@@ -26,8 +26,18 @@ class AutoBotDB:
         self.cursor.execute(query)
         self.connect.commit()
 
-    def add_user(self, query):
-        pass
+    def add_user(self, username, email):
+        try:
+            query = "INSERT INTO users(username, email) "\
+                      "VALUES(%s,%s) RETURNING id;"
+            self.cursor.execute(query, (username, email))
+            self.connect.commit()
+            user_id = self.cursor.fetchone()[0]
+            print(f'{username} with ID: user_id added to DB')
+            return user_id
+        except Exception as ex:
+            print(ex)
+            print(f'Error adding user to DB')
 
     def get_all_users_in_db(self):
         self.cursor.execute(queries.get_all_rows_from_db(self.users_db_table_name))
@@ -54,7 +64,9 @@ class AutoBotDB:
                       "VALUES(%s,%s,%s,%s,%s,%s) RETURNING id;"
             self.cursor.execute(query, (model, model_name, int(mileage), measures, date_added, description))
             self.connect.commit()
+            car_id = self.cursor.fetchone()[0]
             print(f'{model} {model_name} added to DB')
+            return car_id
         except Exception as ex:
             print(ex)
             print(f'Error adding car to DB')
