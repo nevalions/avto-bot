@@ -1,4 +1,5 @@
 import psycopg2
+from psycopg2 import sql
 
 from config import host, user, password, db_name
 import db_main_queries as queries
@@ -26,15 +27,15 @@ class AutoBotDB:
         self.cursor.execute(query)
         self.connect.commit()
 
-    def add_user(self, username, email):
+    def add_user(self, _username, _email):
         try:
-            query = "INSERT INTO users(username, email) "\
-                      "VALUES(%s,%s) RETURNING id;"
-            self.cursor.execute(query, (username, email))
+            query = sql.SQL("INSERT INTO users(username, email) SELECT {username}, {email} WHERE NOT EXISTS (SELECT "
+                            "id FROM users WHERE email = {email})").format(username=sql.Literal(_username),
+                                                                           email=sql.Literal(_email))
+
+            self.cursor.execute(query)
             self.connect.commit()
-            user_id = self.cursor.fetchone()[0]
-            print(f'{username} with ID: user_id added to DB')
-            return user_id
+            print(f'{_username} with ID: user_id added to DB')
         except Exception as ex:
             print(ex)
             print(f'Error adding user to DB')
@@ -60,8 +61,8 @@ class AutoBotDB:
 
     def add_car(self, model, model_name, mileage, measures, date_added, description):
         try:
-            query = "INSERT INTO cars(model, model_name, mileage, measures, date_added, description) "\
-                      "VALUES(%s,%s,%s,%s,%s,%s) RETURNING id;"
+            query = "INSERT INTO cars(model, model_name, mileage, measures, date_added, description) " \
+                    "VALUES(%s,%s,%s,%s,%s,%s) RETURNING id;"
             self.cursor.execute(query, (model, model_name, int(mileage), measures, date_added, description))
             self.connect.commit()
             car_id = self.cursor.fetchone()[0]

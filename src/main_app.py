@@ -9,18 +9,18 @@ now = datetime.now()
 
 def main():
     car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023')
-    user = User('asd', 'asd@asd.ru')
+    user = User('asdasd', 'asd123@added.ru')
 
     try:
         db = db_helper.AutoBotDB()
-
-        print(f'car id: {db.add_car(*vars(car).values())}')
-        print(f'user id: {db.add_user(*vars(user).values())}')
+        add_u = db.add_user(*vars(user).values())
+        # print(f'car id: {db.add_car(*vars(car).values())}')
+        # print(f'user id: {add_u}')
 
         print(*db.get_all_cars_in_db(), sep='\n')
         print(*db.get_all_users_in_db(), sep='\n')
         print(db.get_car_by_car_id(11))
-        print(db.get_user_by_user_id(4))
+        print(db.get_user_by_user_id(13))
     except Exception as ex:
         print(ex)
     finally:
