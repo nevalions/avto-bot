@@ -1,0 +1,5 @@
+python-dateutil
+pytest
+email-validator
+mock
+psycopg2
