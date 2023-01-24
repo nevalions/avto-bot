@@ -13,15 +13,15 @@ def main():
     except Exception as ex:
         print(ex)
 
-    try:
-        add_car_to_user_in_db(find_user_with_email(data_all), Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023'))
-    except Exception as ex:
-        print(ex)
-
-    try:
-        update_user_name_in_db(find_user_with_email(data_all))
-    except Exception as ex:
-        print(ex)
+    # try:
+    #     add_car_to_user_in_db(find_user_with_email(data_all), Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023'))
+    # except Exception as ex:
+    #     print(ex)
+    #
+    # try:
+    #     update_user_name_in_db(find_user_with_email(data_all))
+    # except Exception as ex:
+    #     print(ex)
 
     print(data_all)
 
@@ -70,11 +70,11 @@ def user_not_in_db(user_to_add, db):
 def update_user_name_in_db(user):
     try:
         if user:
-            print(f"Update user's name: {user['name']}")
+            print(f"Update user's name: {user['username']}")
             new_name = input('Enter new user name: ')
             User.not_empty_str(new_name)
-            user['name'] = new_name.strip()
-            print(f'User name updated to {user["name"]}')
+            user['username'] = new_name.strip()
+            print(f'User name updated to {user["username"]}')
         else:
             raise TypeError('No user selected')
     except Exception as ex:
@@ -87,7 +87,7 @@ def add_user_to_db(user_to_add, db):
         if user_to_add:
             if user_not_in_db(user_to_add, db):
                 db.append(remove_first_char_from_keys(vars(user_to_add)))
-                print(f'User {user_to_add.name} added to DB')
+                print(f'User {user_to_add.username} added to DB')
         else:
             print('User is Empty, not added to DB')
             raise TypeError('User is Empty, not added to DB')
@@ -120,7 +120,7 @@ def add_car_to_user_in_db(user, car_to_add):
             if car_to_add:
                 user.update(remove_first_char_from_keys(vars(car_to_add)))
                 print((f'Car {car_to_add.model} {car_to_add.model_name} '
-                       f'added to user {user["name"]} in DB'))
+                       f'added to user {user["username"]} in DB'))
             else:
                 print(f'Car is empty. Not added to user')
                 raise TypeError('Car is empty. Not added to user')

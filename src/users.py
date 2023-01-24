@@ -1,20 +1,19 @@
 import string
 
-from checks import Check
 import checks
 
 
 class User:
     # user class
-    def __init__(self, name: str, email: str):
-        self.not_empty_str(name)
-        self.check_email(email)
+    def __init__(self, username: str, email: str):
+        # self.not_empty_str(name)
+        # self.check_email(email)
 
-        self.name = name.strip()
+        self.username = username.strip()
         self.email = email.strip()
 
     def __str__(self):
-        return f'{self.name}, {self.email}'
+        return f'{self.username}, {self.email}'
 
     def __getattr__(self, attr):
         return self[attr]
@@ -22,10 +21,10 @@ class User:
     @classmethod
     # check is email valid
     def check_email(cls, mail):
-        Check.email_is_valid(mail)
+        checks.email_is_valid(mail)
 
     @classmethod
-    # check is name valid
+    # check string is valid
     def not_empty_str(cls, txt):
         if type(txt) != str:
             raise TypeError('User name must be str type')
@@ -34,22 +33,22 @@ class User:
 
     @classmethod
     # check is object fields not empty to print
-    def __is_valid_to_print(cls, name, email):
+    def __is_valid_to_print(cls, name, mail):
         if not name:
             raise TypeError('User name empty')
-        if not email:
+        if not mail:
             raise TypeError('User email empty')
 
     @property
     # username
-    def name(self):
-        return self._name
+    def username(self):
+        return self._username
 
-    @name.setter
-    def name(self, name):
+    @username.setter
+    def username(self, username):
         try:
-            self.not_empty_str(name)
-            self._name = name.strip().translate(str.maketrans('', '', string.punctuation))
+            self.not_empty_str(username)
+            self._username = username.strip().translate(str.maketrans('', '', string.punctuation))
         except Exception as ex:
             print(str(ex))
             print('User not updated')
@@ -73,8 +72,8 @@ class User:
     def print_user_info(self):
         # print user info (name, email)
         try:
-            self.__is_valid_to_print(self._name, self._email)
-            print(f'Name: {self._name}, email: {self._email}')
+            self.__is_valid_to_print(self._username, self._email)
+            print(f'Name: {self._username}, email: {self._email}')
         except Exception as ex:
             print(str(ex))
             print('Not able to print user')
@@ -85,7 +84,7 @@ def main():
     print(user)
 
     try:
-        user2 = User('', 'asd@asd')
+        user2 = User('', 'asd@asd1.ru')
         print(user2)
     except Exception as ex:
         print(ex)

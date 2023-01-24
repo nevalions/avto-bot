@@ -13,31 +13,31 @@ def main():
 
 
 def test_users_ok():
-    assert user1.name == 'Test'
+    assert user1.username == 'Test'
     assert user1.email == 'asd@asd.ru'
 
 
 def test_update_fields():
-    user1.name = 'Super Jhon'
+    user1.username = 'Super Jhon'
     user1.email = 'asd@asd1.ru'
 
-    assert user1.name == 'Super Jhon'
+    assert user1.username == 'Super Jhon'
     assert user1.email == 'asd@asd1.ru'
 
 
 def test_strip_ok():
-    user1.name = '              Super Jhon         '
+    user1.username = '              Super Jhon         '
     user1.email = '        asd@asd1.ru        '
 
     assert user1.email == 'asd@asd1.ru'
-    assert user1.name == 'Super Jhon'
+    assert user1.username == 'Super Jhon'
 
 
 def test_user_exceptions():
     with pytest.raises(Exception):
-        user1.name = 'G'
+        user1.username = 'G'
     with pytest.raises(Exception):
-        user1.name = 'Ga'
+        user1.username = 'Ga'
     with pytest.raises(Exception):
         user1.email = 'asd@asd.ruasfas'
 
