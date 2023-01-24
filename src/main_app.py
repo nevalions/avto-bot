@@ -8,12 +8,21 @@ now = datetime.now()
 
 
 def main():
-    car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023')
-    print(*vars(car).values())
+    try:
+        car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023')
+        print(*vars(car).values())
+    except:
+        pass
 
     try:
         db = db_helper.AutoBotDB()
+
         db.add_car(*vars(car).values())
+
+        print(*db.get_all_cars_in_db(),sep='\n')
+        print(*db.get_all_users_in_db(), sep='\n')
+        print(db.get_car_by_car_id(11))
+        print(db.get_user_by_user_id(4))
     except Exception as ex:
         print(ex)
     finally:
