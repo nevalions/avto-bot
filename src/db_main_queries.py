@@ -8,4 +8,7 @@ def get_db_item_by_id(_table, _id):
     )
 
 
-print(get_db_item_by_id('cars', 11))
+def get_all_rows_from_db(_table):
+    return sql.SQL("SELECT * FROM {table}").format(table=sql.Identifier(_table))
+
+
