@@ -1,4 +1,6 @@
 from datetime import datetime
+
+import db_helper
 from users import User
 from cars import Car
 
@@ -6,6 +8,16 @@ now = datetime.now()
 
 
 def main():
+
+    try:
+        db = db.AutoBotDB()
+        db.add_car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', 'BLABLABLA')
+    except Exception as ex:
+        print(ex)
+    finally:
+        db.close()
+
+
     data_all = []
 
     try:
