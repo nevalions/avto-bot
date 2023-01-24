@@ -8,22 +8,23 @@ now = datetime.now()
 
 
 def main():
+    car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023')
+    print(*vars(car).values())
 
     try:
-        db = db.AutoBotDB()
-        db.add_car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', 'BLABLABLA')
+        db = db_helper.AutoBotDB()
+        db.add_car(*vars(car).values())
     except Exception as ex:
         print(ex)
     finally:
         db.close()
 
-
-    data_all = []
-
-    try:
-        add_user_to_db(create_user(), data_all)
-    except Exception as ex:
-        print(ex)
+    # data_all = []
+    #
+    # try:
+    #     add_user_to_db(create_user(), data_all)
+    # except Exception as ex:
+    #     print(ex)
 
     # try:
     #     add_car_to_user_in_db(find_user_with_email(data_all), Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023'))
@@ -35,7 +36,7 @@ def main():
     # except Exception as ex:
     #     print(ex)
 
-    print(data_all)
+    # print(data_all)
 
 
 def create_user():
