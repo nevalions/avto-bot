@@ -1,6 +1,7 @@
 import string
 
-from email_validator import validate_email, EmailNotValidError
+from checks import Check
+import checks
 
 
 class User:
@@ -21,9 +22,7 @@ class User:
     @classmethod
     # check is email valid
     def check_email(cls, mail):
-        m = mail.strip()
-        if m != validate_email(m).email:
-            raise EmailNotValidError()
+        Check.email_is_valid(mail)
 
     @classmethod
     # check is name valid
@@ -42,7 +41,7 @@ class User:
             raise TypeError('User email empty')
 
     @property
-    # user name
+    # username
     def name(self):
         return self._name
 
@@ -66,7 +65,7 @@ class User:
         try:
             self.check_email(email)
             self._email = email.strip()
-        except EmailNotValidError as ex:
+        except Exception as ex:
             print(str(ex))
             print('User not updated')
             raise ex
@@ -88,6 +87,12 @@ def main():
     try:
         user2 = User('', 'asd@asd')
         print(user2)
+    except Exception as ex:
+        print(ex)
+
+    try:
+        user3 = User('asfasgv', 'asdasd')
+        print(user3)
     except Exception as ex:
         print(ex)
 
