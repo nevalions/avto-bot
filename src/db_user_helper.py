@@ -2,25 +2,12 @@ import psycopg2
 from psycopg2 import sql
 
 from config import host, user, password, db_name
+from db_helper import AutoBotDB as DB
 import db_main_queries as queries
 
 
-class AutoBotUserDB:
+class AutoBotUserDB(DB):
     db_table_name = 'users'
-
-    def __init__(self, host_db=host, user_db=user, pass_db=password, db=db_name):
-        self.host_db = host_db
-        self.user_db = user_db
-        self.pass_db = pass_db
-        self.db = db
-
-        self.connect = psycopg2.connect(
-            host=host_db,
-            user=user_db,
-            password=pass_db,
-            database=db
-        )
-        self.cursor = self.connect.cursor()
 
     def query_execute(self, query):
         self.cursor.execute(query)
@@ -89,10 +76,6 @@ class AutoBotUserDB:
         else:
             print(f'No users with ID({user_id})')
             raise Exception
-
-    def close(self):
-        self.cursor.close()
-        self.connect.close()
 
 
 def main():

@@ -39,3 +39,17 @@ class AutoBotAutoDB(DB):
         else:
             print(f'No cars with ID {car_id}')
             raise Exception
+
+
+def main():
+    db = AutoBotAutoDB()
+    try:
+        print(db.get_all_cars_in_db())
+    except Exception as ex:
+        print(ex)
+    finally:
+        db.close()
+
+
+if __name__ == '__main__':
+    main()

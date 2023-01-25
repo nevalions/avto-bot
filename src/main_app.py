@@ -13,7 +13,7 @@ def main():
     db_auto = AutoBotAutoDB()
 
     car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023')
-    user = User('NEW2', 'baaa12sd1235467@added.ru')
+    user = User('NEW2', 'ASDsa7@added.ru')
 
     try:
 
@@ -21,7 +21,7 @@ def main():
         print(f'car id: {db_auto.add_car(*vars(car).values())}')
         print(f'user id: {add_u}')
 
-        db_user.update_user_username('baaa12sd1235467@added.ru', 'Super New')
+        db_user.update_user_username('ASDsa7@added.ru', 'Super New')
 
         print(*db_auto.get_all_cars_in_db(), sep='\n')
         print(*db_user.get_all_users_in_db(), sep='\n')
