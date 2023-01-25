@@ -25,6 +25,23 @@ class AutoBotDB:
         self.cursor.execute(query)
         self.connect.commit()
 
+    def select_list(self, query):
+        pass
+
+    def select_query_dict(self, query) -> dict:
+        self.cursor.execute(query)
+        columns = list(self.cursor.description)
+        users_cars = self.cursor.fetchall()
+
+        if users_cars:
+            result = []
+            for row in users_cars:
+                row_dict = {}
+                for i, col in enumerate(columns):
+                    row_dict[col.name] = row[i]
+                result.append(row_dict)
+            return result
+
     def close(self):
         self.cursor.close()
         self.connect.close()
