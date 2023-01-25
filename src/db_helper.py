@@ -30,15 +30,17 @@ class AutoBotDB:
     def add_user(self, _username, _email):
         try:
             query = sql.SQL("INSERT INTO users(username, email) SELECT {username}, {email} WHERE NOT EXISTS (SELECT "
-                            "id FROM users WHERE email = {email})").format(username=sql.Literal(_username),
-                                                                           email=sql.Literal(_email))
+                            "id FROM users WHERE email = {email}) RETURNING id").format(username=sql.Literal(_username),
+                                                                                        email=sql.Literal(_email))
 
             self.cursor.execute(query)
             self.connect.commit()
-            print(f'{_username} with ID: user_id added to DB')
+            user_id = self.cursor.fetchone()[0]
+            print(f'{_username} with ID: {user_id} added to DB')
+            return user_id
         except Exception as ex:
             print(ex)
-            print(f'Error adding user to DB')
+            print(f'Error adding user to DB, user with email {_email} already exist')
 
     def get_all_users_in_db(self):
         self.cursor.execute(queries.get_all_rows_from_db(self.users_db_table_name))
