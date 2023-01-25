@@ -33,18 +33,23 @@ class AutoBotDB:
         Returns from SELECT a list of dictionaries
         :return list:
         """
-        self.cursor.execute(query)
-        columns = list(self.cursor.description)
-        results = self.cursor.fetchall()
+        try:
+            self.cursor.execute(query)
+            columns = list(self.cursor.description)
+            results = self.cursor.fetchall()
 
-        if results:
-            result = []
-            for row in results:
-                row_dict = {}
-                for i, col in enumerate(columns):
-                    row_dict[col.name] = row[i]
-                result.append(row_dict)
-            return result
+            if results:
+                result = []
+                for row in results:
+                    row_dict = {}
+                    for i, col in enumerate(columns):
+                        row_dict[col.name] = row[i]
+                    result.append(row_dict)
+                return result
+            elif not results:
+                raise TypeError('Data error')
+        except Exception as ex:
+            print(ex)
 
     def close(self):
         self.cursor.close()

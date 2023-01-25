@@ -3,3 +3,4 @@ pytest
 email-validator
 mock
 psycopg2
+aiogram
