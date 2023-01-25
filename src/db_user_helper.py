@@ -1,6 +1,6 @@
 from psycopg2 import sql
 
-from db_helper import AutoBotDB as Db
+from db import AutoBotDB as Db
 import db_main_queries as queries
 
 
