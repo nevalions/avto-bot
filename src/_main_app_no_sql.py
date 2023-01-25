@@ -5,9 +5,10 @@ from cars import Car
 
 now = datetime.now()
 
+
 def main():
-    car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023')
-    user = User('NEW2', 'baa12sd1235467@added.ru')
+    # car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023')
+    # user = User('NEW2', 'baa12sd1235467@added.ru')
 
     data_all = []
 

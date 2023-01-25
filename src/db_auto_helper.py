@@ -1,30 +1,12 @@
 import psycopg2
 from psycopg2 import sql
 
-from config import host, user, password, db_name
+from db_helper import AutoBotDB as DB
 import db_main_queries as queries
 
 
-class AutoBotAutoDB:
+class AutoBotAutoDB(DB):
     db_table_name = 'cars'
-
-    def __init__(self, host_db=host, user_db=user, pass_db=password, db=db_name):
-        self.host_db = host_db
-        self.user_db = user_db
-        self.pass_db = pass_db
-        self.db = db
-
-        self.connect = psycopg2.connect(
-            host=host_db,
-            user=user_db,
-            password=pass_db,
-            database=db
-        )
-        self.cursor = self.connect.cursor()
-
-    def query_execute(self, query):
-        self.cursor.execute(query)
-        self.connect.commit()
 
     def add_car(self, model: str, model_name: str, mileage: str, measures: str, date_added: str, description: str):
         try:
@@ -57,7 +39,3 @@ class AutoBotAutoDB:
         else:
             print(f'No cars with ID {car_id}')
             raise Exception
-
-    def close(self):
-        self.cursor.close()
-        self.connect.close()
