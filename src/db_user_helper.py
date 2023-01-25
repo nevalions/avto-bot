@@ -1,10 +1,13 @@
 from psycopg2 import sql
 
-from db_helper import AutoBotDB as DB
+from db_helper import AutoBotDB as Db
 import db_main_queries as queries
 
 
-class AutoBotUserDB(DB):
+class AutoBotUserDB(Db):
+    """
+    Main Postgres DB functions for User()
+    """
     db_table_name = 'users'
 
     def query_execute(self, query):
@@ -77,8 +80,8 @@ class AutoBotUserDB(DB):
 
 
 def main():
+    db = AutoBotUserDB()
     try:
-        db = AutoBotUserDB()
         print(db.get_all_users_in_db())
     except Exception as ex:
         print(ex)

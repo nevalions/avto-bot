@@ -1,8 +1,11 @@
-from db_helper import AutoBotDB as DB
+from db_helper import AutoBotDB as Db
 import db_main_queries as queries
 
 
-class AutoBotAutoDB(DB):
+class AutoBotAutoDB(Db):
+    """
+    Main Postgres DB functions for Car()
+    """
     db_table_name = 'cars'
 
     def add_car(self, model: str, model_name: str, mileage: str, measures: str, date_added: str, description: str):

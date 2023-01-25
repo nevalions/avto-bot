@@ -34,6 +34,10 @@ def main():
 
 
 def create_user():
+    """
+    Create user with terminal.
+    :return:
+    """
     try:
         return User(input('Enter your name: '), input('Enter your email: '))
     except Exception as ex:
@@ -42,6 +46,10 @@ def create_user():
 
 
 def create_car():
+    """
+    Create car with terminal.
+    :return:
+    """
     try:
         new_car = Car(
             input('Enter car model: '),
@@ -57,12 +65,6 @@ def create_car():
     except Exception as ex:
         print('Car is not created!')
         raise ex
-
-
-def remove_first_char_from_keys(dictionary):
-    if not dictionary:
-        raise TypeError('Empty field')
-    return {(k[1:]): v for k, v in dictionary.items()}
 
 
 if __name__ == '__main__':
