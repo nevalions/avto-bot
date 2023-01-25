@@ -5,9 +5,8 @@ from config import host, user, password, db_name
 import db_main_queries as queries
 
 
-class AutoBotDB:
-    users_db_table_name = 'users'
-    cars_db_table_name = 'cars'
+class AutoBotUserDB:
+    db_table_name = 'users'
 
     def __init__(self, host_db=host, user_db=user, pass_db=password, db=db_name):
         self.host_db = host_db
@@ -50,7 +49,7 @@ class AutoBotDB:
             new_value = new_name
 
             query = queries.update_str_value_in_db_by_key(
-                self.users_db_table_name,
+                self.db_table_name,
                 key_name,
                 key,
                 value_name,
@@ -67,7 +66,7 @@ class AutoBotDB:
             print(f'Error updating user in DB')
 
     def get_all_users_in_db(self):
-        self.cursor.execute(queries.get_all_rows_from_db(self.users_db_table_name))
+        self.cursor.execute(queries.get_all_rows_from_db(self.db_table_name))
         all_users = self.cursor.fetchall()
         if all_users:
             return all_users
@@ -76,45 +75,13 @@ class AutoBotDB:
             raise Exception
 
     def get_user_by_user_id(self, user_id: int):
-        query = queries.get_db_item_by_id(self.users_db_table_name, user_id)
+        query = queries.get_db_item_by_id(self.db_table_name, user_id)
         self.cursor.execute(query)
         car = self.cursor.fetchall()
         if car:
             return car[0]
         else:
             print(f'No users with ID {user_id}')
-            raise Exception
-
-    def add_car(self, model: str, model_name: str, mileage: str, measures: str, date_added: str, description: str):
-        try:
-            query = "INSERT INTO cars(model, model_name, mileage, measures, date_added, description) " \
-                    "VALUES(%s,%s,%s,%s,%s,%s) RETURNING id;"
-            self.cursor.execute(query, (model, model_name, int(mileage), measures, date_added, description))
-            self.connect.commit()
-            car_id = self.cursor.fetchone()[0]
-            print(f'{model} {model_name} added to DB')
-            return car_id
-        except Exception as ex:
-            print(ex)
-            print(f'Error adding car to DB')
-
-    def get_all_cars_in_db(self):
-        self.cursor.execute(queries.get_all_rows_from_db(self.cars_db_table_name))
-        all_cars = self.cursor.fetchall()
-        if all_cars:
-            return all_cars
-        else:
-            print('No cars in DB')
-            raise Exception
-
-    def get_car_by_car_id(self, car_id):
-        query = queries.get_db_item_by_id(self.cars_db_table_name, car_id)
-        self.cursor.execute(query)
-        car = self.cursor.fetchall()
-        if car:
-            return car[0]
-        else:
-            print(f'No cars with ID {car_id}')
             raise Exception
 
     def close(self):
@@ -124,9 +91,8 @@ class AutoBotDB:
 
 def main():
     try:
-        db = AutoBotDB()
-        # print(db.get_car_by_car_id(11))
-        print(db.get_all_cars_in_db())
+        db = AutoBotUserDB()
+        print(db.get_all_users_in_db())
     except Exception as ex:
         print(ex)
     finally:

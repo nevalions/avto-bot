@@ -21,12 +21,12 @@ def update_str_value_in_db_by_key(_table: str, _key_name: str, _key: str, _value
     )
 
 
-def get_db_item_by_id(_table, _id):
+def get_db_item_by_id(_table: str, _id: int) -> sql:
     return sql.SQL("SELECT * FROM {table} WHERE {table}.id={item_id}").format(
         table=sql.Identifier(_table),
         item_id=sql.Literal(_id)
     )
 
 
-def get_all_rows_from_db(_table):
+def get_all_rows_from_db(_table: str) -> sql:
     return sql.SQL("SELECT * FROM {table}").format(table=sql.Identifier(_table))
