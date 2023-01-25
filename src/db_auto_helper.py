@@ -1,6 +1,3 @@
-import psycopg2
-from psycopg2 import sql
-
 from db_helper import AutoBotDB as DB
 import db_main_queries as queries
 

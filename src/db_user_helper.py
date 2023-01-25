@@ -1,7 +1,5 @@
-import psycopg2
 from psycopg2 import sql
 
-from config import host, user, password, db_name
 from db_helper import AutoBotDB as DB
 import db_main_queries as queries
 
