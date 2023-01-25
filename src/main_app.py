@@ -30,8 +30,12 @@ def main():
         print(db_auto.get_car_by_car_id(12))
         print(db_user.get_user_by_user_id(13))
 
+        users_cars = db_main.show_all_users_cars(15)
+        for car in users_cars:
+            print(f"{car['model']} {car['model_name']}")
 
-        db_main.add_car_to_user_in_db(15, 17)
+        db_main.add_car_to_user_in_db(16, 17)
+
     except Exception as ex:
         print(ex)
     finally:
