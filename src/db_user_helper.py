@@ -1,7 +1,7 @@
 from psycopg2 import sql
 
 from db import AutoBotDB as Db
-import db_main_queries as queries
+import db_queries as queries
 
 
 class AutoBotUserDB(Db):

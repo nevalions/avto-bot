@@ -1,6 +1,13 @@
 from psycopg2 import sql
 
 
+def create_m2m_relation(_id_one, _id_two):
+    return sql.SQL("INSERT INTO users_cars VALUES ({id_one},{id_two});").format(
+        id_one=sql.Literal(_id_one),
+        id_two=sql.Literal(_id_two)
+    )
+
+
 def update_str_value_in_db_by_key(_table: str, _key_name: str, _key: str, _value_name: str, _new_value: str) -> sql:
     """
     Update value in table DB, select by key: key_name, select value by value in item.
