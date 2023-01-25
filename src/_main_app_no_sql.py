@@ -1,55 +1,32 @@
 from datetime import datetime
 
-import db_helper
-from db_user_helper import AutoBotUserDB
-from db_auto_helper import AutoBotAutoDB
 from users import User
 from cars import Car
 
 now = datetime.now()
 
-
 def main():
     car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023')
     user = User('NEW2', 'baa12sd1235467@added.ru')
 
+    data_all = []
+
     try:
-        db = db_helper.AutoBotDB()
-        db_user = AutoBotUserDB()
-        db_auto = AutoBotAutoDB()
-        add_u = db_user.add_user(*vars(user).values())
-        print(f'car id: {db_auto.add_car(*vars(car).values())}')
-        print(f'user id: {add_u}')
-
-        db_user.update_user_username('asd1235468@added.ru', 'Super New')
-
-        print(*db_auto.get_all_cars_in_db(), sep='\n')
-        print(*db_user.get_all_users_in_db(), sep='\n')
-        print(db_auto.get_car_by_car_id(11))
-        print(db_user.get_user_by_user_id(13))
+        add_user_to_db(create_user(), data_all)
     except Exception as ex:
         print(ex)
-    finally:
-        db.close()
 
-    # data_all = []
-    #
-    # try:
-    #     add_user_to_db(create_user(), data_all)
-    # except Exception as ex:
-    #     print(ex)
+    try:
+        add_car_to_user_in_db(find_user_with_email(data_all), Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023'))
+    except Exception as ex:
+        print(ex)
 
-    # try:
-    #     add_car_to_user_in_db(find_user_with_email(data_all), Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023'))
-    # except Exception as ex:
-    #     print(ex)
-    #
-    # try:
-    #     update_user_name_in_db(find_user_with_email(data_all))
-    # except Exception as ex:
-    #     print(ex)
+    try:
+        update_user_name_in_db(find_user_with_email(data_all))
+    except Exception as ex:
+        print(ex)
 
-    # print(data_all)
+    print(data_all)
 
 
 def create_user():

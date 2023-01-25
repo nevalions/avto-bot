@@ -31,15 +31,21 @@ class AutoBotUserDB:
             query = sql.SQL("INSERT INTO users(username, email) SELECT {username}, {email} WHERE NOT EXISTS (SELECT "
                             "id FROM users WHERE email = {email}) RETURNING id").format(username=sql.Literal(_username),
                                                                                         email=sql.Literal(_email))
-
             self.cursor.execute(query)
             self.connect.commit()
-            user_id = self.cursor.fetchone()[0]
-            print(f'{_username} with ID: {user_id} added to DB')
-            return user_id
+            try:
+                user_id = self.cursor.fetchone()[0]
+                if user_id:
+                    print(f'User {_username} with ID({user_id}) added to DB')
+                    return user_id
+            except Exception as ex:
+                print(ex)
+                print(f'User with email {_email} already exist')
+                print(f'Error adding user to DB')
+
         except Exception as ex:
             print(ex)
-            print(f'Error adding user to DB, user with email {_email} already exist')
+            print(f'Error adding user to DB')
 
     def update_user_username(self, u_email, new_name):
         try:
@@ -60,7 +66,7 @@ class AutoBotUserDB:
             if self.cursor.fetchone():
                 print(f'User {new_name} with email: {u_email} updated')
             else:
-                raise TypeError(f'User with email {u_email} not exist exist')
+                raise TypeError(f'No User with email {u_email}')
         except Exception as ex:
             print(ex)
             print(f'Error updating user in DB')
@@ -81,7 +87,7 @@ class AutoBotUserDB:
         if car:
             return car[0]
         else:
-            print(f'No users with ID {user_id}')
+            print(f'No users with ID({user_id})')
             raise Exception
 
     def close(self):
