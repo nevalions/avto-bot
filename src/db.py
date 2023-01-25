@@ -29,6 +29,10 @@ class AutoBotDB:
         pass
 
     def select_query_dict(self, query) -> dict:
+        """
+        Returns from SELECT a dictionary
+        :return dictionary:
+        """
         self.cursor.execute(query)
         columns = list(self.cursor.description)
         users_cars = self.cursor.fetchall()
