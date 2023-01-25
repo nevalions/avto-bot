@@ -4,7 +4,7 @@ import builtins
 
 from users import User
 from cars import Car
-from src import main_app
+from src import _main_app_no_sql as main_app
 
 
 def main():
