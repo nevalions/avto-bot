@@ -9,7 +9,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.utils import executor
 
 from config_tg import tg_token
-
+from tg_aiobot_commands import set_default_commands
 
 from users import User
 from cars import Car
@@ -18,18 +18,20 @@ from db_auto_helper import AutoBotAutoDB
 from db_main_helper import AutoBotMainDB
 
 
-bot = Bot(token=tg_token)
+bot = Bot(token=tg_token, parse_mode=types.ParseMode.HTML)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
 db_user = AutoBotUserDB()
 db_auto = AutoBotAutoDB()
+db_main = AutoBotMainDB()
 
 now = datetime.now()
 
 
 def main():
     executor.start_polling(dp)
+    set_default_commands(dp)
 
 
 class RegisterForm(StatesGroup):
@@ -56,9 +58,10 @@ async def start_command(message: types.Message):
     # say hello to user and get tg.id
     print(message.from_user.id, message.from_user.username, message.from_user.first_name, message.from_user.last_name)
     await message.answer(
-        f'Hi, {message.from_user.first_name} {message.from_user.last_name}!\n'
+        f'Hi, {message.from_user.first_name}!\n'
         f'If you want to use AutoBot /register first\n'
-        f'If you are already registered you can /addcar'
+        f'If you are already registered you can /addcar\n'
+        f'Show all cars /allcars'
     )
 
 
@@ -68,6 +71,20 @@ async def register_command(message: types.Message):
     await message.answer(
         f'Please, enter your username in our service.'
     )
+
+
+@dp.message_handler(commands=['allcars'])
+async def register_command(message: types.Message):
+    try:
+        user_cars = db_main.show_all_users_cars(15)
+        for car in user_cars:
+            await message.answer(
+                f"ID({car['id']}) {car['model']} {car['model_name']} with {car['mileage']} {car['measures']}"
+            )
+        await message.answer('If you want to edit your car, enter /editcar')
+    except Exception as ex:
+        print(ex)
+        print('Error connecting to DB')
 
 
 @dp.message_handler(state=RegisterForm.enter_username)
@@ -151,7 +168,7 @@ async def enter_model_name(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(state=AddCarForm.enter_mileage)
-async def enter_model_name(message: types.Message, state: FSMContext):
+async def enter_mileage(message: types.Message, state: FSMContext):
 
     try:
         mil = message.text.replace(" ", "").translate(str.maketrans('', '', string.punctuation))
@@ -169,7 +186,7 @@ async def enter_model_name(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(state=AddCarForm.enter_measures)
-async def enter_model_name(message: types.Message, state: FSMContext):
+async def enter_measures(message: types.Message, state: FSMContext):
 
     try:
         mes = message.text.replace(" ", "").translate(str.maketrans('', '', string.punctuation))
@@ -188,7 +205,7 @@ async def enter_model_name(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(state=AddCarForm.enter_description)
-async def enter_model_name(message: types.Message, state: FSMContext):
+async def enter_description(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['description'] = message.text
     try:

@@ -4,3 +4,4 @@ email-validator
 mock
 psycopg2
 aiogram
+python-dotenv
