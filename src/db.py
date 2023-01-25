@@ -28,18 +28,18 @@ class AutoBotDB:
     def select_list(self, query):
         pass
 
-    def select_query_dict(self, query) -> dict:
+    def select_query_dict(self, query) -> list:
         """
-        Returns from SELECT a dictionary
-        :return dictionary:
+        Returns from SELECT a list of dictionaries
+        :return list:
         """
         self.cursor.execute(query)
         columns = list(self.cursor.description)
-        users_cars = self.cursor.fetchall()
+        results = self.cursor.fetchall()
 
-        if users_cars:
+        if results:
             result = []
-            for row in users_cars:
+            for row in results:
                 row_dict = {}
                 for i, col in enumerate(columns):
                     row_dict[col.name] = row[i]

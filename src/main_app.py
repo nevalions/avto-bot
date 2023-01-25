@@ -31,6 +31,7 @@ def main():
         print(db_user.get_user_by_user_id(13))
 
         users_cars = db_main.show_all_users_cars(15)
+        print(*users_cars, sep='\n')
         for car in users_cars:
             print(f"{car['model']} {car['model_name']}")
 
