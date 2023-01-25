@@ -42,6 +42,31 @@ class AutoBotDB:
             print(ex)
             print(f'Error adding user to DB, user with email {_email} already exist')
 
+    def update_user_username(self, u_email, new_name):
+        try:
+            key_name = 'email'
+            key = u_email
+            value_name = 'username'
+            new_value = new_name
+
+            query = queries.update_str_value_in_db_by_key(
+                self.users_db_table_name,
+                key_name,
+                key,
+                value_name,
+                new_value
+            )
+            self.cursor.execute(query)
+            self.connect.commit()
+            if self.cursor.fetchone():
+                print(f'User {new_name} with email: {u_email} updated')
+            else:
+                raise TypeError(f'User with email {u_email} not exist exist')
+
+        except Exception as ex:
+            print(ex)
+            print(f'Error updating user in DB')
+
     def get_all_users_in_db(self):
         self.cursor.execute(queries.get_all_rows_from_db(self.users_db_table_name))
         all_users = self.cursor.fetchall()

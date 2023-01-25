@@ -13,9 +13,12 @@ def main():
 
     try:
         db = db_helper.AutoBotDB()
-        add_u = db.add_user(*vars(user).values())
+        # add_u = db.add_user(*vars(user).values())
         # print(f'car id: {db.add_car(*vars(car).values())}')
-        print(f'user id: {add_u}')
+        # print(f'user id: {add_u}')
+
+        db.update_user_username('asdsdasdg@added.ru', 'xxx')
+
 
         # print(*db.get_all_cars_in_db(), sep='\n')
         # print(*db.get_all_users_in_db(), sep='\n')
