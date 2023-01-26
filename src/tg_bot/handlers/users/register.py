@@ -11,7 +11,10 @@ from tg_bot.keybords.inline import ikb_cancel_menu
 from users import User
 
 from db_user_helper import AutoBotUserDB
+from db_tg_users import AutoBotTgUsersDB
+
 db_user = AutoBotUserDB()
+db_tg_users = AutoBotTgUsersDB()
 
 
 class RegisterForm(StatesGroup):
@@ -19,16 +22,11 @@ class RegisterForm(StatesGroup):
     enter_email = State()
 
 
-@dp.message_handler(commands=['register'])
-async def register_command(message: types.Message):
-    await RegisterForm.enter_username.set()
-    await message.answer(
-        f'Please, enter your username in our service.', reply_markup=ikb_cancel_menu
-    )
-
-
 @dp.callback_query_handler(text='register')
-async def register_command_inline(call: CallbackQuery):
+async def register_command_inline(call: CallbackQuery, state: FSMContext):
+    async with state.proxy() as data:
+        data['tg_user_id'] = call.message.from_user.id
+        data['chat_id'] = call.message.chat.id
     await RegisterForm.enter_username.set()
     await call.message.answer(
         f'Please, enter your username in our service.', reply_markup=ikb_cancel_menu
@@ -94,7 +92,15 @@ async def register_email(message: types.Message, state: FSMContext):
     try:
         new_user = User(data['username'], data['email'])
         print(*vars(new_user).values())
-        db_user.add_user(*vars(new_user).values())
+        tg_referer_id = db_user.add_user(*vars(new_user).values())
+
+        async with state.proxy() as data:
+            data['fk_tg_user_id'] = tg_referer_id
+
+        print(data['tg_user_id'], data['fk_tg_user_id'], data['chat_id'])
+        db_tg_users.add_tg_user_register(int(data['tg_user_id']), int(data['fk_tg_user_id']), int(data['chat_id']))
+
+        print(data['chat_id'])
     except Exception as ex:
         print(ex)
         print('Error connecting to DB')

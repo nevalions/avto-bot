@@ -20,7 +20,10 @@ class AutoBotAutoDB(Db):
         try:
             query = "INSERT INTO cars(model, model_name, mileage, measures, date_added, description, current_mileage) " \
                     "VALUES(%s,%s,%s,%s,%s,%s,%s) RETURNING id;"
-            self.cursor.execute(query, (model, model_name, int(mileage), measures, date_added, description, current_mileage))
+            self.cursor.execute(
+                query,
+                (model, model_name, int(mileage), measures, date_added, description, current_mileage)
+            )
             self.connect.commit()
             car_id = self.cursor.fetchone()[0]
             print(f'{model} {model_name} added to DB')

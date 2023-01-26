@@ -32,16 +32,18 @@ class AddCarForm(StatesGroup):
     enter_description = State()
 
 
-@dp.message_handler(commands=['addcar'])
-async def addcar_command(message: types.Message):
-    await AddCarForm.enter_model.set()
-    await message.answer(
-        f'Please, enter car model (Lada, Ford, Chevrolet, etc)', reply_markup=ikb_cancel_menu
-    )
+# @dp.message_handler(commands=['addcar'])
+# async def addcar_command(message: types.Message):
+#     await AddCarForm.enter_model.set()
+#     await message.answer(
+#         f'Please, enter car model (Lada, Ford, Chevrolet, etc)', reply_markup=ikb_cancel_menu
+#     )
 
 
 @dp.callback_query_handler(text='addcar')
 async def register_command_inline(call: CallbackQuery):
+    print(call.message.from_user.id, call.message.chat.id, call.message.from_user.username,
+          call.message.from_user.first_name, call.message.from_user.last_name)
     await AddCarForm.enter_model.set()
     await call.message.answer(
         f'Please, enter car model (Lada, Ford, Chevrolet, etc)', reply_markup=ikb_cancel_menu
