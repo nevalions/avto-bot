@@ -5,8 +5,10 @@ from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
+from aiogram.types import CallbackQuery
 
 from src.tg_bot.loader import dp
+from tg_bot.keybords.inline import ikb_cancel_menu, ikb_no_description_menu, ikb_km_m_menu
 
 from users import User
 from cars import Car
@@ -33,7 +35,28 @@ class AddCarForm(StatesGroup):
 async def addcar_command(message: types.Message):
     await AddCarForm.enter_model.set()
     await message.answer(
-        f'Please, enter car model (Lada, Ford, Chevrolet, etc)'
+        f'Please, enter car model (Lada, Ford, Chevrolet, etc)', reply_markup=ikb_cancel_menu
+    )
+
+
+@dp.callback_query_handler(text='addcar')
+async def register_command_inline(call: CallbackQuery):
+    await AddCarForm.enter_model.set()
+    await call.message.answer(
+        f'Please, enter car model (Lada, Ford, Chevrolet, etc)', reply_markup=ikb_cancel_menu
+    )
+
+
+@dp.callback_query_handler(state='*', text='cancel')
+async def register_command_inline(call: CallbackQuery, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state is None:
+        return
+
+    await state.finish()
+
+    await call.message.answer(
+        'Cancelled.', reply_markup=types.ReplyKeyboardRemove()
     )
 
 
@@ -57,16 +80,16 @@ async def enter_model(message: types.Message, state: FSMContext):
 
     try:
         if Car.not_empty_str(message.text):
-            return await message.reply('Enter a valid model')
+            return await message.reply('Enter a valid model', reply_markup=ikb_cancel_menu)
     except Exception as ex:
         print(ex)
-        return await message.reply('Enter a valid model')
+        return await message.reply('Enter a valid model', reply_markup=ikb_cancel_menu)
 
     async with state.proxy() as data:
         data['model'] = message.text
 
     await AddCarForm.enter_model_name.set()
-    await message.answer(f"Enter model name for {data['model']}")
+    await message.answer(f"Enter model name for {data['model']}", reply_markup=ikb_cancel_menu)
 
 
 @dp.message_handler(state=AddCarForm.enter_model_name)
@@ -74,16 +97,16 @@ async def enter_model_name(message: types.Message, state: FSMContext):
 
     try:
         if Car.not_empty_str(message.text):
-            return await message.reply('Enter a valid model name')
+            return await message.reply('Enter a valid model name', reply_markup=ikb_cancel_menu)
     except Exception as ex:
         print(ex)
-        return await message.reply('Enter a valid model name')
+        return await message.reply('Enter a valid model name', reply_markup=ikb_cancel_menu)
 
     async with state.proxy() as data:
         data['model_name'] = message.text
 
     await AddCarForm.enter_mileage.set()
-    await message.answer(f"Enter mileage for {data['model']} {data['model_name']}")
+    await message.answer(f"Enter mileage for {data['model']} {data['model_name']}", reply_markup=ikb_cancel_menu)
 
 
 @dp.message_handler(state=AddCarForm.enter_mileage)
@@ -92,16 +115,42 @@ async def enter_mileage(message: types.Message, state: FSMContext):
     try:
         mil = message.text.replace(" ", "").translate(str.maketrans('', '', string.punctuation))
         if Car.is_digit(mil):
-            return await message.reply('Enter a valid mileage')
+            return await message.reply('Enter a valid mileage', reply_markup=ikb_cancel_menu)
     except Exception as ex:
         print(ex)
-        return await message.reply('Enter a valid mileage')
+        return await message.reply('Enter a valid mileage', reply_markup=ikb_cancel_menu)
 
     async with state.proxy() as data:
         data['mileage'] = mil
 
     await AddCarForm.enter_measures.set()
-    await message.answer(f"Enter measures for mileage count (km/miles)")
+    await message.answer(f"Enter measures for mileage count (km/miles)", reply_markup=ikb_km_m_menu)
+
+
+@dp.callback_query_handler(state=AddCarForm.enter_measures, text='km')
+async def measures_km(call: CallbackQuery, state: FSMContext):
+    async with state.proxy() as data:
+        data['measures'] = 'km'
+        data['date_added'] = f'{now.strftime("%d.%m.%Y")}'
+
+    await AddCarForm.enter_description.set()
+    await call.message.answer(
+        f"Enter description for {data['model']} {data['model_name']}",
+        reply_markup=ikb_ok_cancel_menu
+    )
+
+
+@dp.callback_query_handler(state=AddCarForm.enter_measures, text='miles')
+async def measures_miles(call: CallbackQuery, state: FSMContext):
+    async with state.proxy() as data:
+        data['measures'] = 'miles'
+        data['date_added'] = f'{now.strftime("%d.%m.%Y")}'
+
+    await AddCarForm.enter_description.set()
+    await call.message.answer(
+        f"Enter description for {data['model']} {data['model_name']}",
+        reply_markup=ikb_ok_cancel_menu
+    )
 
 
 @dp.message_handler(state=AddCarForm.enter_measures)
@@ -110,17 +159,20 @@ async def enter_measures(message: types.Message, state: FSMContext):
     try:
         mes = message.text.replace(" ", "").translate(str.maketrans('', '', string.punctuation))
         if Car.is_km_or_miles(mes):
-            return await message.reply('Enter a valid mileage')
+            return await message.reply('Enter a valid mileage', reply_markup=ikb_cancel_menu)
     except Exception as ex:
         print(ex)
-        return await message.reply('Enter a valid mileage')
+        return await message.reply('Enter a valid mileage', reply_markup=ikb_cancel_menu)
 
     async with state.proxy() as data:
         data['measures'] = mes
         data['date_added'] = f'{now.strftime("%d.%m.%Y")}'
 
     await AddCarForm.enter_description.set()
-    await message.answer(f"Enter description for {data['model']} {data['model_name']}")
+    await message.answer(
+        f"Enter description for {data['model']} {data['model_name']}",
+        reply_markup=ikb_ok_cancel_menu
+    )
 
 
 @dp.message_handler(state=AddCarForm.enter_description)
@@ -141,4 +193,25 @@ async def enter_description(message: types.Message, state: FSMContext):
         print('Error connecting to DB')
 
     await message.answer(f"{data['model']} {data['model_name']} added at {data['date_added']}")
+    await state.finish()
+
+
+@dp.callback_query_handler(state=AddCarForm.enter_description, text='no_description')
+async def no_description(call: CallbackQuery, state: FSMContext):
+    async with state.proxy() as data:
+        data['description'] = ''
+    try:
+        db_auto.add_car(*vars(Car(
+            data['model'],
+            data['model_name'],
+            data['mileage'],
+            data['measures'],
+            data['date_added'],
+            data['description'],
+        )).values())
+    except Exception as ex:
+        print(ex)
+        print('Error connecting to DB')
+
+    await call.message.answer(f"{data['model']} {data['model_name']} added at {data['date_added']}")
     await state.finish()

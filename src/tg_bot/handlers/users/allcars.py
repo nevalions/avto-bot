@@ -1,4 +1,5 @@
 from aiogram import types
+from aiogram.types import CallbackQuery
 
 from src.tg_bot.loader import dp
 
@@ -15,6 +16,20 @@ async def register_command(message: types.Message):
                 f"ID({car['id']}) {car['model']} {car['model_name']} with {car['mileage']} {car['measures']}"
             )
         await message.answer('If you want to edit your car, enter /editcar')
+    except Exception as ex:
+        print(ex)
+        print('Error connecting to DB')
+
+
+@dp.callback_query_handler(text='allcars')
+async def register_command_inline(call: CallbackQuery):
+    try:
+        user_cars = db_main.show_all_users_cars(15)
+        for car in user_cars:
+            await call.message.answer(
+                f"ID({car['id']}) {car['model']} {car['model_name']} with {car['mileage']} {car['measures']}"
+            )
+        await call.message.answer('If you want to edit your car, enter /editcar')
     except Exception as ex:
         print(ex)
         print('Error connecting to DB')

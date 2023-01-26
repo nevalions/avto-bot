@@ -3,8 +3,10 @@ from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
+from aiogram.types import CallbackQuery
 
 from src.tg_bot.loader import dp
+from tg_bot.keybords.inline import ikb_cancel_menu
 
 from users import User
 
@@ -21,7 +23,28 @@ class RegisterForm(StatesGroup):
 async def register_command(message: types.Message):
     await RegisterForm.enter_username.set()
     await message.answer(
-        f'Please, enter your username in our service.'
+        f'Please, enter your username in our service.', reply_markup=ikb_cancel_menu
+    )
+
+
+@dp.callback_query_handler(text='register')
+async def register_command_inline(call: CallbackQuery):
+    await RegisterForm.enter_username.set()
+    await call.message.answer(
+        f'Please, enter your username in our service.', reply_markup=ikb_cancel_menu
+    )
+
+
+@dp.callback_query_handler(state='*', text='cancel')
+async def register_command_inline(call: CallbackQuery, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state is None:
+        return
+
+    await state.finish()
+
+    await call.message.answer(
+        'Cancelled.', reply_markup=types.ReplyKeyboardRemove()
     )
 
 
@@ -45,26 +68,26 @@ async def register_username(message: types.Message, state: FSMContext):
 
     try:
         if User.not_empty_str(message.text):
-            return await message.reply('Enter a valid username')
+            return await message.reply('Enter a valid username', reply_markup=ikb_cancel_menu)
     except Exception as ex:
         print(ex)
-        return await message.reply('Enter a valid username')
+        return await message.reply('Enter a valid username', reply_markup=ikb_cancel_menu)
 
     async with state.proxy() as data:
         data['username'] = message.text
 
     await RegisterForm.enter_email.set()
-    await message.answer(f"Enter email for user {message.text}")
+    await message.answer(f"Enter email for user {message.text}", reply_markup=ikb_cancel_menu)
 
 
 @dp.message_handler(state=RegisterForm.enter_email)
 async def register_email(message: types.Message, state: FSMContext):
     try:
         if User.check_email(message.text):
-            return await message.reply('Enter a valid email')
+            return await message.reply('Enter a valid email', reply_markup=ikb_cancel_menu)
     except Exception as ex:
         print(ex)
-        return await message.reply('Enter a valid email')
+        return await message.reply('Enter a valid email', reply_markup=ikb_cancel_menu)
 
     async with state.proxy() as data:
         data['email'] = message.text
