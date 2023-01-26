@@ -16,6 +16,18 @@ ikb_start_menu = InlineKeyboardMarkup(row_width=2,
                                           ]
                                       ])
 
+ikb_menu = InlineKeyboardMarkup(row_width=2,
+                                inline_keyboard=[
+                                    [
+                                        InlineKeyboardButton(text='Add new car',
+                                                             callback_data='addcar')
+                                    ],
+                                    [
+                                        InlineKeyboardButton(text='Show your cars',
+                                                             callback_data='allcars')
+                                    ]
+                                ])
+
 ikb_cancel_menu = InlineKeyboardMarkup(row_width=1,
                                        inline_keyboard=[
                                            [
@@ -25,12 +37,12 @@ ikb_cancel_menu = InlineKeyboardMarkup(row_width=1,
                                        ])
 
 ikb_no_description_menu = InlineKeyboardMarkup(row_width=1,
-                                          inline_keyboard=[
-                                              [
-                                                  InlineKeyboardButton(text='No Description',
-                                                                       callback_data='no_description'),
-                                              ],
-                                          ])
+                                               inline_keyboard=[
+                                                   [
+                                                       InlineKeyboardButton(text='No Description',
+                                                                            callback_data='no_description'),
+                                                   ],
+                                               ])
 
 ikb_km_m_menu = InlineKeyboardMarkup(row_width=2,
                                      inline_keyboard=[
@@ -41,3 +53,10 @@ ikb_km_m_menu = InlineKeyboardMarkup(row_width=2,
                                                                   callback_data='miles')
                                          ],
                                      ])
+
+ikb_car_add = InlineKeyboardMarkup(row_width=1,
+                                   inline_keyboard=[
+                                       [
+                                           InlineKeyboardButton(text='Add new car',
+                                                                callback_data='addcar')]
+                                   ])

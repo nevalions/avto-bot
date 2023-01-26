@@ -1,10 +1,9 @@
 from aiogram import types
-from aiogram.dispatcher.filters import Command
-
 from src.tg_bot.loader import dp
-from src.tg_bot.keybords.default import kb_menu
+
+from src.tg_bot.keybords.inline import ikb_menu
 
 
-@dp.message_handler(Command('menu'))
-async def menu(message: types.Message):
-    await message.answer('Select from menu', reply_markup=kb_menu)
+@dp.message_handler(commands='menu')
+async def inline_menu(message: types.Message):
+    await message.answer('Menu', reply_markup=ikb_menu)

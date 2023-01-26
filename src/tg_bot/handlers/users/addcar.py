@@ -8,7 +8,7 @@ from aiogram.dispatcher.filters import Text
 from aiogram.types import CallbackQuery
 
 from src.tg_bot.loader import dp
-from tg_bot.keybords.inline import ikb_cancel_menu, ikb_no_description_menu, ikb_km_m_menu
+from tg_bot.keybords.inline import ikb_cancel_menu, ikb_no_description_menu, ikb_km_m_menu, ikb_menu
 
 from users import User
 from cars import Car
@@ -16,6 +16,7 @@ from cars import Car
 from db_user_helper import AutoBotUserDB
 from db_auto_helper import AutoBotAutoDB
 from db_main_helper import AutoBotMainDB
+
 db_user = AutoBotUserDB()
 db_auto = AutoBotAutoDB()
 db_main = AutoBotMainDB()
@@ -77,7 +78,6 @@ async def cancel_handler(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=AddCarForm.enter_model)
 async def enter_model(message: types.Message, state: FSMContext):
-
     try:
         if Car.not_empty_str(message.text):
             return await message.reply('Enter a valid model', reply_markup=ikb_cancel_menu)
@@ -94,7 +94,6 @@ async def enter_model(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=AddCarForm.enter_model_name)
 async def enter_model_name(message: types.Message, state: FSMContext):
-
     try:
         if Car.not_empty_str(message.text):
             return await message.reply('Enter a valid model name', reply_markup=ikb_cancel_menu)
@@ -111,7 +110,6 @@ async def enter_model_name(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=AddCarForm.enter_mileage)
 async def enter_mileage(message: types.Message, state: FSMContext):
-
     try:
         mil = message.text.replace(" ", "").translate(str.maketrans('', '', string.punctuation))
         if Car.is_digit(mil):
@@ -136,7 +134,7 @@ async def measures_km(call: CallbackQuery, state: FSMContext):
     await AddCarForm.enter_description.set()
     await call.message.answer(
         f"Enter description for {data['model']} {data['model_name']}",
-        reply_markup=ikb_ok_cancel_menu
+        reply_markup=ikb_no_description_menu
     )
 
 
@@ -149,20 +147,19 @@ async def measures_miles(call: CallbackQuery, state: FSMContext):
     await AddCarForm.enter_description.set()
     await call.message.answer(
         f"Enter description for {data['model']} {data['model_name']}",
-        reply_markup=ikb_ok_cancel_menu
+        reply_markup=ikb_no_description_menu
     )
 
 
 @dp.message_handler(state=AddCarForm.enter_measures)
 async def enter_measures(message: types.Message, state: FSMContext):
-
     try:
         mes = message.text.replace(" ", "").translate(str.maketrans('', '', string.punctuation))
         if Car.is_km_or_miles(mes):
-            return await message.reply('Enter a valid mileage', reply_markup=ikb_cancel_menu)
+            return await message.reply('Enter a valid mileage', reply_markup=ikb_km_m_menu)
     except Exception as ex:
         print(ex)
-        return await message.reply('Enter a valid mileage', reply_markup=ikb_cancel_menu)
+        return await message.reply('Enter a valid mileage', reply_markup=ikb_km_m_menu)
 
     async with state.proxy() as data:
         data['measures'] = mes
@@ -171,7 +168,7 @@ async def enter_measures(message: types.Message, state: FSMContext):
     await AddCarForm.enter_description.set()
     await message.answer(
         f"Enter description for {data['model']} {data['model_name']}",
-        reply_markup=ikb_ok_cancel_menu
+        reply_markup=ikb_no_description_menu
     )
 
 
@@ -192,7 +189,8 @@ async def enter_description(message: types.Message, state: FSMContext):
         print(ex)
         print('Error connecting to DB')
 
-    await message.answer(f"{data['model']} {data['model_name']} added at {data['date_added']}")
+    await message.answer(f"{data['model']} {data['model_name']} added at {data['date_added']}",
+                         reply_markup=ikb_menu)
     await state.finish()
 
 
@@ -213,5 +211,6 @@ async def no_description(call: CallbackQuery, state: FSMContext):
         print(ex)
         print('Error connecting to DB')
 
-    await call.message.answer(f"{data['model']} {data['model_name']} added at {data['date_added']}")
+    await call.message.answer(f"{data['model']} {data['model_name']} added at {data['date_added']}",
+                              reply_markup=ikb_menu)
     await state.finish()

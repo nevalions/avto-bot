@@ -4,6 +4,8 @@ from aiogram.types import CallbackQuery
 from src.tg_bot.loader import dp
 
 from db_main_helper import AutoBotMainDB
+from src.tg_bot.keybords.inline import ikb_car_menu, ikb_menu
+
 db_main = AutoBotMainDB()
 
 
@@ -15,7 +17,7 @@ async def register_command(message: types.Message):
             await message.answer(
                 f"ID({car['id']}) {car['model']} {car['model_name']} with {car['mileage']} {car['measures']}"
             )
-        await message.answer('If you want to edit your car, enter /editcar')
+        await message.answer('Menu', reply_markup=ikb_menu)
     except Exception as ex:
         print(ex)
         print('Error connecting to DB')
@@ -27,9 +29,10 @@ async def register_command_inline(call: CallbackQuery):
         user_cars = db_main.show_all_users_cars(15)
         for car in user_cars:
             await call.message.answer(
-                f"ID({car['id']}) {car['model']} {car['model_name']} with {car['mileage']} {car['measures']}"
+                f"ID({car['id']}) {car['model']} {car['model_name']} with {car['mileage']} {car['measures']}",
+                reply_markup=ikb_car_menu
             )
-        await call.message.answer('If you want to edit your car, enter /editcar')
+        await call.message.answer('Menu', reply_markup=ikb_menu)
     except Exception as ex:
         print(ex)
         print('Error connecting to DB')
