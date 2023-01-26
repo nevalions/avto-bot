@@ -120,12 +120,13 @@ async def enter_mileage(message: types.Message, state: FSMContext):
 
     async with state.proxy() as data:
         data['mileage'] = mil
+        data['current_mileage'] = mil
 
     await AddCarForm.enter_measures.set()
     await message.answer(f"Enter measures for mileage count (km/miles)", reply_markup=ikb_km_m_menu)
 
 
-@dp.callback_query_handler(state=AddCarForm.enter_measures, text='km')
+@dp.callback_query_handler(state=AddCarForm.enter_measures, text=['km'])
 async def measures_km(call: CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
         data['measures'] = 'km'
@@ -138,35 +139,14 @@ async def measures_km(call: CallbackQuery, state: FSMContext):
     )
 
 
-@dp.callback_query_handler(state=AddCarForm.enter_measures, text='miles')
-async def measures_miles(call: CallbackQuery, state: FSMContext):
+@dp.callback_query_handler(state=AddCarForm.enter_measures, text=['miles'])
+async def measures_km(call: CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
         data['measures'] = 'miles'
         data['date_added'] = f'{now.strftime("%d.%m.%Y")}'
 
     await AddCarForm.enter_description.set()
     await call.message.answer(
-        f"Enter description for {data['model']} {data['model_name']}",
-        reply_markup=ikb_no_description_menu
-    )
-
-
-@dp.message_handler(state=AddCarForm.enter_measures)
-async def enter_measures(message: types.Message, state: FSMContext):
-    try:
-        mes = message.text.replace(" ", "").translate(str.maketrans('', '', string.punctuation))
-        if Car.is_km_or_miles(mes):
-            return await message.reply('Enter a valid mileage', reply_markup=ikb_km_m_menu)
-    except Exception as ex:
-        print(ex)
-        return await message.reply('Enter a valid mileage', reply_markup=ikb_km_m_menu)
-
-    async with state.proxy() as data:
-        data['measures'] = mes
-        data['date_added'] = f'{now.strftime("%d.%m.%Y")}'
-
-    await AddCarForm.enter_description.set()
-    await message.answer(
         f"Enter description for {data['model']} {data['model_name']}",
         reply_markup=ikb_no_description_menu
     )
@@ -183,7 +163,9 @@ async def enter_description(message: types.Message, state: FSMContext):
             data['mileage'],
             data['measures'],
             data['date_added'],
+            data['current_mileage'],
             data['description'],
+
         )).values())
     except Exception as ex:
         print(ex)
@@ -205,7 +187,9 @@ async def no_description(call: CallbackQuery, state: FSMContext):
             data['mileage'],
             data['measures'],
             data['date_added'],
+            data['current_mileage'],
             data['description'],
+
         )).values())
     except Exception as ex:
         print(ex)

@@ -10,7 +10,9 @@ class Car:
             mileage: str,
             measures: str,
             date_added: str,
+            current_mileage: str,
             description=''
+
     ):
 
         self.model = model
@@ -19,6 +21,7 @@ class Car:
         self.measures = measures
         self.date_added = date_added
         self.description = description
+        self.current_mileage = current_mileage
 
     def __str__(self):
         if self.description == '':
@@ -165,6 +168,21 @@ class Car:
             print('Description Error')
             raise ex
 
+    @property
+    # car current_mileage
+    def current_mileage(self):
+        return self._current_mileage
+
+    @current_mileage.setter
+    def current_mileage(self, mileage):
+        try:
+            self.is_digit(mileage)
+            self._current_mileage = mileage.strip()
+        except Exception as ex:
+            print(str(ex))
+            print('Car not updated')
+            raise ex
+
 
 def main():
     # try:
@@ -173,14 +191,16 @@ def main():
     #     print(ex)
 
     try:
-        car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', 'BLABLABLA')
-        print(car)
-        print(Car.is_date(car.date_added))
-        car.date_added = '12 JUN 2023'
-        print(car)
-        car_diction = vars(car)
-
-        print({(k[1:]): v for k, v in car_diction.items()})
+        car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', '300000', 'BLABLABLA')
+        print(*vars(car).values())
+        car.current_mileage = '2'
+        print(*vars(car).values())
+        # print(Car.is_date(car.date_added))
+        # car.date_added = '12 JUN 2023'
+        # print(car)
+        # car_diction = vars(car)
+        #
+        # print({(k[1:]): v for k, v in car_diction.items()})
     except Exception as ex:
         print(ex)
 

@@ -47,9 +47,9 @@ ikb_no_description_menu = InlineKeyboardMarkup(row_width=1,
 ikb_km_m_menu = InlineKeyboardMarkup(row_width=2,
                                      inline_keyboard=[
                                          [
-                                             InlineKeyboardButton(text='Km',
+                                             InlineKeyboardButton(text='km',
                                                                   callback_data='km'),
-                                             InlineKeyboardButton(text='Miles',
+                                             InlineKeyboardButton(text='miles',
                                                                   callback_data='miles')
                                          ],
                                      ])
