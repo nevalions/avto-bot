@@ -16,10 +16,12 @@ from cars import Car
 from db_user_helper import AutoBotUserDB
 from db_auto_helper import AutoBotAutoDB
 from db_main_helper import AutoBotMainDB
+from db_tg_users import AutoBotTgUsersDB
 
 db_user = AutoBotUserDB()
 db_auto = AutoBotAutoDB()
 db_main = AutoBotMainDB()
+db_tg_users = AutoBotTgUsersDB()
 
 now = datetime.now()
 
@@ -32,22 +34,22 @@ class AddCarForm(StatesGroup):
     enter_description = State()
 
 
-# @dp.message_handler(commands=['addcar'])
-# async def addcar_command(message: types.Message):
-#     await AddCarForm.enter_model.set()
-#     await message.answer(
-#         f'Please, enter car model (Lada, Ford, Chevrolet, etc)', reply_markup=ikb_cancel_menu
-#     )
-
-
 @dp.callback_query_handler(text='addcar')
-async def register_command_inline(call: CallbackQuery):
+async def register_command_inline(call: CallbackQuery, state: FSMContext):
     print(call.message.from_user.id, call.message.chat.id, call.message.from_user.username,
           call.message.from_user.first_name, call.message.from_user.last_name)
-    await AddCarForm.enter_model.set()
-    await call.message.answer(
-        f'Please, enter car model (Lada, Ford, Chevrolet, etc)', reply_markup=ikb_cancel_menu
-    )
+    try:
+        is_registered = db_tg_users.search_tg_user_chat_id_in_db('chat_id', call.message.chat.id)
+        if is_registered[0]['fk_tg_users_users'] is not None:
+            user_id = is_registered[0]['fk_tg_users_users']
+            async with state.proxy() as data:
+                data['user_id'] = user_id
+        await AddCarForm.enter_model.set()
+        await call.message.answer(
+            f'Please, enter car model (Lada, Ford, Chevrolet, etc)', reply_markup=ikb_cancel_menu
+        )
+    except Exception as ex:
+        print(ex)
 
 
 @dp.callback_query_handler(state='*', text='cancel')
@@ -115,10 +117,10 @@ async def enter_mileage(message: types.Message, state: FSMContext):
     try:
         mil = message.text.replace(" ", "").translate(str.maketrans('', '', string.punctuation))
         if Car.is_digit(mil):
-            return await message.reply('Enter a valid mileage', reply_markup=ikb_cancel_menu)
+            return await message.reply('Enter a valid mileage.\n Just numbers.', reply_markup=ikb_cancel_menu)
     except Exception as ex:
         print(ex)
-        return await message.reply('Enter a valid mileage', reply_markup=ikb_cancel_menu)
+        return await message.reply('Enter a valid mileage.\n Just numbers.', reply_markup=ikb_cancel_menu)
 
     async with state.proxy() as data:
         data['mileage'] = mil
@@ -159,7 +161,7 @@ async def enter_description(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['description'] = message.text
     try:
-        db_auto.add_car(*vars(Car(
+        car_id = db_auto.add_car(*vars(Car(
             data['model'],
             data['model_name'],
             data['mileage'],
@@ -169,6 +171,8 @@ async def enter_description(message: types.Message, state: FSMContext):
             data['description'],
 
         )).values())
+
+        db_main.add_car_to_user_in_db(data['user_id'], car_id)
     except Exception as ex:
         print(ex)
         print('Error connecting to DB')
@@ -183,7 +187,7 @@ async def no_description(call: CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
         data['description'] = ''
     try:
-        db_auto.add_car(*vars(Car(
+        car_id = db_auto.add_car(*vars(Car(
             data['model'],
             data['model_name'],
             data['mileage'],
@@ -193,6 +197,8 @@ async def no_description(call: CallbackQuery, state: FSMContext):
             data['description'],
 
         )).values())
+
+        db_main.add_car_to_user_in_db(data['user_id'], car_id)
     except Exception as ex:
         print(ex)
         print('Error connecting to DB')
