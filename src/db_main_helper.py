@@ -29,4 +29,3 @@ class AutoBotMainDB(Db):
                 raise TypeError('User dont have any car')
         except Exception as ex:
             print(ex)
-
