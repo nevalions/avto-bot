@@ -6,15 +6,17 @@ from aiogram.dispatcher.filters import Text
 from aiogram.types import CallbackQuery
 
 from src.tg_bot.loader import dp
-from tg_bot.keybords.inline import ikb_cancel_menu
+from tg_bot.keybords.inline import ikb_cancel_menu, ikb_menu
 
 from users import User
 
 from db_user_helper import AutoBotUserDB
 from db_tg_users import AutoBotTgUsersDB
+from db_main_helper import AutoBotMainDB
 
 db_user = AutoBotUserDB()
 db_tg_users = AutoBotTgUsersDB()
+db_main = AutoBotMainDB()
 
 
 class RegisterForm(StatesGroup):
@@ -27,10 +29,19 @@ async def register_command_inline(call: CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
         data['tg_user_id'] = call.message.from_user.id
         data['chat_id'] = call.message.chat.id
-    await RegisterForm.enter_username.set()
-    await call.message.answer(
-        f'Please, enter your username in our service.', reply_markup=ikb_cancel_menu
-    )
+    try:
+        is_registered = db_tg_users.search_tg_user_chat_id_in_db('chat_id', data['chat_id'])
+        if is_registered[0]['fk_tg_users_users']:
+            print('You are already registered')
+            await call.message.answer('You are already registered', reply_markup=ikb_menu)
+            await state.finish()
+        else:
+            await RegisterForm.enter_username.set()
+            await call.message.answer(
+                f'Please, enter your username in our service.', reply_markup=ikb_cancel_menu
+            )
+    except Exception as ex:
+        print(ex)
 
 
 @dp.callback_query_handler(state='*', text='cancel')
@@ -63,7 +74,6 @@ async def cancel_handler(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=RegisterForm.enter_username)
 async def register_username(message: types.Message, state: FSMContext):
-
     try:
         if User.not_empty_str(message.text):
             return await message.reply('Enter a valid username', reply_markup=ikb_cancel_menu)
@@ -83,6 +93,8 @@ async def register_email(message: types.Message, state: FSMContext):
     try:
         if User.check_email(message.text):
             return await message.reply('Enter a valid email', reply_markup=ikb_cancel_menu)
+        elif db_user.search_user_email_in_db('email', message.text):
+            return await message.reply(f'Email already exist.\n Enter a valid email', reply_markup=ikb_cancel_menu)
     except Exception as ex:
         print(ex)
         return await message.reply('Enter a valid email', reply_markup=ikb_cancel_menu)
@@ -105,5 +117,5 @@ async def register_email(message: types.Message, state: FSMContext):
         print(ex)
         print('Error connecting to DB')
 
-    await message.answer(f"User {data['username']} with email: {data['email']} registered")
+    await message.answer(f"User {data['username']} with email: {data['email']} registered", reply_markup=ikb_menu)
     await state.finish()
