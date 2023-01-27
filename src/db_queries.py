@@ -35,5 +35,13 @@ def get_db_item_by_id(_table: str, _id: int) -> sql:
     )
 
 
+def get_db_item_by_name(_table: str, _item_name: str, _item: int) -> sql:
+    return sql.SQL("SELECT * FROM {table} WHERE {table}.{item_name}={item}").format(
+        table=sql.Identifier(_table),
+        item_name=sql.Identifier(_item_name),
+        item=sql.Literal(_item)
+    )
+
+
 def get_all_rows_from_db(_table: str) -> sql:
     return sql.SQL("SELECT * FROM {table}").format(table=sql.Identifier(_table))
