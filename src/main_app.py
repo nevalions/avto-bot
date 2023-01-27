@@ -3,6 +3,8 @@ from datetime import datetime
 from db_user_helper import AutoBotUserDB
 from db_auto_helper import AutoBotAutoDB
 from db_main_helper import AutoBotMainDB
+from db_tg_users import AutoBotTgUsersDB
+
 from users import User
 from cars import Car
 
@@ -13,14 +15,17 @@ def main():
     db_user = AutoBotUserDB()
     db_auto = AutoBotAutoDB()
     db_main = AutoBotMainDB()
+    db_tg_user = AutoBotTgUsersDB()
 
     car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', '300000', 'BLABLABLA')
     user = User('NEW2', 'ASDsa7@added.ru')
 
     try:
-        print(*vars(car).values())
+        # print(db_user.search_user_email_in_db('email', 'ail.ru'))
+        print(db_tg_user.search_tg_user_chat_id_in_db('chat_id', 84891021))
+        # print(*vars(car).values())
         # add_u = db_user.add_user(*vars(user).values())
-        print(f'car id: {db_auto.add_car(*vars(car).values())}')
+        # print(f'car id: {db_auto.add_car(*vars(car).values())}')
         # print(f'user id: {add_u}')
         #
         # db_user.update_user_username('ASDsa7@added.ru', 'Super New')
