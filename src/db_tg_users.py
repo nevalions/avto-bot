@@ -1,5 +1,7 @@
-from db import AutoBotDB as Db
 from psycopg2 import sql
+
+from db import AutoBotDB as Db
+import db_queries as queries
 
 
 class AutoBotTgUsersDB(Db):
@@ -10,8 +12,9 @@ class AutoBotTgUsersDB(Db):
 
     def add_tg_user_start(self, _chat_id, _tg_username, _tg_firstname, _tg_lastname):
         try:
-            query = sql.SQL("INSERT INTO tg_users(chat_id, tg_username, tg_firstname, tg_lastname) "
-                            "VALUES ({chat_id},{tg_username},{tg_firstname},{tg_lastname}) RETURNING chat_id;").format(
+            query = sql.SQL("INSERT INTO tg_users (chat_id, tg_username, tg_firstname, tg_lastname) "
+                            "SELECT {chat_id},{tg_username}, {tg_firstname}, {tg_lastname} WHERE NOT EXISTS (SELECT "
+                            "* FROM tg_users WHERE chat_id = {chat_id}) RETURNING chat_id;").format(
                 chat_id=sql.Literal(_chat_id),
                 tg_username=sql.Literal(_tg_username),
                 tg_firstname=sql.Literal(_tg_firstname),
@@ -40,6 +43,18 @@ class AutoBotTgUsersDB(Db):
         except Exception as ex:
             print(ex)
             print(f'Error adding car to DB')
+
+    def search_tg_user_chat_id_in_db(self, item_name, item):
+        try:
+            query = queries.get_db_item_by_name(self.db_table_name, item_name, item)
+            result = self.select_query_dict(query)
+            if result:
+                return result
+            else:
+                print(f'No user with this chat id')
+                return None
+        except Exception as ex:
+            print(ex)
 
 
 # add_tg_user = AutoBotTgUsersDB()
