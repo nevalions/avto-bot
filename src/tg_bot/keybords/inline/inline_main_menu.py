@@ -5,14 +5,6 @@ ikb_start_menu = InlineKeyboardMarkup(row_width=2,
                                           [
                                               InlineKeyboardButton(text='Register',
                                                                    callback_data='register')
-                                          ],
-                                          [
-                                              InlineKeyboardButton(text='Add new car',
-                                                                   callback_data='addcar')
-                                          ],
-                                          [
-                                              InlineKeyboardButton(text='Show your cars',
-                                                                   callback_data='allcars')
                                           ]
                                       ])
 
