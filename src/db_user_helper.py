@@ -78,6 +78,18 @@ class AutoBotUserDB(Db):
             print(f'No users with ID({user_id})')
             raise Exception
 
+    def search_user_email_in_db(self, item_name, item):
+        try:
+            query = queries.get_db_item_by_name(self.db_table_name, item_name, item)
+            result = self.select_query_dict(query)
+            if result:
+                return result
+            else:
+                print(f'No email in DB')
+                return None
+        except Exception as ex:
+            print(ex)
+
 
 def main():
     db = AutoBotUserDB()
