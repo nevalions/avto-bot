@@ -2,7 +2,7 @@ import pytest
 
 from cars import Car
 
-car1 = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', 'BlaBlaBla')
+car1 = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', '300000', 'BlaBlaBla')
 
 
 def main():
@@ -19,6 +19,7 @@ def test_cars_ok():
     assert car1.mileage == '300000'
     assert car1.measures == 'miles'
     assert car1.date_added == '22.01.2023'
+    assert car1.current_mileage == '300000'
     assert car1.description == 'BlaBlaBla'
 
 

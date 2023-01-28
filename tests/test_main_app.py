@@ -70,7 +70,7 @@ def test_add_user_to_db():
 
 def test_add_car_to_user_in_db():
     user1 = {'username': 'Test', 'email': 'asd@asd.ru'}
-    car1 = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', 'BlaBlaBla')
+    car1 = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', '300000', 'BlaBlaBla')
     main_app.add_car_to_user_in_db(user1, car1)
     assert user1 == {'username': 'Test',
                      'email': 'asd@asd.ru',
@@ -79,6 +79,7 @@ def test_add_car_to_user_in_db():
                      'mileage': '300000',
                      'measures': 'miles',
                      'date_added': '22.01.2023',
+                     'current_mileage': '300000',
                      'description': 'BlaBlaBla',
                      }
 
@@ -135,11 +136,11 @@ def test_add_user_to_db_ex():
 def test_add_car_to_user_in_db_ex():
     try:
         not_user = User('', '')
-        not_car = Car('', 'Savana', 300000, 'miles', '22.01.2023', 'BlaBlaBla')
+        not_car = Car('', 'Savana', 300000, 'miles', '22.01.2023', '300000', 'BlaBlaBla')
     except:
         pass
     user1 = {'username': 'Test', 'email': 'asd@asd.ru'}
-    car1 = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', 'BlaBlaBla')
+    car1 = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', '300000', 'BlaBlaBla')
 
     with pytest.raises(Exception):
         main_app.add_car_to_user_in_db(not_user, car1)
