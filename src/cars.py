@@ -1,5 +1,12 @@
+import logging.config
 import string
 from dateutil.parser import parse
+
+from log_dir.log_conf import LOGGING_CONFIG
+from log_dir.func_auto_log import autolog_debug, autolog_info
+
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = logging.getLogger(__name__)
 
 
 class Car:
@@ -14,7 +21,7 @@ class Car:
             description=''
 
     ):
-
+        autolog_debug(f'Car class called')
         self.model = model
         self.model_name = model_name
         self.mileage = mileage
@@ -40,6 +47,7 @@ class Car:
     @classmethod
     # check is text valid
     def not_empty_str(cls, txt):
+        autolog_debug(f'Car class check "{txt}"')
         if type(txt) != str:
             raise TypeError('Text must be str type')
         if len(txt.strip()) < 2:
@@ -48,6 +56,7 @@ class Car:
     @classmethod
     # check is digit
     def is_digit(cls, miles):
+        autolog_debug(f'Car class check "{miles}"')
         if type(miles) != str or not miles.isdigit():
             # !s
             raise TypeError('Miles must be number')
@@ -55,6 +64,7 @@ class Car:
     @classmethod
     # check is int
     def is_km_or_miles(cls, txt):
+        autolog_debug(f'Car class check "{txt}"')
         if type(txt) != str:
             raise TypeError('Text must be str type')
         if txt not in ['km', 'miles']:
@@ -81,12 +91,12 @@ class Car:
 
     @model.setter
     def model(self, model):
+        autolog_debug(f'Car model entered "{model}"')
         try:
             self.not_empty_str(model)
             self._model = model.strip()
         except Exception as ex:
-            print(str(ex))
-            print('Car not updated')
+            logging.error(ex)
             raise ex
 
     @property
@@ -96,12 +106,12 @@ class Car:
 
     @model_name.setter
     def model_name(self, model_name):
+        autolog_debug(f'Car model_name entered "{model_name}"')
         try:
             self.not_empty_str(model_name)
             self._model_name = model_name.strip()
         except Exception as ex:
-            print(str(ex))
-            print('Car not updated')
+            logging.error(ex)
             raise ex
 
     @property
@@ -111,12 +121,12 @@ class Car:
 
     @mileage.setter
     def mileage(self, mileage):
+        autolog_debug(f'Car mileage entered "{mileage}"')
         try:
             self.is_digit(mileage)
             self._mileage = mileage.strip()
         except Exception as ex:
-            print(str(ex))
-            print('Car not updated')
+            logging.error(ex)
             raise ex
 
     @property
@@ -126,13 +136,13 @@ class Car:
 
     @measures.setter
     def measures(self, measures):
+        autolog_debug(f'Car measures entered "{measures}"')
         try:
             m = measures.strip().translate(str.maketrans('', '', string.punctuation))
             self.is_km_or_miles(m)
             self._measures = m
         except Exception as ex:
-            print(str(ex))
-            print('Car not updated')
+            logging.error(ex)
             raise ex
 
     @property
@@ -142,16 +152,15 @@ class Car:
 
     @date_added.setter
     def date_added(self, date_added):
+        autolog_debug(f'Car date_added entered "{date_added}"')
         try:
             if Car.is_date(date_added.strip()):
                 self._date_added = date_added.strip()
             else:
-                print('Wrong date format')
-                print('Car not updated')
-                raise Exception
+                logging.error(f'Wrong date format {date_added}')
+                raise TypeError
         except Exception as ex:
-            print(str(ex))
-            print('Car not updated')
+            logging.error(ex)
             raise ex
 
     @property
@@ -161,11 +170,11 @@ class Car:
 
     @description.setter
     def description(self, description):
+        autolog_debug(f'Car description entered "{description}"')
         try:
             self._description = description.strip()
         except Exception as ex:
-            print(str(ex))
-            print('Description Error')
+            logging.error(ex)
             raise ex
 
     @property
@@ -175,20 +184,21 @@ class Car:
 
     @current_mileage.setter
     def current_mileage(self, mileage):
+        autolog_debug(f'Car current_mileage entered "{mileage}"')
         try:
             self.is_digit(mileage)
             self._current_mileage = mileage.strip()
         except Exception as ex:
-            print(str(ex))
-            print('Car not updated')
+            logging.error(ex)
             raise ex
 
 
 def main():
-    # try:
-    #     Car('Gmc', 'Savana', '300000', 'miles', 'asd')
-    # except Exception as ex:
-    #     print(ex)
+    try:
+        Car('Gmc', 'Savana', '300000', 'miles', 'asd')
+    except Exception as ex:
+        autolog_info('Not valid car')
+        print(ex)
 
     try:
         car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', '300000', 'BLABLABLA')
@@ -202,13 +212,15 @@ def main():
         #
         # print({(k[1:]): v for k, v in car_diction.items()})
     except Exception as ex:
+        autolog_info('Not valid car')
         print(ex)
 
-    # try:
-    #     car2 = Car('asd', 'asd', 'asd', 'miles', '22.01.202')
-    #     print(car2)
-    # except Exception as ex:
-    #     print(ex)
+    try:
+        car2 = Car('asd', 'asd', 'asd', 'miles', '22.01.202')
+        print(car2)
+    except Exception as ex:
+        autolog_info('Not valid car')
+        print(ex)
 
 
 if __name__ == '__main__':
