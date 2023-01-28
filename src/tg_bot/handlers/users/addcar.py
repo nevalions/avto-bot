@@ -3,7 +3,7 @@ from datetime import datetime
 
 import logging.config
 from log_dir.log_conf import LOGGING_CONFIG
-from log_dir.func_auto_log import autolog_debug, autolog_info
+from log_dir.func_auto_log import autolog_warning, autolog_info
 
 from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
@@ -43,9 +43,9 @@ class AddCarForm(StatesGroup):
 
 @dp.callback_query_handler(text='addcar')
 async def add_car_command(call: CallbackQuery, state: FSMContext):
-    autolog_debug(f'Telegram start adding a car')
-    autolog_debug(f"{call.message.from_user.id}, {call.message.chat.id}, {call.message.from_user.username}, "
-                  f"{call.message.from_user.first_name}, {call.message.from_user.last_name}")
+    autolog_info(f'Telegram start adding a car')
+    autolog_info(f"{call.message.from_user.id}, {call.message.chat.id}, {call.message.from_user.username}, "
+                 f"{call.message.from_user.first_name}, {call.message.from_user.last_name}")
     try:
         is_registered = db_tg_users.search_tg_user_chat_id_in_db('chat_id', call.message.chat.id)
         if is_registered[0]['fk_tg_users_users'] is not None:
@@ -63,41 +63,29 @@ async def add_car_command(call: CallbackQuery, state: FSMContext):
 @dp.callback_query_handler(state='*', text='cancel')
 async def cancel_inline(call: CallbackQuery, state: FSMContext):
     current_state = await state.get_state()
+    autolog_warning(f'Telegram user canceled adding a car')
     if current_state is None:
         return
 
     await state.finish()
-    autolog_info(f'Telegram user canceled adding a car')
+    db_main.close()
     await call.message.answer(
         'Cancelled.', reply_markup=types.ReplyKeyboardRemove()
     )
 
 
-# @dp.message_handler(state='*', commands='cancel')
-# @dp.message_handler(Text(equals='cancel', ignore_case=True), state='*')
-# async def cancel_handler(message: types.Message, state: FSMContext):
-#     """
-#     Allow user to cancel any action
-#     """
-#     current_state = await state.get_state()
-#     if current_state is None:
-#         return
-#
-#     await state.finish()
-#     # And remove keyboard (just in case)
-#     await message.reply('Cancelled.', reply_markup=types.ReplyKeyboardRemove())
-
-
 @dp.message_handler(state=AddCarForm.enter_model)
 async def enter_model(message: types.Message, state: FSMContext):
-    autolog_debug(f'Telegram user added car model')
+    autolog_info(f'Telegram user added car model')
     try:
         if Car.not_empty_str(message.text):
-            autolog_info(f'Invalid car model {message.text}')
-            return await message.reply('Enter a valid model', reply_markup=ikb_cancel_menu)
+            autolog_warning(f'Invalid car model "{message.text}"')
+            return await message.reply(f'Invalid car model "{message.text}"\n'
+                                       f'Enter a valid model', reply_markup=ikb_cancel_menu)
     except Exception as ex:
         logging.error(ex)
-        return await message.reply('Enter a valid model', reply_markup=ikb_cancel_menu)
+        return await message.reply(f'Invalid car model "{message.text}"\n'
+                                   f'Enter a valid model', reply_markup=ikb_cancel_menu)
 
     async with state.proxy() as data:
         data['model'] = message.text
@@ -108,14 +96,15 @@ async def enter_model(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=AddCarForm.enter_model_name)
 async def enter_model_name(message: types.Message, state: FSMContext):
-    autolog_debug(f'Telegram user added car model name')
+    autolog_info(f'Telegram user added car model name')
     try:
         if Car.not_empty_str(message.text):
-            autolog_info(f'Invalid car model name {message.text}')
-            return await message.reply('Enter a valid model name', reply_markup=ikb_cancel_menu)
+            autolog_warning(f'Invalid car model name "{message.text}"')
+            return await message.reply(f'Invalid car model name "{message.text}"\n'
+                                       f'Enter a valid model name', reply_markup=ikb_cancel_menu)
     except Exception as ex:
         logging.error(ex)
-        return await message.reply('Enter a valid model name', reply_markup=ikb_cancel_menu)
+        return await message.reply(f'Enter a valid model name', reply_markup=ikb_cancel_menu)
 
     async with state.proxy() as data:
         data['model_name'] = message.text
@@ -126,15 +115,17 @@ async def enter_model_name(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=AddCarForm.enter_mileage)
 async def enter_mileage(message: types.Message, state: FSMContext):
-    autolog_debug(f'Telegram user added car mileage')
+    autolog_info(f'Telegram user added car mileage')
     try:
         mil = message.text.replace(" ", "").translate(str.maketrans('', '', string.punctuation))
         if Car.is_digit(mil):
-            autolog_info(f'Invalid car mileage {message.text}')
-            return await message.reply('Enter a valid mileage.\n Just numbers.', reply_markup=ikb_cancel_menu)
+            autolog_warning(f'Invalid car mileage "{message.text}"')
+            return await message.reply(f'Invalid car mileage "{message.text}".\n'
+                                       f'Enter a valid mileage.\nJust numbers.', reply_markup=ikb_cancel_menu)
     except Exception as ex:
         logging.error(ex)
-        return await message.reply('Enter a valid mileage.\n Just numbers.', reply_markup=ikb_cancel_menu)
+        return await message.reply(f'Invalid car mileage "{message.text}".\nEnter a valid mileage.\n'
+                                   f'Just numbers.', reply_markup=ikb_cancel_menu)
 
     async with state.proxy() as data:
         data['mileage'] = mil
@@ -146,7 +137,7 @@ async def enter_mileage(message: types.Message, state: FSMContext):
 
 @dp.callback_query_handler(state=AddCarForm.enter_measures, text=['km'])
 async def measures_km(call: CallbackQuery, state: FSMContext):
-    autolog_debug(f'Telegram user added car measures')
+    autolog_info(f'Telegram user added car measures')
     async with state.proxy() as data:
         data['measures'] = 'km'
         data['date_added'] = f'{now.strftime("%d.%m.%Y")}'
@@ -160,7 +151,7 @@ async def measures_km(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(state=AddCarForm.enter_measures, text=['miles'])
 async def measures_km(call: CallbackQuery, state: FSMContext):
-    autolog_debug(f'Telegram user added car measures')
+    autolog_info(f'Telegram user added car measures')
     async with state.proxy() as data:
         data['measures'] = 'miles'
         data['date_added'] = f'{now.strftime("%d.%m.%Y")}'
@@ -174,7 +165,7 @@ async def measures_km(call: CallbackQuery, state: FSMContext):
 
 @dp.message_handler(state=AddCarForm.enter_description)
 async def enter_description(message: types.Message, state: FSMContext):
-    autolog_debug(f'Telegram user added car with description ')
+    autolog_info(f'Telegram user added car with description')
     async with state.proxy() as data:
         data['description'] = message.text
     try:
@@ -184,13 +175,14 @@ async def enter_description(message: types.Message, state: FSMContext):
             data['mileage'],
             data['measures'],
             data['date_added'],
-            data['current_mileage'],
             data['description'],
-
+            data['current_mileage']
         )).values())
 
         db_main.add_car_to_user_in_db(data['user_id'], car_id)
+        db_main.close()
         autolog_info(f"Car {data['model']}, {data['model_name']}, {data['mileage']} added at {data['date_added']}")
+        await state.finish()
     except Exception as ex:
         logging.error(ex)
 
@@ -201,7 +193,7 @@ async def enter_description(message: types.Message, state: FSMContext):
 
 @dp.callback_query_handler(state=AddCarForm.enter_description, text='no_description')
 async def no_description(call: CallbackQuery, state: FSMContext):
-    autolog_debug(f'Telegram user added car no description ')
+    autolog_info(f'Telegram user added car no description ')
     async with state.proxy() as data:
         data['description'] = ''
     try:
@@ -211,13 +203,14 @@ async def no_description(call: CallbackQuery, state: FSMContext):
             data['mileage'],
             data['measures'],
             data['date_added'],
-            data['current_mileage'],
             data['description'],
-
+            data['current_mileage'],
         )).values())
 
         db_main.add_car_to_user_in_db(data['user_id'], car_id)
+        db_main.close()
         autolog_info(f"Car {data['model']}, {data['model_name']}, {data['mileage']} added at {data['date_added']}")
+        await state.finish()
     except Exception as ex:
         logging.error(ex)
 

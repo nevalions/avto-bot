@@ -4,7 +4,6 @@ from src import config
 
 log_path = config.ROOT_DIR / 'log_dir'
 log_path_filename = log_path / 'main.log'
-print(log_path_filename)
 
 LOGGING_CONFIG = {
     'version': 1,
@@ -22,7 +21,7 @@ LOGGING_CONFIG = {
             'class': 'logging.StreamHandler',
         },
         'file_handler': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'filename': log_path_filename,
             'mode': 'w',
             'class': 'logging.FileHandler',
@@ -32,7 +31,7 @@ LOGGING_CONFIG = {
     'loggers': {
         '': {
             'handlers': ['file_handler'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': True
         },
     }

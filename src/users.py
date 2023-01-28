@@ -2,7 +2,7 @@ import logging.config
 import string
 
 from log_dir.log_conf import LOGGING_CONFIG
-from log_dir.func_auto_log import autolog_debug, autolog_info
+from log_dir.func_auto_log import autolog_info, autolog_warning
 import checks
 
 logging.config.dictConfig(LOGGING_CONFIG)
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 class User:
     # user class
     def __init__(self, username: str, email: str):
-        autolog_debug(f'User class called')
+        autolog_info(f'User class called')
         self.username = username.strip()
         self.email = email.strip()
 
@@ -30,7 +30,7 @@ class User:
     @classmethod
     # check string is valid
     def not_empty_str(cls, txt):
-        autolog_debug(f'User class check "{txt}"')
+        autolog_info(f'User class check "{txt}"')
         if type(txt) != str:
             raise TypeError('User name must be str type')
         if len(txt.strip()) < 3:
@@ -39,7 +39,7 @@ class User:
     @classmethod
     # check is object fields not empty to print
     def __is_valid_to_print(cls, name, mail):
-        autolog_debug(f'User class check is valid for print')
+        autolog_info(f'User class check is valid for print')
         if not name:
             raise TypeError('User name empty')
         if not mail:
@@ -52,7 +52,7 @@ class User:
 
     @username.setter
     def username(self, username):
-        autolog_debug(f'User username enter "{username}"')
+        autolog_info(f'User username enter "{username}"')
         try:
             self.not_empty_str(username)
             self._username = username.strip().translate(str.maketrans('', '', string.punctuation))
@@ -67,7 +67,7 @@ class User:
 
     @email.setter
     def email(self, email):
-        autolog_debug(f'User email enter "{email}"')
+        autolog_info(f'User email enter "{email}"')
         try:
             self.check_email(email)
             self._email = email.strip()
@@ -93,16 +93,14 @@ def main():
         user2 = User('', 'asd@asd1.ru')
         print(user2)
     except Exception as ex:
-        autolog_info('Not valid user')
-        print(ex)
+        autolog_warning('Not valid user')
 
     try:
         user3 = User('asfasgv', 'asdasd')
         print(user3)
     except Exception as ex:
-        autolog_info('Not valid user')
-        print(ex)
-    #
+        autolog_warning('Not valid user')
+
     # user_diction = vars(user)
     # print(user_diction)
     #
