@@ -22,7 +22,7 @@ db_main = AutoBotMainDB()
 async def inline_start_menu(message: types.Message):
     autolog_info(f'Telegram user started a chat')
     autolog_info(f"{message.from_user.id}, {message.chat.id}, {message.from_user.username}, "
-                  f"{message.from_user.first_name}, {message.from_user.last_name}")
+                 f"{message.from_user.first_name}, {message.from_user.last_name}")
 
     try:
         autolog_info(f'new user added to DB tg_user after start if not exist in DB')
@@ -45,6 +45,6 @@ async def inline_start_menu(message: types.Message):
         else:
             autolog_warning(f'Telegram user {message.chat.id} not registered')
             await message.answer(f'Hi, {message.from_user.first_name}! Please register.\n' 
-                                 'We need some info, to add a garage for you.', reply_markup=ikb_start_menu)
+                                 f'We need some info, to add a garage for you.', reply_markup=ikb_start_menu)
     except Exception as ex:
         logging.error(ex)

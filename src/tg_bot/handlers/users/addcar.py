@@ -43,7 +43,7 @@ class AddCarForm(StatesGroup):
 
 @dp.callback_query_handler(text='addcar')
 async def add_car_command(call: CallbackQuery, state: FSMContext):
-    autolog_info(f'Telegram start adding a car')
+    autolog_info(f"Telegram start adding a car")
     autolog_info(f"{call.message.from_user.id}, {call.message.chat.id}, {call.message.from_user.username}, "
                  f"{call.message.from_user.first_name}, {call.message.from_user.last_name}")
     try:
@@ -54,7 +54,7 @@ async def add_car_command(call: CallbackQuery, state: FSMContext):
                 data['user_id'] = user_id
         await AddCarForm.enter_model.set()
         await call.message.answer(
-            f'Please, enter car model (Lada, Ford, Chevrolet, etc)', reply_markup=ikb_cancel_menu
+            f"Please, enter car model (Lada, Ford, Chevrolet, etc)", reply_markup=ikb_cancel_menu
         )
     except Exception as ex:
         logging.error(ex)
@@ -180,9 +180,7 @@ async def enter_description(message: types.Message, state: FSMContext):
         )).values())
 
         db_main.add_car_to_user_in_db(data['user_id'], car_id)
-        db_main.close()
         autolog_info(f"Car {data['model']}, {data['model_name']}, {data['mileage']} added at {data['date_added']}")
-        await state.finish()
     except Exception as ex:
         logging.error(ex)
 
@@ -208,7 +206,6 @@ async def no_description(call: CallbackQuery, state: FSMContext):
         )).values())
 
         db_main.add_car_to_user_in_db(data['user_id'], car_id)
-        db_main.close()
         autolog_info(f"Car {data['model']}, {data['model_name']}, {data['mileage']} added at {data['date_added']}")
         await state.finish()
     except Exception as ex:

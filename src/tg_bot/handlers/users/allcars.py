@@ -28,7 +28,6 @@ async def show_users_cars(call: CallbackQuery):
             autolog_info(f"Show all tg_user {call.message.chat.id} cars")
             user_id = is_registered[0]['fk_tg_users_users']
             user_cars = db_main.show_all_users_cars(user_id)
-            db_main.close()
             if user_cars:
                 autolog_info(f"tg_user {call.message.chat.id} have some cars")
                 for car in user_cars:

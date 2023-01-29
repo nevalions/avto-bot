@@ -2,7 +2,7 @@ from psycopg2 import sql
 
 
 def create_m2m_relation(_id_one, _id_two):
-    return sql.SQL("INSERT INTO users_cars VALUES ({id_one},{id_two});").format(
+    return sql.SQL("INSERT INTO users_cars VALUES ({id_one},{id_two}) RETURNING {id_one}, {id_two};").format(
         id_one=sql.Literal(_id_one),
         id_two=sql.Literal(_id_two)
     )

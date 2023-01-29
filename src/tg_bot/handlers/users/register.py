@@ -106,7 +106,6 @@ async def register_email(message: types.Message, state: FSMContext):
             autolog_warning('Enter a valid email')
             return await message.reply('Enter a valid email', reply_markup=ikb_cancel_menu)
         elif db_user.search_user_email_in_db('email', message.text):
-            db_main.close()
             autolog_warning('Email already exist.\n Enter a valid email')
             return await message.reply(f'Email already exist.\n Enter a valid email', reply_markup=ikb_cancel_menu)
     except Exception as ex:
@@ -118,7 +117,6 @@ async def register_email(message: types.Message, state: FSMContext):
     try:
         new_user = User(data['username'], data['email'])
         tg_referer_id = db_user.add_user(*vars(new_user).values())
-        db_main.close()
         autolog_warning(f"User added to DB {data['username']}, {data['email']}")
 
         async with state.proxy() as data:
@@ -126,7 +124,6 @@ async def register_email(message: types.Message, state: FSMContext):
 
         autolog_warning(f"Users_tg_users relation added {data['tg_user_id']}, {data['fk_tg_user_id']}, {data['chat_id']}")
         db_tg_users.add_tg_user_register(int(data['tg_user_id']), int(data['fk_tg_user_id']), int(data['chat_id']))
-        db_main.close()
 
         await state.finish()
     except Exception as ex:

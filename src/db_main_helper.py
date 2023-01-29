@@ -10,7 +10,7 @@ class AutoBotMainDB(Db):
             query = queries.create_m2m_relation(user_id, car_id)
             self.query_execute(query)
             print(f'Car ID({car_id}) added to user ID({user_id})')
-            return user_id, car_id
+            # return user_id, car_id
         except Exception as ex:
             print(ex)
             print(f'Error adding car to user, user already have this car')
