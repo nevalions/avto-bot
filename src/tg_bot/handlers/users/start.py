@@ -1,12 +1,13 @@
 from aiogram import types
 
 import logging.config
-from ....log_dir.log_conf import LOGGING_CONFIG
-from ....log_dir.func_auto_log import autolog_warning, autolog_info
 
-from ...loader import dp
+from log_dir.log_conf import LOGGING_CONFIG
+from log_dir.func_auto_log import autolog_warning, autolog_info
 
-from ...keybords.inline import ikb_start_menu, ikb_menu
+from loader import dp
+
+from keybords.inline import ikb_start_menu, ikb_menu
 
 from db_tg_users import AutoBotTgUsersDB
 from db_main_helper import AutoBotMainDB
