@@ -1,8 +1,10 @@
 import logging.config
+
 import string
 from dateutil.parser import parse
 
 from log_dir.log_conf import LOGGING_CONFIG
+
 from log_dir.func_auto_log import autolog_info, autolog_warning
 
 logging.config.dictConfig(LOGGING_CONFIG)
