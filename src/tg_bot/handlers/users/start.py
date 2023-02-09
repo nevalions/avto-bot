@@ -1,7 +1,7 @@
 import os
 
-src = os.path.expanduser('~www')
-print(src)
+home = os.path.expanduser('~www')
+print(home)
 
 from aiogram import types
 
