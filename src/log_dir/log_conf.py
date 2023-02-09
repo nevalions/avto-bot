@@ -1,6 +1,4 @@
-import pathlib
-
-from src import config
+import config
 
 log_path = config.ROOT_DIR / 'log_dir'
 log_path_filename = log_path / 'main.log'
