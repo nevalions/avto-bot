@@ -5,9 +5,9 @@ import logging.config
 from src.log_dir.log_conf import LOGGING_CONFIG
 from src.log_dir.func_auto_log import autolog_warning, autolog_info
 
-from loader import dp
+from tg_bot.loader import dp
 
-from keybords.inline import ikb_start_menu, ikb_menu
+from tg_bot.keybords.inline import ikb_start_menu, ikb_menu
 
 from db_tg_users import AutoBotTgUsersDB
 from db_main_helper import AutoBotMainDB
