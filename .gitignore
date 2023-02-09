@@ -62,3 +62,5 @@ dmypy.json
 
 .pytest_cache
 /src/tg_bot/config_tg.py
+/src/log_dir/
+/log_dir/
