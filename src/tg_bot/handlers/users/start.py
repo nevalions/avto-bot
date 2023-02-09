@@ -1,17 +1,14 @@
 import os
 
-from dotenv import load_dotenv
+src = os.path.expanduser('~www')
 
-load_dotenv()
-src = str(os.getenv("SRC_DIR"))
-print(src)
 
 from aiogram import types
 
 import logging.config
 
-from log_dir.log_conf import LOGGING_CONFIG
-from log_dir.func_auto_log import autolog_warning, autolog_info
+from src.log_dir.log_conf import LOGGING_CONFIG
+from src.log_dir.func_auto_log import autolog_warning, autolog_info
 
 from tg_bot.loader import dp
 
