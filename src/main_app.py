@@ -17,7 +17,7 @@ def main():
     db_main = AutoBotMainDB()
     db_tg_user = AutoBotTgUsersDB()
 
-    car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', '300000', 'BLABLABLA')
+    car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', 'BLABLABLA', '300000')
     user = User('NEW2', 'ASDsa7@added.ru')
 
     try:
