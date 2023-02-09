@@ -1,17 +1,17 @@
 import os
 
 from dotenv import load_dotenv
+
 load_dotenv()
 src = str(os.getenv("SRC_DIR"))
+print(src)
 
 from aiogram import types
 
-import config
-
 import logging.config
 
-from log_dir.log_conf import LOGGING_CONFIG
-from log_dir.func_auto_log import autolog_warning, autolog_info
+from src.log_dir.log_conf import LOGGING_CONFIG
+from src.log_dir.func_auto_log import autolog_warning, autolog_info
 
 from tg_bot.loader import dp
 
@@ -53,7 +53,7 @@ async def inline_start_menu(message: types.Message):
             await message.answer(f'Welcome back {message.from_user.first_name}!', reply_markup=ikb_menu)
         else:
             autolog_warning(f'Telegram user {message.chat.id} not registered')
-            await message.answer(f'Hi, {message.from_user.first_name}! Please register.\n' 
+            await message.answer(f'Hi, {message.from_user.first_name}! Please register.\n'
                                  f'We need some info, to add a garage for you.', reply_markup=ikb_start_menu)
     except Exception as ex:
         logging.error(ex)
