@@ -1,8 +1,8 @@
 from aiogram import types
 
 import logging.config
-from log_dir.log_conf import LOGGING_CONFIG
-from log_dir.func_auto_log import autolog_warning, autolog_info
+from src.log_dir.log_conf import LOGGING_CONFIG
+from src.log_dir.func_auto_log import autolog_warning, autolog_info
 
 from src.tg_bot.loader import dp
 

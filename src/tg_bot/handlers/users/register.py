@@ -15,8 +15,8 @@ from db_user_helper import AutoBotUserDB
 from db_tg_users import AutoBotTgUsersDB
 from db_main_helper import AutoBotMainDB
 
-from log_dir.log_conf import LOGGING_CONFIG
-from log_dir.func_auto_log import autolog_warning, autolog_info
+from src.log_dir.log_conf import LOGGING_CONFIG
+from src.log_dir.func_auto_log import autolog_warning, autolog_info
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
