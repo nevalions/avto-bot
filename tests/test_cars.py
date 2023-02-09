@@ -2,7 +2,7 @@ import pytest
 
 from cars import Car
 
-car1 = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', '300000', 'BlaBlaBla')
+car1 = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', 'BlaBlaBla', '300000')
 
 
 def main():
@@ -90,13 +90,13 @@ def test_cars_exceptions():
         car1.date_added = 'as.12.as'
 
     with pytest.raises(Exception):
-        Car('Gm', 'Savana', '300000', 'miles', 'asd')
+        Car('Gm', 'Savana', '300000', 'miles', 'asd', 'BlaBlaBla', '300000')
     with pytest.raises(Exception):
-        Car('Gmc', '', '300000', 'miles', '22.01.2023')
+        Car('Gmc', '', '300000', 'miles', '22.01.2023', 'BlaBlaBla', '300000')
     with pytest.raises(Exception):
-        Car('Gmc', 'Savana', '300000a', 'miles', '22.01.2023')
+        Car('Gmc', 'Savana', '300000a', 'miles', '22.01.2023', 'BlaBlaBla', '300000')
     with pytest.raises(Exception):
-        Car('Gmc', 'Savana', '300000', 'kilometers', '22.01.2023')
+        Car('Gmc', 'Savana', '300000', 'kilometers', '22.01.2023', 'BlaBlaBla', '300000')
 
 
 if __name__ == '__main__':
