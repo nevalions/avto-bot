@@ -1,8 +1,8 @@
-from config import LOG_DIR
+# from config import LOG_DIR
 
-log_path_filename = LOG_DIR / 'main.log'
+# log_path_filename = 'main.log'
 
-print(log_path_filename)
+# print(log_path_filename)
 
 LOGGING_CONFIG = {
     'version': 1,
@@ -21,7 +21,7 @@ LOGGING_CONFIG = {
         },
         'file_handler': {
             'level': 'INFO',
-            'filename': log_path_filename,
+            'filename': 'main.log',
             'mode': 'w',
             'class': 'logging.FileHandler',
             'formatter': 'standard'
