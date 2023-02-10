@@ -1,3 +1,5 @@
+import log_dir
+
 import logging.config
 import string
 

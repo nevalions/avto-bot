@@ -21,10 +21,10 @@ def main():
     user = User('NEW2', 'ASDsa7@added.ru')
 
     try:
-        # print(db_user.search_user_email_in_db('email', 'ail.ru'))
+        print(db_user.search_user_email_in_db('email', 'ASDsa7@added.ru'))
         print(db_tg_user.search_tg_user_chat_id_in_db('chat_id', 84891021))
-        # print(*vars(car).values())
-        # add_u = db_user.add_user(*vars(user).values())
+        print(*vars(car).values())
+        add_u = db_user.add_user(*vars(user).values())
         # print(f'car id: {db_auto.add_car(*vars(car).values())}')
         # print(f'user id: {add_u}')
         #

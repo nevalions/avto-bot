@@ -1,7 +1,8 @@
-import config
+from config import LOG_DIR
 
-log_path = config.ROOT_DIR / 'log_dir'
-log_path_filename = log_path / 'main.log'
+log_path_filename = LOG_DIR / 'main.log'
+
+print(log_path_filename)
 
 LOGGING_CONFIG = {
     'version': 1,
