@@ -1,6 +1,6 @@
 import pytest
 
-from cars import Car
+from classes.cars import Car
 
 car1 = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', 'BlaBlaBla', '300000')
 

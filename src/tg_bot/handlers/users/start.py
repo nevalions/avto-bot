@@ -9,8 +9,8 @@ from tg_bot.loader import dp
 
 from tg_bot.keybords.inline import ikb_start_menu, ikb_menu
 
-from db_tg_users import AutoBotTgUsersDB
-from db_main_helper import AutoBotMainDB
+from db.db_tg_users import AutoBotTgUsersDB
+from db.db_main_helper import AutoBotMainDB
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)

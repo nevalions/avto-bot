@@ -1,7 +1,15 @@
+from pprint import pprint
+import sys
+import os
+
 from psycopg2 import sql
 
-from db import AutoBotDB as Db
-import db_queries as queries
+sys.path.append(os.path.join(os.getcwd(), 'db'))
+# pprint(sys.path)
+
+from db_main import AutoBotDB as Db
+from db_queries import get_all_rows_from_db, update_str_value_in_db_by_key, get_db_item_by_id
+from db_queries import get_db_item_by_name
 
 
 class AutoBotUserDB(Db):
@@ -42,7 +50,7 @@ class AutoBotUserDB(Db):
             value_name = 'username'
             new_value = new_name
 
-            query = queries.update_str_value_in_db_by_key(
+            query = update_str_value_in_db_by_key(
                 self.db_table_name,
                 key_name,
                 key,
@@ -60,7 +68,7 @@ class AutoBotUserDB(Db):
             print(f'Error updating user in DB')
 
     def get_all_users_in_db(self):
-        self.cursor.execute(queries.get_all_rows_from_db(self.db_table_name))
+        self.cursor.execute(get_all_rows_from_db(self.db_table_name))
         all_users = self.cursor.fetchall()
         if all_users:
             return all_users
@@ -69,7 +77,7 @@ class AutoBotUserDB(Db):
             raise Exception
 
     def get_user_by_user_id(self, user_id: int):
-        query = queries.get_db_item_by_id(self.db_table_name, user_id)
+        query = get_db_item_by_id(self.db_table_name, user_id)
         self.cursor.execute(query)
         car = self.cursor.fetchall()
         if car:
@@ -80,7 +88,7 @@ class AutoBotUserDB(Db):
 
     def search_user_email_in_db(self, item_name, item):
         try:
-            query = queries.get_db_item_by_name(self.db_table_name, item_name, item)
+            query = get_db_item_by_name(self.db_table_name, item_name, item)
             result = self.select_query_dict(query)
             if result:
                 return result

@@ -1,17 +1,13 @@
 from datetime import datetime
 
-from db_user_helper import AutoBotUserDB
-from db_auto_helper import AutoBotAutoDB
-from db_main_helper import AutoBotMainDB
-from db_tg_users import AutoBotTgUsersDB
-
-from users import User
-from cars import Car
+from db import AutoBotTgUsersDB, AutoBotUserDB, AutoBotMainDB, AutoBotAutoDB
+from classes import User, Car
 
 now = datetime.now()
 
 
 def main():
+    # tg_app.start_bot()
     db_user = AutoBotUserDB()
     db_auto = AutoBotAutoDB()
     db_main = AutoBotMainDB()

@@ -8,6 +8,7 @@ class AutoBotDB:
     """
     Main Postgres DB functions.
     """
+
     def __init__(self, host_db=host, user_db=user, pass_db=password, db=db_name):
         self.host_db = host_db
         self.user_db = user_db

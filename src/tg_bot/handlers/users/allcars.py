@@ -1,13 +1,12 @@
 import logging.config
-from aiogram import types
 from aiogram.types import CallbackQuery
 
 from src.tg_bot.loader import dp
 
 from src.tg_bot.keybords.inline import ikb_car_menu, ikb_menu
 
-from db_main_helper import AutoBotMainDB
-from db_tg_users import AutoBotTgUsersDB
+from db.db_main_helper import AutoBotMainDB
+from db.db_tg_users import AutoBotTgUsersDB
 
 from src.log_dir.log_conf import LOGGING_CONFIG
 from src.log_dir.func_auto_log import autolog_warning, autolog_info

@@ -1,6 +1,6 @@
 import pytest
 
-from users import User
+from classes.users import User
 
 user1 = User('Test', 'asd@asd.ru')
 

@@ -13,11 +13,11 @@ from aiogram.dispatcher import FSMContext
 from config_tg import tg_token
 from tg_bot.utils.set_bot_commands import set_default_commands
 
-from users import User
-from cars import Car
-from db_user_helper import AutoBotUserDB
-from db_auto_helper import AutoBotAutoDB
-from db_main_helper import AutoBotMainDB
+from classes.users import User
+from classes.cars import Car
+from db.db_user_helper import AutoBotUserDB
+from db.db_auto_helper import AutoBotAutoDB
+from db.db_main_helper import AutoBotMainDB
 
 
 bot = Bot(token=tg_token, parse_mode=types.ParseMode.HTML)

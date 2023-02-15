@@ -2,8 +2,8 @@ import pytest
 import mock
 import builtins
 
-from users import User
-from cars import Car
+from classes.users import User
+from classes.cars import Car
 from src import _main_app_no_sql as main_app
 
 

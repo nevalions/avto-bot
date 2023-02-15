@@ -1,11 +1,10 @@
-import log_dir
-
 import logging.config
 import string
 
 from log_dir.log_conf import LOGGING_CONFIG
 from log_dir.func_auto_log import autolog_info, autolog_warning
-import checks
+
+from helpers.checks import email_is_valid
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
@@ -27,7 +26,7 @@ class User:
     @classmethod
     # check is email valid
     def check_email(cls, mail):
-        checks.email_is_valid(mail)
+        email_is_valid(mail)
 
     @classmethod
     # check string is valid
