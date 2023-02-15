@@ -18,7 +18,7 @@ def main():
     db_tg_user = AutoBotTgUsersDB()
 
     car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', 'BLABLABLA', '300000')
-    user = User('NEW2', 'ASDsa7@added.ru')
+    user = User('NEW2', 'asd123qwe@added.ru')
 
     try:
         print(db_user.search_user_email_in_db('email', 'ASDsa7@added.ru'))
