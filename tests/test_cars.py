@@ -1,8 +1,16 @@
+import os
+import sys
+from pprint import pprint
+
 import pytest
 
-import classes
+sys.path.append(os.path.join(os.getcwd(), '..'))
+sys.path.append(os.path.join(os.getcwd(), '..'))
+sys.path.append(os.path.join(os.getcwd(), 'src'))
+pprint(sys.path)
+from classes import Car
 
-car1 = classes.cars.Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', 'BlaBlaBla', '300000')
+car1 = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', 'BlaBlaBla', '300000')
 
 
 def main():
