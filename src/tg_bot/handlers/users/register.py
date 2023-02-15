@@ -5,7 +5,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery
 
-from src.tg_bot.loader import dp
+from loader import dp
 from tg_bot.keybords.inline import ikb_cancel_menu, ikb_menu
 
 from classes.users import User

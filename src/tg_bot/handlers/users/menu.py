@@ -1,7 +1,7 @@
 from aiogram import types
-from src.tg_bot.loader import dp
+from loader import dp
 
-from src.tg_bot.keybords.inline import ikb_menu
+from tg_bot.keybords.inline import ikb_menu
 
 
 @dp.message_handler(commands='menu')
