@@ -5,10 +5,7 @@ from loader import dp
 
 from tg_bot.keybords.inline import ikb_car_menu, ikb_menu
 
-
 from db import AutoBotTgUsersDB, AutoBotMainDB
-# from db.db_main_helper import AutoBotMainDB
-# from db.db_tg_users import AutoBotTgUsersDB
 
 from log_dir.log_conf import LOGGING_CONFIG
 from log_dir.func_auto_log import autolog_warning, autolog_info

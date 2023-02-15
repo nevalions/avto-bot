@@ -8,14 +8,12 @@ from aiogram.types import CallbackQuery
 from loader import dp
 from tg_bot.keybords.inline import ikb_cancel_menu, ikb_menu
 
-from classes.users import User
+from classes import User
 
-from db.db_user_helper import AutoBotUserDB
-from db.db_tg_users import AutoBotTgUsersDB
-from db.db_main_helper import AutoBotMainDB
+from db import AutoBotTgUsersDB, AutoBotMainDB, AutoBotUserDB
 
-from src.log_dir.log_conf import LOGGING_CONFIG
-from src.log_dir.func_auto_log import autolog_warning, autolog_info
+from log_dir.log_conf import LOGGING_CONFIG
+from log_dir.func_auto_log import autolog_warning, autolog_info
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)

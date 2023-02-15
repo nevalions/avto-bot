@@ -2,12 +2,14 @@ from datetime import datetime
 
 from db import AutoBotTgUsersDB, AutoBotUserDB, AutoBotMainDB, AutoBotAutoDB
 from classes import User, Car
+from tg_app import start_bot
+
 
 now = datetime.now()
 
 
 def main():
-    # tg_app.start_bot()
+    start_bot()
     db_user = AutoBotUserDB()
     db_auto = AutoBotAutoDB()
     db_main = AutoBotMainDB()
