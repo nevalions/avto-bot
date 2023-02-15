@@ -3,6 +3,10 @@ import logging.config
 import string
 from dateutil.parser import parse
 
+import sys
+import os
+
+sys.path.append(os.path.join(os.getcwd(), '..'))
 from log_dir.log_conf import LOGGING_CONFIG
 from log_dir.func_auto_log import autolog_info, autolog_warning
 

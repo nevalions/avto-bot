@@ -1,8 +1,8 @@
 import pytest
 
-from classes.cars import Car
+import classes
 
-car1 = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', 'BlaBlaBla', '300000')
+car1 = classes.cars.Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', 'BlaBlaBla', '300000')
 
 
 def main():
