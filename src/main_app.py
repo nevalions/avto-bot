@@ -2,7 +2,6 @@ from datetime import datetime
 
 from db import AutoBotTgUsersDB, AutoBotUserDB, AutoBotMainDB, AutoBotAutoDB
 from classes import User, Car
-from tg_app import start_bot
 
 now = datetime.now()
 
@@ -44,6 +43,7 @@ def main():
         db_auto.close()
 
     try:
+        from tg_app import start_bot
         start_bot()
     except Exception as ex:
         print(ex)
