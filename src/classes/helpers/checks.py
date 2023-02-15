@@ -1,6 +1,11 @@
-import logging.config
-from email_validator import validate_email, EmailNotValidError
+import sys
+import os
 
+from email_validator import validate_email, EmailNotValidError
+import logging.config
+
+sys.path.append(os.path.join(os.getcwd(), '..'))
+sys.path.append(os.path.join(os.getcwd(), '..'))
 from log_dir.log_conf import LOGGING_CONFIG
 from log_dir.func_auto_log import autolog_debug
 
