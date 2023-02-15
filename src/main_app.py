@@ -4,12 +4,10 @@ from db import AutoBotTgUsersDB, AutoBotUserDB, AutoBotMainDB, AutoBotAutoDB
 from classes import User, Car
 from tg_app import start_bot
 
-
 now = datetime.now()
 
 
 def main():
-    start_bot()
     db_user = AutoBotUserDB()
     db_auto = AutoBotAutoDB()
     db_main = AutoBotMainDB()
@@ -44,6 +42,12 @@ def main():
         print(ex)
     finally:
         db_auto.close()
+
+    try:
+        start_bot()
+    except Exception as ex:
+        print(ex)
+        print('bot error')
 
 
 def create_user():
