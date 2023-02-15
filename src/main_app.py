@@ -42,11 +42,11 @@ def main():
     finally:
         db_auto.close()
 
-    try:
-        from tg_app import start_bot
-    except Exception as ex:
-        print(ex)
-        print('bot error')
+    # try:
+    #     from tg_app import start_bot
+    # except Exception as ex:
+    #     print(ex)
+    #     print('bot error')
 
 
 def create_user():
