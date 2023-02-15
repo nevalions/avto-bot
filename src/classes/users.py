@@ -7,8 +7,8 @@ import string
 from helpers.checks import email_is_valid
 
 sys.path.append(os.path.join(os.getcwd(), '..'))
-from log_dir.log_conf import LOGGING_CONFIG
-from log_dir.func_auto_log import autolog_info, autolog_warning
+from src.log_dir.log_conf import LOGGING_CONFIG
+from src.log_dir.func_auto_log import autolog_info, autolog_warning
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)

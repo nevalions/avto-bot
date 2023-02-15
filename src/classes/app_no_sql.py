@@ -1,14 +1,14 @@
 from datetime import datetime
 
-from classes.users import User
-from classes.cars import Car
+from users import User
+from cars import Car
 
 now = datetime.now()
 
 
 def main():
-    # car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023')
-    # user = User('NEW2', 'baa12sd1235467@added.ru')
+    car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', '', '300000')
+    user = User('NEW2', 'baa12sd1235467@added.ru')
 
     data_all = []
 
@@ -18,7 +18,8 @@ def main():
         print(ex)
 
     try:
-        add_car_to_user_in_db(find_user_with_email(data_all), Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023'))
+        add_car_to_user_in_db(find_user_with_email(data_all), Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', ''
+                                                                  , '300000'))
     except Exception as ex:
         print(ex)
 
