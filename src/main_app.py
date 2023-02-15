@@ -44,7 +44,6 @@ def main():
 
     try:
         from tg_app import start_bot
-        start_bot()
     except Exception as ex:
         print(ex)
         print('bot error')
