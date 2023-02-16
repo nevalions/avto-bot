@@ -1,16 +1,10 @@
 import pytest
 import mock
 import builtins
-import sys
-import os
 
-from pprint import pprint
-
-sys.path.append(os.path.join(os.getcwd(), '..'))
-pprint(sys.path)
-from classes import User
-from classes import Car
-from classes import app_no_sql as main_app
+from src.classes import app_no_sql as main_app
+from src.classes.cars import Car
+from src.classes.users import User
 
 
 def main():

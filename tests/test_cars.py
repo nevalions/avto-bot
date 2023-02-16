@@ -1,17 +1,6 @@
-import os
-import sys
-from pprint import pprint
-
 import pytest
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(SCRIPT_DIR))
-
-# sys.path.append(os.path.join(os.getcwd(), '../../..'))
-# sys.path.append(os.path.join(os.getcwd(), '../../..'))
-# sys.path.append(os.path.join(os.getcwd(), 'src'))
-# pprint(sys.path)
-from .. src.classes.cars import Car
+from src.classes.cars import Car
 
 car1 = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', 'BlaBlaBla', '300000')
 

@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from users import User
-from cars import Car
+from .users import User
+from .cars import Car
 
 now = datetime.now()
 
