@@ -4,11 +4,16 @@ import logging.config
 from .logs.log_conf_main import LOGGING_CONFIG
 from .logs.func_auto_log import autolog_warning, autolog_info
 
-from loader import dp
+import os
+import sys
 
-from tg_bot.keybords.inline import ikb_start_menu, ikb_menu
+# sys.path.append(os.path.join(os.getcwd(), '..'))
 
-from db import AutoBotTgUsersDB, AutoBotMainDB
+from src.loader import dp
+
+from src.tg_bot.keybords.inline import ikb_start_menu, ikb_menu
+
+from src.db import AutoBotTgUsersDB, AutoBotMainDB
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
