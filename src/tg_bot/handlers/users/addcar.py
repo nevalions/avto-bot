@@ -1,3 +1,5 @@
+import os
+import sys
 import string
 from datetime import datetime
 
@@ -10,12 +12,13 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery
 
-from loader import dp
-from tg_bot.keybords.inline import ikb_cancel_menu, ikb_no_description_menu, ikb_km_m_menu, ikb_menu
+sys.path.append(os.path.join(os.getcwd(), '..'))
+sys.path.append(os.path.join(os.getcwd(), '..'))
+from src.loader import dp
+from src.tg_bot.keybords.inline import ikb_cancel_menu, ikb_no_description_menu, ikb_km_m_menu, ikb_menu
 
-from classes import Car
-
-from db import AutoBotTgUsersDB, AutoBotMainDB, AutoBotAutoDB, AutoBotUserDB
+from src.classes import Car
+from src.db import AutoBotTgUsersDB, AutoBotMainDB, AutoBotAutoDB, AutoBotUserDB
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)

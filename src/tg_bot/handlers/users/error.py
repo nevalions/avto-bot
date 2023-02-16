@@ -1,5 +1,11 @@
+import os
+import sys
+
 from aiogram import types
-from loader import dp
+
+sys.path.append(os.path.join(os.getcwd(), '..'))
+sys.path.append(os.path.join(os.getcwd(), '..'))
+from src.loader import dp
 
 
 @dp.message_handler()

@@ -13,12 +13,10 @@ from .logs.func_auto_log import autolog_warning, autolog_info
 
 sys.path.append(os.path.join(os.getcwd(), '..'))
 sys.path.append(os.path.join(os.getcwd(), '..'))
-
 from src.loader import dp
 from src.tg_bot.keybords.inline import ikb_cancel_menu, ikb_menu
 
 from src.classes import User
-
 from src.db import AutoBotTgUsersDB, AutoBotMainDB, AutoBotUserDB
 
 

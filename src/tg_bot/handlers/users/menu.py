@@ -1,7 +1,12 @@
 from aiogram import types
-from loader import dp
+import os
+import sys
+sys.path.append(os.path.join(os.getcwd(), '..'))
+sys.path.append(os.path.join(os.getcwd(), '..'))
 
-from tg_bot.keybords.inline import ikb_menu
+from src.loader import dp
+
+from src.tg_bot.keybords.inline import ikb_menu
 
 
 @dp.message_handler(commands='menu')

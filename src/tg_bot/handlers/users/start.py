@@ -9,11 +9,7 @@ import sys
 
 sys.path.append(os.path.join(os.getcwd(), '..'))
 sys.path.append(os.path.join(os.getcwd(), '..'))
-
-print(sys.path)
-
 from src.loader import dp
-
 from src.tg_bot.keybords.inline import ikb_start_menu, ikb_menu
 
 from src.db import AutoBotTgUsersDB, AutoBotMainDB
