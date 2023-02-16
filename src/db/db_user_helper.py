@@ -4,7 +4,7 @@ import os
 
 from psycopg2 import sql
 
-sys.path.append(os.path.join(os.getcwd(), 'db'))
+# sys.path.append(os.path.join(os.getcwd(), 'db'))
 # pprint(sys.path)
 
 from db_main import AutoBotDB as Db

@@ -1,6 +1,6 @@
 # from config import LOG_DIR
 #
-# log_path_filename = LOG_DIR / 'main.log'
+log_path_filename = f'logs/{__name__}.log'
 #
 # print(log_path_filename)
 
@@ -21,7 +21,7 @@ LOGGING_CONFIG = {
         },
         'file_handler': {
             'level': 'INFO',
-            'filename': 'main.log',
+            'filename': log_path_filename,
             'mode': 'w',
             'class': 'logging.FileHandler',
             'formatter': 'standard'

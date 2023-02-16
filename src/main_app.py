@@ -1,12 +1,21 @@
+import logging.config
+from logs.log_conf_main import LOGGING_CONFIG
+from logs.func_auto_log import autolog_info, autolog_warning
+
 from datetime import datetime
 
 from db import AutoBotTgUsersDB, AutoBotUserDB, AutoBotMainDB, AutoBotAutoDB
 from classes import User, Car
 
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = logging.getLogger(__name__)
+
 now = datetime.now()
 
 
 def main():
+    autolog_info(f'Main app started')
+
     db_user = AutoBotUserDB()
     db_auto = AutoBotAutoDB()
     db_main = AutoBotMainDB()
@@ -20,10 +29,10 @@ def main():
         print(db_tg_user.search_tg_user_chat_id_in_db('chat_id', 84891021))
         print(*vars(car).values())
         add_u = db_user.add_user(*vars(user).values())
-        # print(f'car id: {db_auto.add_car(*vars(car).values())}')
-        # print(f'user id: {add_u}')
+        print(f'car id: {db_auto.add_car(*vars(car).values())}')
+        print(f'user id: {add_u}')
         #
-        # db_user.update_user_username('ASDsa7@added.ru', 'Super New')
+        db_user.update_user_username('ASDsa7@added.ru', 'Super New')
         #
         # print(*db_auto.get_all_cars_in_db(), sep='\n')
         # print(*db_user.get_all_users_in_db(), sep='\n')

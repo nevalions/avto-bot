@@ -7,8 +7,8 @@ from tg_bot.keybords.inline import ikb_car_menu, ikb_menu
 
 from db import AutoBotTgUsersDB, AutoBotMainDB
 
-from log_dir.log_conf import LOGGING_CONFIG
-from log_dir.func_auto_log import autolog_warning, autolog_info
+from .logs.log_conf_main import LOGGING_CONFIG
+from .logs.func_auto_log import autolog_warning, autolog_info
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)

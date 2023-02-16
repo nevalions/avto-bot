@@ -1,7 +1,7 @@
 import sys
 import os
 
-sys.path.append(os.path.join(os.getcwd(), 'db'))
+# sys.path.append(os.path.join(os.getcwd(), 'db'))
 
 from db_main import AutoBotDB as Db
 import db_queries as queries

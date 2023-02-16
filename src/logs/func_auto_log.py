@@ -3,11 +3,11 @@ import logging
 
 
 def autolog_debug(message):
-    """Automatically log_dir the current function details."""
+    """Automatically logs the current function details."""
     # Get the previous frame in the stack, otherwise it would
     # be this function!!!
     func = inspect.currentframe().f_back.f_code
-    # Dump the message + the name of this function to the log_dir.
+    # Dump the message + the name of this function to the logs.
     logging.debug("%s: %s in %s:%i" % (
         message,
         func.co_name,
@@ -17,11 +17,11 @@ def autolog_debug(message):
 
 
 def autolog_info(message):
-    """Automatically log_dir the current function details."""
+    """Automatically logs the current function details."""
     # Get the previous frame in the stack, otherwise it would
     # be this function!!!
     func = inspect.currentframe().f_back.f_code
-    # Dump the message + the name of this function to the log_dir.
+    # Dump the message + the name of this function to the logs.
     logging.info("%s: %s in %s:%i" % (
         message,
         func.co_name,
@@ -31,11 +31,11 @@ def autolog_info(message):
 
 
 def autolog_warning(message):
-    """Automatically log_dir the current function details."""
+    """Automatically logs the current function details."""
     # Get the previous frame in the stack, otherwise it would
     # be this function!!!
     func = inspect.currentframe().f_back.f_code
-    # Dump the message + the name of this function to the log_dir.
+    # Dump the message + the name of this function to the logs.
     logging.warning("%s: %s in %s:%i" % (
         message,
         func.co_name,

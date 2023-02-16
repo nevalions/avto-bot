@@ -4,11 +4,14 @@ import os
 import logging.config
 import string
 
-from helpers.checks import email_is_valid
+from logs.log_conf_main import LOGGING_CONFIG
+from logs.func_auto_log import autolog_info, autolog_warning
 
-sys.path.append(os.path.join(os.getcwd(), '..'))
-from log_dir.log_conf import LOGGING_CONFIG
-from log_dir.func_auto_log import autolog_info, autolog_warning
+# SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# sys.path.append(os.path.dirname(SCRIPT_DIR))
+# sys.path.append(os.path.join(os.getcwd(), '..'))
+
+from helpers import checks
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
@@ -30,7 +33,7 @@ class User:
     @classmethod
     # check is email valid
     def check_email(cls, mail):
-        email_is_valid(mail)
+        checks.email_is_valid(mail)
 
     @classmethod
     # check string is valid

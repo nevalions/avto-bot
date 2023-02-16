@@ -2,8 +2,8 @@ import string
 from datetime import datetime
 
 import logging.config
-from log_dir.log_conf import LOGGING_CONFIG
-from log_dir.func_auto_log import autolog_warning, autolog_info
+from .logs.log_conf_main import LOGGING_CONFIG
+from .logs.func_auto_log import autolog_warning, autolog_info
 
 from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup

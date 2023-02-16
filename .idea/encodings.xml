@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/src/log_dir/main.log" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/logs/main.log" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/tg_bot/handlers/log_dir/main.log" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/tg_bot/handlers/users/log_dir/main.log" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/tg_bot/log_dir/main.log" charset="windows-1251" />
