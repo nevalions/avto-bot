@@ -1,19 +1,26 @@
 import logging.config
+import os
+import sys
+
 from aiogram import types
 
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery
 
-from loader import dp
-from tg_bot.keybords.inline import ikb_cancel_menu, ikb_menu
-
-from classes import User
-
-from db import AutoBotTgUsersDB, AutoBotMainDB, AutoBotUserDB
-
 from .logs.log_conf_main import LOGGING_CONFIG
 from .logs.func_auto_log import autolog_warning, autolog_info
+
+sys.path.append(os.path.join(os.getcwd(), '..'))
+sys.path.append(os.path.join(os.getcwd(), '..'))
+
+from src.loader import dp
+from src.tg_bot.keybords.inline import ikb_cancel_menu, ikb_menu
+
+from src.classes import User
+
+from src.db import AutoBotTgUsersDB, AutoBotMainDB, AutoBotUserDB
+
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
