@@ -2,7 +2,7 @@ import os
 import sys
 
 import pytest
-sys.path.append(os.path.join(os.getcwd(), '..'))
+# s
 
 from src.classes.cars import Car
 
