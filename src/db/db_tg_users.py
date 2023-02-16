@@ -2,9 +2,10 @@ import sys
 import os
 from psycopg2 import sql
 
-# sys.path.append(os.path.join(os.getcwd(), 'db'))
-from db_main import AutoBotDB as Db
-import db_queries as queries
+from .db_main import AutoBotDB as Db
+
+sys.path.append(os.path.join(os.getcwd(), '..'))
+import src.db.db_queries as queries
 
 
 class AutoBotTgUsersDB(Db):
