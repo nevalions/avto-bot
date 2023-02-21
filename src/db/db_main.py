@@ -4,7 +4,7 @@ import os
 import psycopg2
 
 # sys.path.append(os.path.join(os.getcwd(), '..'))
-from src.config import host, user, password, db_name
+from config import host, user, password, db_name
 
 
 class AutoBotDB:
