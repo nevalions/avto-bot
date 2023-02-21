@@ -4,16 +4,16 @@ import string
 from datetime import datetime
 
 import logging.config
-from .logs.log_conf_main import LOGGING_CONFIG
-from .logs.func_auto_log import autolog_warning, autolog_info
+from src.logs.log_conf_main import LOGGING_CONFIG
+from src.logs.func_auto_log import autolog_warning, autolog_info
 
 from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery
 
-sys.path.append(os.path.join(os.getcwd(), '..'))
-sys.path.append(os.path.join(os.getcwd(), '..'))
+# sys.path.append(os.path.join(os.getcwd(), '..'))
+# sys.path.append(os.path.join(os.getcwd(), '..'))
 from src.loader import dp
 from src.tg_bot.keybords.inline import ikb_cancel_menu, ikb_no_description_menu, ikb_km_m_menu, ikb_menu
 

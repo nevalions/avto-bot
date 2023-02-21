@@ -3,8 +3,8 @@ import sys
 
 from aiogram import types
 
-sys.path.append(os.path.join(os.getcwd(), '..'))
-sys.path.append(os.path.join(os.getcwd(), '..'))
+# sys.path.append(os.path.join(os.getcwd(), '..'))
+# sys.path.append(os.path.join(os.getcwd(), '..'))
 from src.loader import dp
 
 

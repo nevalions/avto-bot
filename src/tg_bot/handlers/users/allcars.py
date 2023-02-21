@@ -3,11 +3,11 @@ import sys
 import logging.config
 from aiogram.types import CallbackQuery
 
-from .logs.log_conf_main import LOGGING_CONFIG
-from .logs.func_auto_log import autolog_warning, autolog_info
+from src.logs.log_conf_main import LOGGING_CONFIG
+from src.logs.func_auto_log import autolog_warning, autolog_info
 
-sys.path.append(os.path.join(os.getcwd(), '..'))
-sys.path.append(os.path.join(os.getcwd(), '..'))
+# sys.path.append(os.path.join(os.getcwd(), '..'))
+# sys.path.append(os.path.join(os.getcwd(), '..'))
 from src.loader import dp
 from src.tg_bot.keybords.inline import ikb_car_menu, ikb_menu
 
