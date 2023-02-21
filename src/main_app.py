@@ -6,6 +6,7 @@ from datetime import datetime
 
 from db import AutoBotTgUsersDB, AutoBotUserDB, AutoBotMainDB, AutoBotAutoDB
 from classes import User, Car
+from src.config import LOG_DIR
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
