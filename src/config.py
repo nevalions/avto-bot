@@ -5,10 +5,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-SRC_DIR = pathlib.Path(str(os.getenv("SRC_DIR")))
-SRC_DIR_ABSOLUTE = pathlib.Path.absolute(SRC_DIR)
-ROOT_DIR = pathlib.Path.absolute(SRC_DIR).parents[0]
-LOG_DIR = SRC_DIR_ABSOLUTE / "logs"
+PYTHONPATH = pathlib.Path(str(os.getenv("PYTHONPATH")))
+python_path = pathlib.Path(str(PYTHONPATH).split(';')[0])
+absolut_python_path = python_path.absolute()
+
+print(PYTHONPATH)
+print(python_path)
+print(absolut_python_path)
+
 
 host = str(os.getenv("HOST"))
 user = str(os.getenv("DB_USER"))
@@ -29,3 +33,5 @@ port = int(os.getenv("PORT"))
 # print(user)
 # print(db_name)
 # print(port)
+
+

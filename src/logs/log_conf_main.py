@@ -1,8 +1,7 @@
-# from config import LOG_DIR
-#
-log_path_filename = f'logs/{__name__}.log'
-#
-# print(log_path_filename)
+from config import absolut_python_path
+
+log_path_filename = absolut_python_path / f'logs/123.log'
+print(log_path_filename)
 
 LOGGING_CONFIG = {
     'version': 1,

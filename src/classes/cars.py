@@ -5,12 +5,8 @@ import logging.config
 import string
 from dateutil.parser import parse
 
-from logs.log_conf_main import LOGGING_CONFIG
-from logs.func_auto_log import autolog_info, autolog_warning
-
-# SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-# sys.path.append(os.path.dirname(SCRIPT_DIR))
-# sys.path.append(os.path.join(os.getcwd(), '..'))
+from src.logs.log_conf_main import LOGGING_CONFIG
+from src.logs.func_auto_log import autolog_info, autolog_warning
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
