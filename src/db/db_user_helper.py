@@ -7,9 +7,9 @@ from psycopg2 import sql
 # sys.path.append(os.path.join(os.getcwd(), 'db'))
 # pprint(sys.path)
 
-from .db_main import AutoBotDB as Db
-from .db_queries import get_all_rows_from_db, update_str_value_in_db_by_key, get_db_item_by_id
-from .db_queries import get_db_item_by_name
+from src.db.db_main import AutoBotDB as Db
+from src.db.db_queries import get_all_rows_from_db, update_str_value_in_db_by_key, get_db_item_by_id
+from src.db.db_queries import get_db_item_by_name
 
 
 class AutoBotUserDB(Db):
