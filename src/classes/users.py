@@ -1,11 +1,8 @@
-import sys
-import os
-
 import logging.config
 import string
 
-from logs.log_conf_main import LOGGING_CONFIG
-from logs.func_auto_log import autolog_info, autolog_warning
+from src.logs.log_conf_main import LOGGING_CONFIG
+from src.logs.func_auto_log import autolog_info, autolog_warning
 
 from src.classes.helpers import email_is_valid
 

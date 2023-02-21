@@ -1,11 +1,11 @@
 import logging.config
-from logs.log_conf_main import LOGGING_CONFIG
-from logs.func_auto_log import autolog_info, autolog_warning
+from src.logs.log_conf_main import LOGGING_CONFIG
+from src.logs.func_auto_log import autolog_info, autolog_warning
 
 from datetime import datetime
 
-from db import AutoBotTgUsersDB, AutoBotUserDB, AutoBotMainDB, AutoBotAutoDB
-from classes import User, Car
+from src.db import AutoBotTgUsersDB, AutoBotUserDB, AutoBotMainDB, AutoBotAutoDB
+from src.classes import User, Car
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)

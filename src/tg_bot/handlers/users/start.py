@@ -4,11 +4,6 @@ import logging.config
 from src.logs.log_conf_main import LOGGING_CONFIG
 from src.logs.func_auto_log import autolog_warning, autolog_info
 
-import os
-import sys
-
-# sys.path.append(os.path.join(os.getcwd(), '..'))
-# sys.path.append(os.path.join(os.getcwd(), '..'))
 from src.loader import dp
 from src.tg_bot.keybords.inline import ikb_start_menu, ikb_menu
 
