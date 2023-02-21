@@ -1,2 +1,2 @@
-source venv/bin/activate
+source env/bin/activate
 export PYTHONPATH=$PYTHONPATH:$(pwd)
