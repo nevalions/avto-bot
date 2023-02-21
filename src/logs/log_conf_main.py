@@ -1,7 +1,8 @@
-from config import absolut_python_path
+import os
+from config import python_path
+from datetime import datetime as d
 
-log_path_filename = absolut_python_path / f'logs/123.log'
-print(log_path_filename)
+log_path_filename = python_path / f'logs/{d.now().date()}{os.path.basename(__file__)}.log'
 
 LOGGING_CONFIG = {
     'version': 1,

@@ -1,6 +1,3 @@
-import sys
-import os
-
 import logging.config
 import string
 from dateutil.parser import parse
