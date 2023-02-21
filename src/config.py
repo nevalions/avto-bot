@@ -16,10 +16,8 @@ password = str(os.getenv("PASSWORD"))
 db_name = str(os.getenv("DB_NAME"))
 port = int(os.getenv("PORT"))
 
-# logging_config = logs.LOGGING_CONFIG
-# autolog_debug = logs.autolog_debug()
-# autolog_info = logs.autolog_info()
-# autolog_warning = logs.autolog_warning()
+tg_token = str(os.getenv("BOT_TOKEN"))
+admins_id = str(os.getenv('BOT_ADMINS'))
 
 # print(SRC_DIR)
 # print(SRC_DIR_ABSOLUTE)
