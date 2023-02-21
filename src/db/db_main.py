@@ -1,9 +1,6 @@
 # TODO add logger to all db modules
-import sys
-import os
 import psycopg2
 
-# sys.path.append(os.path.join(os.getcwd(), '..'))
 from config import host, user, password, db_name
 
 
