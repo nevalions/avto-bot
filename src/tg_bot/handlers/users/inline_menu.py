@@ -1,12 +1,8 @@
-import os
-import sys
 from aiogram import types
-from aiogram.types import CallbackQuery
-from aiogram.types import InlineQuery
 
 # sys.path.append(os.path.join(os.getcwd(), '..'))
 # sys.path.append(os.path.join(os.getcwd(), '..'))
-from src.loader import dp
+from tg_bot.loader import dp
 from src.tg_bot.keybords.inline import ikb_start_menu
 
 

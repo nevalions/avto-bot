@@ -1,11 +1,6 @@
-import os
-import sys
-
 from aiogram import types
 
-# sys.path.append(os.path.join(os.getcwd(), '..'))
-# sys.path.append(os.path.join(os.getcwd(), '..'))
-from src.loader import dp
+from tg_bot.loader import dp
 
 
 @dp.message_handler()

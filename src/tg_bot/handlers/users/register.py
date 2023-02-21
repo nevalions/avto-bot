@@ -1,6 +1,4 @@
 import logging.config
-import os
-import sys
 
 from aiogram import types
 
@@ -13,7 +11,7 @@ from src.logs.func_auto_log import autolog_warning, autolog_info
 
 # sys.path.append(os.path.join(os.getcwd(), '..'))
 # sys.path.append(os.path.join(os.getcwd(), '..'))
-from src.loader import dp
+from tg_bot.loader import dp
 from src.tg_bot.keybords.inline import ikb_cancel_menu, ikb_menu
 
 from src.classes import User
