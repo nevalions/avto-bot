@@ -1,7 +1,7 @@
 # TODO add logger to all db modules
 import psycopg2
 
-from config import host, user, password, db_name
+from src.config import host, user, password, db_name
 
 
 class AutoBotDB:
