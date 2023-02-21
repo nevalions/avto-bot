@@ -2,9 +2,14 @@ import logging.config
 from logs.log_conf_main import LOGGING_CONFIG
 from logs.func_auto_log import autolog_info, autolog_warning
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import os
 print(os.environ)
-print(os.getenv('HOST'))
+host = str(os.getenv("HOST"))
+print(host)
 print(os.environ['PYTHONPATH'].replace(';', '\n'))
 
 from datetime import datetime
