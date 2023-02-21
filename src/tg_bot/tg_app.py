@@ -11,7 +11,7 @@ async def on_startup(_dp):
 
 def start_bot():
     from aiogram import executor
-    from tg_bot import dp
+    from handlers import dp
 
     executor.start_polling(dp, on_startup=on_startup)
 
