@@ -1,9 +1,6 @@
 import mock
 import builtins
-import os
-import sys
 import pytest
-# sys.path.append(os.path.join(os.getcwd(), '../..'))
 
 from src.classes import app_no_sql as main_app
 from src.classes.cars import Car
