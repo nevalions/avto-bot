@@ -51,46 +51,6 @@ def main():
     finally:
         db_auto.close()
 
-    # try:
-    #     from tg_app import start_bot
-    # except Exception as ex:
-    #     print(ex)
-    #     print('bot error')
-
-
-def create_user():
-    """
-    Create user with terminal.
-    :return:
-    """
-    try:
-        return User(input('Enter your name: '), input('Enter your email: '))
-    except Exception as ex:
-        print('User is not created!')
-        raise ex
-
-
-def create_car():
-    """
-    Create car with terminal.
-    :return:
-    """
-    try:
-        new_car = Car(
-            input('Enter car model: '),
-            input('Enter car model name: '),
-            input('Enter car mileage: '),
-            input('Enter mileage measures (km or miles): '),
-            f'{now.strftime("%d.%m.%Y")}',
-
-            input('Enter car description (optional): '),
-        )
-        print(f'Car {new_car.model} {new_car.model_name} created')
-        return new_car
-    except Exception as ex:
-        print('Car is not created!')
-        raise ex
-
 
 if __name__ == '__main__':
     main()
