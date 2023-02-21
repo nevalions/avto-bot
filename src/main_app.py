@@ -3,6 +3,7 @@ from logs.log_conf_main import LOGGING_CONFIG
 from logs.func_auto_log import autolog_info, autolog_warning
 
 import os
+print(os.environ)
 print(os.environ['pythonpath'].replace(';', '\n'))
 
 from datetime import datetime
