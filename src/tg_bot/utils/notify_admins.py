@@ -1,6 +1,6 @@
 from aiogram import Dispatcher
 
-from tg_bot.config_tg import admins_id
+from src.tg_bot.config_tg import admins_id
 
 
 async def on_startup_notify(dp: Dispatcher):
