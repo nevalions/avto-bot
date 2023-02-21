@@ -10,9 +10,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery
 
-# sys.path.append(os.path.join(os.getcwd(), '..'))
-# sys.path.append(os.path.join(os.getcwd(), '..'))
-from tg_bot.loader import dp
+from src.tg_bot.loader import dp
 from src.tg_bot.keybords.inline import ikb_cancel_menu, ikb_no_description_menu, ikb_km_m_menu, ikb_menu
 
 from src.classes import Car

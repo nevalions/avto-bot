@@ -1,6 +1,6 @@
 from aiogram import types
 
-from tg_bot.loader import dp
+from src.tg_bot.loader import dp
 
 
 @dp.message_handler()
