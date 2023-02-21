@@ -4,7 +4,8 @@ from logs.func_auto_log import autolog_info, autolog_warning
 
 import os
 print(os.environ)
-print(os.environ['pythonpath'].replace(';', '\n'))
+print(os.getenv('HOST'))
+print(os.environ['PYTHONPATH'].replace(';', '\n'))
 
 from datetime import datetime
 
