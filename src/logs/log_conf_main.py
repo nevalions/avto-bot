@@ -3,6 +3,7 @@ from src.config import python_path
 from datetime import datetime as d
 
 log_path_filename = python_path / f'logs/{d.now().date()}{os.path.basename(__file__)}.log'
+print(log_path_filename)
 
 LOGGING_CONFIG = {
     'version': 1,
