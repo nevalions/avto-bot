@@ -1,4 +1,4 @@
 source /home/www/code/avto-bot/env/bin/activate
 export PYTHONPATH=""
-export PYTHONPATH="${PYTHONPATH}${PWD}"
+export PYTHONPATH="${PYTHONPATH}/home/www/code/avto-bot/"
 python /home/www/code/avto-bot/src/tg_bot/tg_app.py
