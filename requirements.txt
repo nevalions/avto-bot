@@ -6,3 +6,5 @@ psycopg2
 aiogram
 python-dotenv
 pathlib
+sqlalchemy
+alembic

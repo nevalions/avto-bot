@@ -1,7 +1,7 @@
 # TODO add logger to all db modules
 import psycopg2
 
-from src.config import host, user, password, db_name
+from src.config import host, user, password, db_name, port
 
 
 class AutoBotDB:
@@ -9,7 +9,7 @@ class AutoBotDB:
     Main Postgres DB functions.
     """
 
-    def __init__(self, host_db=host, user_db=user, pass_db=password, db=db_name):
+    def __init__(self, host_db=host, user_db=user, pass_db=password, db=db_name, port=port):
         self.host_db = host_db
         self.user_db = user_db
         self.pass_db = pass_db
@@ -19,7 +19,8 @@ class AutoBotDB:
             host=host_db,
             user=user_db,
             password=pass_db,
-            database=db
+            database=db,
+            port=port
         )
         self.cursor = self.connect.cursor()
 

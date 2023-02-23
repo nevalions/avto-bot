@@ -134,7 +134,8 @@ async def measures_km(call: CallbackQuery, state: FSMContext):
     autolog_info(f'Telegram user added car measures')
     async with state.proxy() as data:
         data['measures'] = 'km'
-        data['date_added'] = f'{now.strftime("%d.%m.%Y")}'
+        data['date_added'] = f'{datetime.utcnow()}'
+        # data['date_added'] = f'{now.strftime("%d.%m.%Y")}'
 
     await AddCarForm.enter_description.set()
     await call.message.answer(
@@ -148,7 +149,8 @@ async def measures_km(call: CallbackQuery, state: FSMContext):
     autolog_info(f'Telegram user added car measures')
     async with state.proxy() as data:
         data['measures'] = 'miles'
-        data['date_added'] = f'{now.strftime("%d.%m.%Y")}'
+        data['date_added'] = f'{datetime.utcnow()}'
+        # data['date_added'] = f'{now.strftime("%d.%m.%Y")}'
 
     await AddCarForm.enter_description.set()
     await call.message.answer(
