@@ -6,8 +6,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 PYTHONPATH = pathlib.Path(str(os.getenv("PYTHONPATH")))
-python_path = pathlib.Path(str(PYTHONPATH).split(';')[0])
+python_path = pathlib.Path(str(PYTHONPATH).split(':')[0])
 absolut_python_path = python_path.absolute()
+print('PYTHONPATH=' + str(python_path))
 
 host = str(os.getenv("HOST"))
 user = str(os.getenv("DB_USER"))
