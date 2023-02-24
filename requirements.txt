@@ -6,5 +6,8 @@ psycopg2
 aiogram
 python-dotenv
 pathlib
+asyncio
+greenlet
 sqlalchemy
 alembic
+asyncpg
