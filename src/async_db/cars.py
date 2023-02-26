@@ -1,10 +1,12 @@
 import asyncio
+from pprint import pprint
 
 from datetime import datetime
 
 from sqlalchemy import Column, Integer, String, TIMESTAMP, BigInteger, Text, ForeignKey
 from sqlalchemy import func
 from sqlalchemy import select
+from sqlalchemy import delete
 from sqlalchemy.orm import relationship
 
 from models.models import users
@@ -69,13 +71,51 @@ class CarService:
             await session.commit()
             return car
 
+    async def get_all_cars(self):
+        async with self.db.async_session() as session:
+            result = await session.execute(select(Car))
+
+            all_cars = []
+            for car in result.scalars():
+                all_cars.append(vars(car))
+
+            return all_cars
+
+    async def get_all_user_cars(self, user_id):
+        async with self.db.async_session() as session:
+            result = await session.execute(select(Car).filter_by(fk_users=user_id))
+
+            all_user_cars = []
+            for car in result.scalars():
+                all_user_cars.append(vars(car))
+
+            return all_user_cars
+
+    async def delete_car(self, car_id):
+        async with self.db.async_session() as session:
+            await session.execute(delete(Car).filter_by(id=car_id))
+            await session.commit()
+
 
 async def async_main() -> None:
     db = Database(DATABASE_URL)
     car_service = CarService(db)
-    car = await car_service.add_car('Gmc', 'Savana', 300000, 'miles', fk_users=1)
-    print(car)
-    print(vars(car))
+    # car = await car_service.add_car('Gmc', 'Savana', 300000, 'miles', fk_users=1)
+    # print(car)
+    # print(vars(car))
+
+    # car = await car_service.add_car('Chevrolet', 'Astro', 100000, 'miles', fk_users=2)
+    # print(car)
+    # print(vars(car))
+
+    # all_cars = await car_service.get_all_cars()
+    # pprint(all_cars)
+
+    await car_service.delete_car(9)
+
+    all_users_cars = await car_service.get_all_user_cars(1)
+    pprint((all_users_cars))
+
     await db.engine.dispose()
 
 

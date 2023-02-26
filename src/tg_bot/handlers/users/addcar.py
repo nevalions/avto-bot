@@ -14,15 +14,15 @@ from src.tg_bot.loader import dp
 from src.tg_bot.keybords.inline import ikb_cancel_menu, ikb_no_description_menu, ikb_km_m_menu, ikb_menu
 
 from src.classes import Car
-from src.db import AutoBotTgUsersDB, AutoBotMainDB, AutoBotAutoDB, AutoBotUserDB
+
+from async_db.base import DATABASE_URL, Database
+from async_db.tg_users import TgUserService
+from async_db.cars import CarService
+
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
-db_user = AutoBotUserDB()
-db_auto = AutoBotAutoDB()
-db_main = AutoBotMainDB()
-db_tg_users = AutoBotTgUsersDB()
 
 now = datetime.now()
 
@@ -40,10 +40,14 @@ async def add_car_command(call: CallbackQuery, state: FSMContext):
     autolog_info(f"Telegram start adding a car")
     autolog_info(f"{call.message.from_user.id}, {call.message.chat.id}, {call.message.from_user.username}, "
                  f"{call.message.from_user.first_name}, {call.message.from_user.last_name}")
+
+    db = Database(DATABASE_URL)
+    tg_user_service = TgUserService(db)
+
     try:
-        is_registered = db_tg_users.search_tg_user_chat_id_in_db('chat_id', call.message.chat.id)
-        if is_registered[0]['fk_tg_users_users'] is not None:
-            user_id = is_registered[0]['fk_tg_users_users']
+        is_registered = await tg_user_service.get_tg_user_by_chat_id(int(call.message.chat.id))
+        if is_registered.tg_users_id is not None:
+            user_id = is_registered.fk_users
             async with state.proxy() as data:
                 data['user_id'] = user_id
         await AddCarForm.enter_model.set()
@@ -52,6 +56,8 @@ async def add_car_command(call: CallbackQuery, state: FSMContext):
         )
     except Exception as ex:
         logging.error(ex)
+    finally:
+        await db.engine.dispose()
 
 
 @dp.callback_query_handler(state='*', text='cancel')
@@ -62,7 +68,6 @@ async def cancel_inline(call: CallbackQuery, state: FSMContext):
         return
 
     await state.finish()
-    db_main.close()
     await call.message.answer(
         'Cancelled.', reply_markup=types.ReplyKeyboardRemove()
     )
@@ -150,7 +155,6 @@ async def measures_km(call: CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
         data['measures'] = 'miles'
         data['date_added'] = f'{datetime.utcnow()}'
-        # data['date_added'] = f'{now.strftime("%d.%m.%Y")}'
 
     await AddCarForm.enter_description.set()
     await call.message.answer(
@@ -162,51 +166,54 @@ async def measures_km(call: CallbackQuery, state: FSMContext):
 @dp.message_handler(state=AddCarForm.enter_description)
 async def enter_description(message: types.Message, state: FSMContext):
     autolog_info(f'Telegram user added car with description')
+    db = Database(DATABASE_URL)
+    car_service = CarService(db)
+
     async with state.proxy() as data:
         data['description'] = message.text
     try:
-        car_id = db_auto.add_car(*vars(Car(
+        car = await car_service.add_car(
             data['model'],
             data['model_name'],
-            data['mileage'],
+            int(data['mileage']),
             data['measures'],
-            data['date_added'],
             data['description'],
-            data['current_mileage']
-        )).values())
+            fk_users=data['user_id']
+        )
 
-        db_main.add_car_to_user_in_db(data['user_id'], car_id)
-        autolog_info(f"Car {data['model']}, {data['model_name']}, {data['mileage']} added at {data['date_added']}")
+        autolog_info(f"Car {car.model}, {car.model_name}, {car.mileage} added at {car.date_added}")
+        await message.answer(f"{car.model} {car.model_name} added at {car.date_added}",
+                             reply_markup=ikb_menu)
+
     except Exception as ex:
         logging.error(ex)
-
-    await message.answer(f"{data['model']} {data['model_name']} added at {data['date_added']}",
-                         reply_markup=ikb_menu)
-    await state.finish()
+    finally:
+        await state.finish()
+        await db.engine.dispose()
 
 
 @dp.callback_query_handler(state=AddCarForm.enter_description, text='no_description')
 async def no_description(call: CallbackQuery, state: FSMContext):
+    db = Database(DATABASE_URL)
+    car_service = CarService(db)
     autolog_info(f'Telegram user added car no description ')
     async with state.proxy() as data:
         data['description'] = ''
     try:
-        car_id = db_auto.add_car(*vars(Car(
+        car = await car_service.add_car(
             data['model'],
             data['model_name'],
-            data['mileage'],
+            int(data['mileage']),
             data['measures'],
-            data['date_added'],
             data['description'],
-            data['current_mileage'],
-        )).values())
+            fk_users=data['user_id']
+        )
 
-        db_main.add_car_to_user_in_db(data['user_id'], car_id)
-        autolog_info(f"Car {data['model']}, {data['model_name']}, {data['mileage']} added at {data['date_added']}")
-        await state.finish()
+        autolog_info(f"Car {car.model}, {car.model_name}, {car.mileage} added at {car.date_added}\n{car.description}")
+        await call.message.answer(f"{car.model} {car.model_name} added at {car.date_added}\n{car.description}",
+                                  reply_markup=ikb_menu)
     except Exception as ex:
         logging.error(ex)
-
-    await call.message.answer(f"{data['model']} {data['model_name']} added at {data['date_added']}",
-                              reply_markup=ikb_menu)
-    await state.finish()
+    finally:
+        await state.finish()
+        await db.engine.dispose()

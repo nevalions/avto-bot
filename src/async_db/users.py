@@ -66,7 +66,7 @@ class UserService:
 async def async_main() -> None:
     db = Database(DATABASE_URL)
     user_service = UserService(db)
-    # await user_service.add_user('John Doe2', 'mail2@mail.ru')
+    await user_service.add_user('John Doe', 'mail@mail.ru')
 
     # found_user = await user_service.get_user_by_id(14)
     found_user = await user_service.get_user_by_email('mail@mail.ru')

@@ -27,14 +27,6 @@ cars = Table(
     Column('fk_users', ForeignKey('users.id'), nullable=True),
 )
 
-# users_cars = Table(
-#     'users_cars',
-#     metadata,
-#     Column('user_id', ForeignKey('users.id')),
-#     Column('car_id', ForeignKey('cars.id'))
-# )
-
-
 tg_users = Table(
     'tg_users',
     metadata,

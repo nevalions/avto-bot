@@ -15,6 +15,11 @@ ikb_car_menu = InlineKeyboardMarkup(row_width=2,
                                         [
                                             InlineKeyboardButton(text='Add TO',
                                                                  callback_data='to')
+                                        ],
+                                        [
+                                            InlineKeyboardButton(text='DELETE CAR',
+                                                                 callback_data='car_menu_delete')
                                         ]
                                     ])
+
 
