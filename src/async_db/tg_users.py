@@ -17,19 +17,19 @@ class TgUser(Base):
     tg_username = Column('tg_username', String)
     tg_firstname = Column('tg_firstname', String)
     tg_lastname = Column('tg_lastname', String)
-    fk_tg_users_users = Column(Integer, ForeignKey(users.c.id))
+    fk_users = Column(Integer, ForeignKey(users.c.id))
 
-    def __init__(self, chat_id, tg_username, tg_firstname, tg_lastname, fk_tg_users_users=None, tg_users_id=None):
+    def __init__(self, chat_id, tg_username, tg_firstname, tg_lastname, fk_users=None, tg_users_id=None):
         self.tg_users_id = tg_users_id
         self.chat_id = chat_id
         self.tg_username = tg_username
         self.tg_firstname = tg_firstname
         self.tg_lastname = tg_lastname
-        self.fk_tg_users_users = fk_tg_users_users
+        self.fk_users = fk_users
 
     def __repr__(self):
         return f'({self.id}) {self.chat_id} {self.tg_username} {self.tg_firstname} {self.tg_lastname} ' \
-               f'connected to user {self.fk_tg_users_users}'
+               f'connected to user {self.fk_users}'
 
 
 class TgUserService:
@@ -42,7 +42,7 @@ class TgUserService:
             tg_username,
             tg_firstname,
             tg_lastname,
-            fk_tg_users_users=None,
+            fk_users=None,
             tg_users_id=None,
     ):
         async with self.db.async_session() as session:
@@ -51,7 +51,7 @@ class TgUserService:
                 tg_username=tg_username,
                 tg_firstname=tg_firstname,
                 tg_lastname=tg_lastname,
-                fk_tg_users_users=fk_tg_users_users,
+                fk_users=fk_users,
                 tg_users_id=tg_users_id
             )
             session.add(tg_user)
@@ -78,14 +78,14 @@ class TgUserService:
 
             return all_tg_users
 
-    async def add_tg_user_register(self, tg_users_id, fk_tg_users_users, chat_id):
+    async def add_tg_user_register(self, tg_users_id, fk_users, chat_id):
         async with self.db.async_session() as session:
             result = await session.execute(select(TgUser).filter_by(chat_id=chat_id))
 
             tg_user = result.scalars().one_or_none()
             if tg_user:
                 tg_user.tg_users_id = tg_users_id
-                tg_user.fk_tg_users_users = fk_tg_users_users
+                tg_user.fk_users = fk_users
             else:
                 print(f'Error user adding to tg_user')
 
@@ -126,13 +126,13 @@ async def async_main() -> None:
     #     print(tu)
     # else:
     #     print(tu)
-        # print(tu.fk_tg_users_users)
+        # print(tu.fk_users)
     #
     # try:
     #     tu = await find_tg_user_by_chat_id(async_session, 1234)
     #     if tu:
     #         print(tu)
-    #         print(tu.fk_tg_users_users)
+    #         print(tu.fk_users)
     #
     # except Exception as ex:
     #     print(ex)

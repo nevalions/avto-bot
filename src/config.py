@@ -24,7 +24,7 @@ host = str(os.getenv("HOST"))
 user = str(os.getenv("DB_USER"))
 password = str(os.getenv("PASSWORD"))
 db_name = str(os.getenv("DB_NAME"))
-port = int(os.getenv("PORT"))
+port = str(os.getenv("PORT"))
 
 tg_token = str(os.getenv("BOT_TOKEN"))
 admins_id = str(os.getenv('BOT_ADMINS'))

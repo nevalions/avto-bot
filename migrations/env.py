@@ -16,7 +16,7 @@ section = config.config_ini_section
 config.set_section_option(section, 'user', user)
 config.set_section_option(section, 'password', password)
 config.set_section_option(section, 'host', host)
-config.set_section_option(section, 'port', '32777')
+config.set_section_option(section, 'port', port)
 config.set_section_option(section, 'db_name', db_name)
 
 # Interpret the config file for Python logging.
