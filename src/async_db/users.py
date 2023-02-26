@@ -1,65 +1,85 @@
-from __future__ import annotations
-
 import asyncio
-import datetime
-from typing import List
 
-from sqlalchemy import ForeignKey
+from datetime import datetime
+
+from sqlalchemy import Column, Integer, String, TIMESTAMP
 from sqlalchemy import func
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import async_sessionmaker
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.ext.asyncio import create_async_engine
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
-from sqlalchemy.orm import selectinload
 
-from base import async_engine_start
-
-from src.config import user, password, host, port, db_name
-
-
-class Base(DeclarativeBase):
-    pass
+from src.async_db.base import DATABASE_URL, Base, Database
 
 
 class User(Base):
     __tablename__ = 'users'
+    __table_args__ = {'extend_existing': True}
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str]
-    email: Mapped[str]
-    registered_at: Mapped[datetime.datetime] = mapped_column(server_default=func.utcnow())
+    id = Column('id', Integer, primary_key=True)
+    username = Column('username', String)
+    email = Column('email', String)
+    registered_at = Column('registered_at', TIMESTAMP, default=func.utcnow())
+
+    def __init__(self, username, email, registered_at=datetime.utcnow()):
+        self.username = username
+        self.email = email
+        self.registered_at = registered_at
+
+    def __repr__(self):
+        return f'({self.id}) {self.username} {self.email} registered at {self.registered_at}'
 
 
-async def insert_objects(async_session: async_sessionmaker[AsyncSession]) -> None:
-    async with async_session() as session:
-        async with session.begin():
-            session.add_all(
-                [
-                    User(username='test1', email='test1@test.com')
-                ]
-            )
+class UserService:
+    def __init__(self, database):
+        self.db = database
+
+    async def add_user(self, username, email):
+        async with self.db.async_session() as session:
+            user = User(username=username, email=email)
+            session.add(user)
+            await session.commit()
+            return user
+
+    async def get_user_by_id(self, user_id):
+        async with self.db.async_session() as session:
+            user = await session.execute(select(User).filter_by(id=user_id))
+            return user.scalars().one_or_none()
+
+    async def get_user_by_email(self, user_email):
+        async with self.db.async_session() as session:
+            user = await session.execute(select(User).filter_by(email=user_email))
+            return user.scalars().one_or_none()
+
+    async def update_username(self, username, user_id):
+        async with self.db.async_session() as session:
+            result = await session.execute(select(User).filter_by(id=user_id))
+
+            user = result.scalars().one_or_none()
+            if user:
+                user.username = username
+            else:
+                print(f'Error changing username')
+
+            await session.commit()
+            return user
 
 
 async def async_main() -> None:
-    # async_session = async_engine_start()
+    db = Database(DATABASE_URL)
+    user_service = UserService(db)
+    # await user_service.add_user('John Doe2', 'mail2@mail.ru')
 
+    # found_user = await user_service.get_user_by_id(14)
+    found_user = await user_service.get_user_by_email('mail@mail.ru')
+    print(vars(found_user)['email'])
+    print(found_user.__dict__)
+    print(found_user.username)
+    x = [*vars(found_user).values()]
+    print(x[1:])
+    change_username = await  user_service.update_username('ROOT', found_user.id)
+    print(vars(change_username))
+    print(vars(found_user))
 
+    await db.engine.dispose()
 
-    DATABASE_URL = f"postgresql+asyncpg://{user}:{password}@{host}:{str(port)}/{db_name}"
-
-    engine = create_async_engine(DATABASE_URL, echo=True)
-    async_session = async_sessionmaker(engine, expire_on_commit=False)
-
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
-    await insert_objects(async_session)
-
-    await engine.dispose()
-
-
-asyncio.run(async_main())
+if __name__ == '__main__':
+    asyncio.run(async_main())

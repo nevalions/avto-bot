@@ -55,7 +55,3 @@ class AutoBotTgUsersDB(Db):
                 return None
         except Exception as ex:
             print(ex)
-
-
-# add_tg_user = AutoBotTgUsersDB()
-# add_tg_user.add_tg_user_register(5685602622, 33, 84891021)

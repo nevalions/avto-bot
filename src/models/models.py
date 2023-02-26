@@ -39,9 +39,9 @@ tg_users = Table(
     metadata,
     Column('id', Integer, primary_key=True),
     Column('tg_users_id', BigInteger, nullable=True),
-    Column('chat_id', BigInteger, nullable=False),
+    Column('chat_id', BigInteger, nullable=False, unique=True),
     Column('tg_username', String(50), nullable=False),
     Column('tg_firstname', String(50), default=''),
     Column('tg_lastname', String(50), default=''),
-    Column('fk_tg_users_users', ForeignKey('users.id'))
+    Column('fk_tg_users_users', ForeignKey('users.id'), nullable=True)
 )
