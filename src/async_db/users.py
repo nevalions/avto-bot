@@ -75,7 +75,7 @@ async def async_main() -> None:
     print(found_user.username)
     x = [*vars(found_user).values()]
     print(x[1:])
-    change_username = await  user_service.update_username('ROOT', found_user.id)
+    change_username = await user_service.update_username('ROOT', found_user.id)
     print(vars(change_username))
     print(vars(found_user))
 

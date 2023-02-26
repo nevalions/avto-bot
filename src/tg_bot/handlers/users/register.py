@@ -126,3 +126,4 @@ async def register_email(message: types.Message, state: FSMContext):
 
     await message.answer(f"User {data['username']} with email: {data['email']} registered", reply_markup=ikb_menu)
     await state.finish()
+    await db.engine.dispose()

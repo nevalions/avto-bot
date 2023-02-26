@@ -37,8 +37,6 @@ async def inline_start_menu(message: types.Message):
 
     try:
         is_registered = await tg_user_service.get_tg_user_by_chat_id(int(message.chat.id))
-        print(is_registered.tg_users_id)
-
         if is_registered.tg_users_id is not None:
             autolog_warning(f'Telegram user {message.chat.id} already registered')
             await message.answer(f'Welcome back {message.from_user.first_name}!', reply_markup=ikb_menu)

@@ -19,11 +19,11 @@ cars = Table(
     Column('id', Integer, primary_key=True),
     Column('model', String(50), nullable=False),
     Column('model_name', String(50), nullable=False),
-    Column('mileage', Integer, nullable=False),
+    Column('mileage', BigInteger, nullable=False),
     Column('measures', String(15), nullable=False),
     Column('date_added', TIMESTAMP, default=datetime.utcnow),
     Column('description', Text, default=''),
-    Column('current_mileage', Integer, nullable=False)
+    Column('current_mileage', BigInteger, nullable=False)
 )
 
 users_cars = Table(
