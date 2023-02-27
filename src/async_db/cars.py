@@ -83,7 +83,7 @@ class CarService:
 
     async def get_all_user_cars(self, user_id):
         async with self.db.async_session() as session:
-            result = await session.execute(select(Car).filter_by(fk_users=user_id))
+            result = await session.execute(select(Car).order_by(Car.model).filter_by(fk_users=user_id))
 
             all_user_cars = []
             for car in result.scalars():
@@ -104,6 +104,11 @@ class CarService:
     async def update_car_current_mileage(self, car_id, current_mileage):
         async with self.db.async_session() as session:
             await session.execute(update(Car).where(Car.id == car_id).values(current_mileage=current_mileage))
+            await session.commit()
+
+    async def update_car_description(self, car_id, description):
+        async with self.db.async_session() as session:
+            await session.execute(update(Car).where(Car.id == car_id).values(description=description))
             await session.commit()
 
     async def delete_car(self, car_id):

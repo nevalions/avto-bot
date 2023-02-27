@@ -16,8 +16,7 @@ async def show_delete_cars_menu(car_id):
                                                                         callback_data=car_action_menu_cd.new(
                                                                             action='delete_ok', car_id=car_id)),
                                                    InlineKeyboardButton(text='Cancel',
-                                                                        callback_data=car_action_menu_cd.new(
-                                                                            action='cancel', car_id=car_id))
+                                                                        callback_data='cancel_delete')
                                                ]
                                            ])
     return delete_car_menu
@@ -29,33 +28,52 @@ def show_all_cars_menu(car_id):
                                               [
                                                   InlineKeyboardButton(text='Edit model',
                                                                        callback_data=car_action_menu_cd.new(
-                                                                           action='edit_model', car_id=car_id)),
+                                                                           action='edit_model', car_id=car_id)
+                                                                       ),
                                                   InlineKeyboardButton(text='Edit model name',
                                                                        callback_data=car_action_menu_cd.new(
-                                                                           action='edit_model_name', car_id=car_id))
+                                                                           action='edit_model_name', car_id=car_id)
+                                                                       )
                                               ],
                                               [
                                                   InlineKeyboardButton(text='Add current mileage',
-                                                                       callback_data='add_cur_mil')
+                                                                       callback_data=car_action_menu_cd.new(
+                                                                           action='edit_current_mileage', car_id=car_id)
+                                                                       )
+                                              ],
+                                              [
+                                                  InlineKeyboardButton(text='Edit description',
+                                                                       callback_data=car_action_menu_cd.new(
+                                                                           action='edit_description', car_id=car_id)
+                                                                       )
+                                              ],
+                                              [
+                                                  InlineKeyboardButton(text='-',
+                                                                       callback_data=car_action_menu_cd.new(
+                                                                           action='spacer', car_id=car_id)
+                                                                       )
                                               ],
                                               [
                                                   InlineKeyboardButton(text='Add TO',
                                                                        callback_data='add_to')
                                               ],
                                               [
-                                                  InlineKeyboardButton(text='----------',
+                                                  InlineKeyboardButton(text='-',
                                                                        callback_data=car_action_menu_cd.new(
-                                                                           action='spacer', car_id=car_id))
+                                                                           action='spacer', car_id=car_id)
+                                                                       )
                                               ],
                                               [
                                                   InlineKeyboardButton(text='DELETE CAR',
                                                                        callback_data=car_action_menu_cd.new(
-                                                                           action='delete', car_id=car_id))
+                                                                           action='delete', car_id=car_id)
+                                                                       )
                                               ],
                                               [
-                                                  InlineKeyboardButton(text='----------',
+                                                  InlineKeyboardButton(text='-',
                                                                        callback_data=car_action_menu_cd.new(
-                                                                           action='spacer', car_id=car_id))
+                                                                           action='spacer', car_id=car_id)
+                                                                       )
                                               ],
                                               [
                                                   InlineKeyboardButton(text='Add new car',
