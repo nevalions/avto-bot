@@ -54,7 +54,7 @@ async def register_command_inline(call: CallbackQuery, state: FSMContext):
 
 
 @dp.callback_query_handler(state='*', text='cancel')
-async def register_command_inline(call: CallbackQuery, state: FSMContext):
+async def cancel_register(call: CallbackQuery, state: FSMContext):
     current_state = await state.get_state()
     if current_state is None:
         return
