@@ -61,3 +61,4 @@ dmypy.json
 .pytest_cache
 
 /ac.sh
+/migrations/versions/
