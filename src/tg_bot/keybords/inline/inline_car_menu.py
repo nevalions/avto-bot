@@ -12,10 +12,10 @@ async def show_delete_cars_menu(car_id):
     delete_car_menu = InlineKeyboardMarkup(row_width=2,
                                            inline_keyboard=[
                                                [
-                                                   InlineKeyboardButton(text='delete',
+                                                   InlineKeyboardButton(text='Delete',
                                                                         callback_data=car_action_menu_cd.new(
-                                                                            action='delete', car_id=car_id)),
-                                                   InlineKeyboardButton(text='cancel',
+                                                                            action='delete_ok', car_id=car_id)),
+                                                   InlineKeyboardButton(text='Cancel',
                                                                         callback_data=car_action_menu_cd.new(
                                                                             action='cancel', car_id=car_id))
                                                ]
@@ -28,9 +28,11 @@ def show_all_cars_menu(car_id):
                                           inline_keyboard=[
                                               [
                                                   InlineKeyboardButton(text='Edit model',
-                                                                       callback_data='edit_model'),
+                                                                       callback_data=car_action_menu_cd.new(
+                                                                           action='edit_model', car_id=car_id)),
                                                   InlineKeyboardButton(text='Edit model name',
-                                                                       callback_data='edit_model_name')
+                                                                       callback_data=car_action_menu_cd.new(
+                                                                           action='edit_model_name', car_id=car_id))
                                               ],
                                               [
                                                   InlineKeyboardButton(text='Add current mileage',
@@ -38,36 +40,39 @@ def show_all_cars_menu(car_id):
                                               ],
                                               [
                                                   InlineKeyboardButton(text='Add TO',
-                                                                       callback_data='to')
+                                                                       callback_data='add_to')
+                                              ],
+                                              [
+                                                  InlineKeyboardButton(text='----------',
+                                                                       callback_data=car_action_menu_cd.new(
+                                                                           action='spacer', car_id=car_id))
                                               ],
                                               [
                                                   InlineKeyboardButton(text='DELETE CAR',
                                                                        callback_data=car_action_menu_cd.new(
                                                                            action='delete', car_id=car_id))
-                                              ]
+                                              ],
+                                              [
+                                                  InlineKeyboardButton(text='----------',
+                                                                       callback_data=car_action_menu_cd.new(
+                                                                           action='spacer', car_id=car_id))
+                                              ],
+                                              [
+                                                  InlineKeyboardButton(text='Add new car',
+                                                                       callback_data='addcar')
+                                              ],
+
                                           ])
     return ikb_car_menu_i
-#
-# ikb_car_menu = InlineKeyboardMarkup(row_width=2,
-#                                     inline_keyboard=[
-#                                         [
-#                                             InlineKeyboardButton(text='Edit model',
-#                                                                  callback_data='edit_model'),
-#                                             InlineKeyboardButton(text='Edit model name',
-#                                                                  callback_data='edit_model_name')
-#                                         ],
-#                                         [
-#                                             InlineKeyboardButton(text='Add current mileage',
-#                                                                  callback_data='add_cur_mil')
-#                                         ],
-#                                         [
-#                                             InlineKeyboardButton(text='Add TO',
-#                                                                  callback_data='to')
-#                                         ],
-#                                         [
-#                                             InlineKeyboardButton(text='DELETE CAR',
-#                                                                  callback_data='delete_menu')
-#                                         ]
-#                                     ])
-#
 
+
+def show_cars_cancel_menu(car_id):
+    ikb_car_cancel_menu = InlineKeyboardMarkup(row_width=1,
+                                               inline_keyboard=[
+                                                   [
+                                                       InlineKeyboardButton(text='Cancel',
+                                                                            callback_data=car_action_menu_cd.new(
+                                                                                action='cancel', car_id=car_id))
+                                                   ],
+                                               ])
+    return ikb_car_cancel_menu

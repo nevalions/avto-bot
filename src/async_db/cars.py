@@ -5,11 +5,11 @@ from datetime import datetime
 
 from sqlalchemy import Column, Integer, String, TIMESTAMP, BigInteger, Text, ForeignKey
 from sqlalchemy import func
-from sqlalchemy import select
-from sqlalchemy import delete
+from sqlalchemy import select, delete, update
+
 from sqlalchemy.orm import relationship
 
-from models.models import users
+from models.models import users, cars
 from src.async_db.base import DATABASE_URL, Base, Database
 
 
@@ -91,6 +91,21 @@ class CarService:
 
             return all_user_cars
 
+    async def update_car_model(self, car_id, new_model):
+        async with self.db.async_session() as session:
+            await session.execute(update(Car).where(Car.id == car_id).values(model=new_model))
+            await session.commit()
+
+    async def update_car_model_name(self, car_id, new_model_name):
+        async with self.db.async_session() as session:
+            await session.execute(update(Car).where(Car.id == car_id).values(model_name=new_model_name))
+            await session.commit()
+
+    async def update_car_current_mileage(self, car_id, current_mileage):
+        async with self.db.async_session() as session:
+            await session.execute(update(Car).where(Car.id == car_id).values(current_mileage=current_mileage))
+            await session.commit()
+
     async def delete_car(self, car_id):
         async with self.db.async_session() as session:
             await session.execute(delete(Car).filter_by(id=car_id))
@@ -110,11 +125,13 @@ async def async_main() -> None:
 
     # all_cars = await car_service.get_all_cars()
     # pprint(all_cars)
-
-    await car_service.delete_car(9)
-
-    all_users_cars = await car_service.get_all_user_cars(1)
-    pprint((all_users_cars))
+    #
+    # await car_service.delete_car(9)
+    #
+    # all_users_cars = await car_service.get_all_user_cars(1)
+    # pprint((all_users_cars))
+    await car_service.update_car_model(10, 'Ford')
+    # await car_service.update_car_current_mileage(10, 22222222)
 
     await db.engine.dispose()
 
