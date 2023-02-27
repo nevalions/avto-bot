@@ -9,7 +9,7 @@ from sqlalchemy import select, delete, update
 
 from sqlalchemy.orm import relationship
 
-from models.models import users, cars
+from src.models.models import users, cars
 from src.async_db.base import DATABASE_URL, Base, Database
 
 

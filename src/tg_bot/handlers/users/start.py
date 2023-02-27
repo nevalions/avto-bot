@@ -2,8 +2,8 @@ from aiogram import types
 
 import logging.config
 
-from async_db.base import DATABASE_URL, Database
-from async_db.tg_users import TgUserService
+from src.async_db.base import DATABASE_URL, Database
+from src.async_db.tg_users import TgUserService
 
 from src.logs.log_conf_main import LOGGING_CONFIG
 from src.logs.func_auto_log import autolog_warning, autolog_info

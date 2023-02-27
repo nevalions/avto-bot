@@ -15,9 +15,9 @@ from src.tg_bot.keybords.inline import ikb_cancel_menu, ikb_no_description_menu,
 
 from src.classes import Car
 
-from async_db.base import DATABASE_URL, Database
-from async_db.tg_users import TgUserService
-from async_db.cars import CarService
+from src.async_db.base import DATABASE_URL, Database
+from src.async_db.tg_users import TgUserService
+from src.async_db.cars import CarService
 
 
 logging.config.dictConfig(LOGGING_CONFIG)
