@@ -1,5 +1,3 @@
-src/tg_bot/config_tg.py
-
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
@@ -61,4 +59,5 @@ venv.bak/
 dmypy.json
 
 .pytest_cache
-/src/tg_bot/config_tg.py
+
+/ac.sh

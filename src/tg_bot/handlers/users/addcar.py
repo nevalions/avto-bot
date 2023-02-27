@@ -181,8 +181,8 @@ async def enter_description(message: types.Message, state: FSMContext):
             fk_users=data['user_id']
         )
 
-        autolog_info(f"Car {car.model}, {car.model_name}, {car.mileage} added at {car.date_added}")
-        await message.answer(f"{car.model} {car.model_name} added at {car.date_added}",
+        autolog_info(f"Car {car.model}, {car.model_name}, {car.mileage} added at {car.date_added.isoformat()}")
+        await message.answer(f"{car.model} {car.model_name} added at {car.date_added.isoformat()}",
                              reply_markup=ikb_menu)
 
     except Exception as ex:
@@ -209,8 +209,10 @@ async def no_description(call: CallbackQuery, state: FSMContext):
             fk_users=data['user_id']
         )
 
-        autolog_info(f"Car {car.model}, {car.model_name}, {car.mileage} added at {car.date_added}\n{car.description}")
-        await call.message.answer(f"{car.model} {car.model_name} added at {car.date_added}\n{car.description}",
+        autolog_info(f"Car {car.model}, {car.model_name}, {car.mileage} added at {car.date_added.isoformat()}"
+                     f"\n{car.description}")
+        await call.message.answer(f"{car.model} {car.model_name} added at {car.date_added.isoformat()}"
+                                  f"\n{car.description}",
                                   reply_markup=ikb_menu)
     except Exception as ex:
         logging.error(ex)
