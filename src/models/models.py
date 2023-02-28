@@ -57,12 +57,14 @@ works = Table(
     Column('title', String(50), nullable=False),
     Column('is_regular', Boolean, default=False),
     Column('description', Text, default=''),
-    Column('next_maintenance_after', BigInteger, default=0)
+    Column('next_maintenance_after', BigInteger, default=0),
+    Column('is_custom', Boolean, default=False),
+    Column('fk_users', ForeignKey('users.id'), nullable=True)
 )
 
 maints_works = Table(
     'maints_works',
     metadata,
-    Column('fk_maintenances', ForeignKey('maintenances.id'), nullable=False),
+    Column('fk_maintenances', ForeignKey('maintenances.id'), nullable=False, primary_key=True),
     Column('fk_works', ForeignKey('works.id'), nullable=False)
 )
