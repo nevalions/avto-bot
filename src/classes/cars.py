@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 
 class Car:
     # car class
-    description = ''
 
     def __init__(
             self, model: str,
@@ -19,8 +18,8 @@ class Car:
             mileage: str,
             measures: str,
             date_added: str,
-            description: str,
-            current_mileage: str
+            current_mileage: str,
+            description: str = '',
     ):
         autolog_info(f'Car class called')
         self.model = model
@@ -51,8 +50,8 @@ class Car:
         autolog_info(f'Car class check "{txt}"')
         if type(txt) != str:
             raise TypeError('Text must be str type')
-        if len(txt.strip()) < 2:
-            raise TypeError('Text must be minimum 2 letters')
+        if len(txt.strip()) < 1:
+            raise TypeError('Text must be minimum 1 letter')
 
     @classmethod
     # check is digit
@@ -196,13 +195,13 @@ class Car:
 
 def main():
     try:
-        car1 = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', '', '1')
+        car1 = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', '1', '')
         print(car1)
     except Exception as ex:
         autolog_warning('Not valid car')
 
     try:
-        car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', 'BLABLABLA', '300000')
+        car = Car('Gmc', 'Savana', '300000', 'miles', '22.01.2023', '300000', 'BLABLABLA')
         print(*vars(car).values())
         car.current_mileage = '2'
         print(*vars(car).values())

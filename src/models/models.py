@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import MetaData, Table, Column, Integer, String, TIMESTAMP, ForeignKey, BigInteger, Text
+from sqlalchemy import MetaData, Table, Column, Integer, String, TIMESTAMP, ForeignKey, BigInteger, Text, Boolean
 
 metadata = MetaData()
 
@@ -37,4 +37,32 @@ tg_users = Table(
     Column('tg_firstname', String(50), default=''),
     Column('tg_lastname', String(50), default=''),
     Column('fk_users', ForeignKey('users.id'), nullable=True)
+)
+
+maintenances = Table(
+    'maintenances',
+    metadata,
+    Column('id', Integer, primary_key=True),
+    Column('title', String(50), nullable=False),
+    Column('date', TIMESTAMP, default=datetime.utcnow),
+    Column('current_mileage', BigInteger, nullable=False),
+    Column('description', Text, default=''),
+    Column('fk_cars', ForeignKey('cars.id'), nullable=True)
+)
+
+works = Table(
+    'works',
+    metadata,
+    Column('id', Integer, primary_key=True),
+    Column('title', String(50), nullable=False),
+    Column('is_regular', Boolean, default=False),
+    Column('description', Text, default=''),
+    Column('next_maintenance_after', BigInteger, default=0)
+)
+
+maints_works = Table(
+    'maints_works',
+    metadata,
+    Column('fk_maintenances', ForeignKey('maintenances.id'), nullable=False),
+    Column('fk_works', ForeignKey('works.id'), nullable=False)
 )
