@@ -6,4 +6,4 @@ from src.tg_bot.keybords.inline import ikb_menu
 
 @dp.message_handler(commands='menu')
 async def inline_menu(message: types.Message):
-    await message.answer('Menu', reply_markup=ikb_menu)
+    await message.answer('Main menu', reply_markup=ikb_menu)

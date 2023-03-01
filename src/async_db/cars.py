@@ -77,7 +77,7 @@ class CarService:
 
     async def get_all_cars(self):
         async with self.db.async_session() as session:
-            result = await session.execute(select(Car))
+            result = await session.execute(select(Car).order_by(Car.model))
 
             all_cars = []
             for car in result.scalars():

@@ -11,7 +11,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery
 
 from src.tg_bot.loader import dp
-from src.tg_bot.keybords.inline import ikb_cancel_menu, ikb_no_description_menu, ikb_km_m_menu, ikb_menu
+from src.tg_bot.keybords.inline import ikb_cancel_menu, ikb_no_description_menu, ikb_km_m_menu, ikb_menu, ikb_start_menu
 
 from src.classes import Car
 
@@ -19,10 +19,8 @@ from src.async_db.base import DATABASE_URL, Database
 from src.async_db.tg_users import TgUserService
 from src.async_db.cars import CarService
 
-
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
-
 
 now = datetime.now()
 
@@ -46,14 +44,18 @@ async def add_car_command(call: CallbackQuery, state: FSMContext):
 
     try:
         is_registered = await tg_user_service.get_tg_user_by_chat_id(int(call.message.chat.id))
-        if is_registered.tg_user_id is not None:
+        if is_registered.tg_user_id:
             user_id = is_registered.fk_user
             async with state.proxy() as data:
                 data['user_id'] = user_id
-        await AddCarForm.enter_model.set()
-        await call.message.answer(
-            f"Please, enter car model (Lada, Ford, Chevrolet, etc)", reply_markup=ikb_cancel_menu
-        )
+            await AddCarForm.enter_model.set()
+            await call.message.answer(
+                f"Please, enter car model (Lada, Ford, Chevrolet, etc)", reply_markup=ikb_cancel_menu
+            )
+        else:
+            autolog_warning(f'Telegram user {call.message.chat.id} not registered')
+            await call.message.answer(f'Hi! Please register.\n'
+                                      f'We need some info, to add a garage for you.', reply_markup=ikb_start_menu)
     except Exception as ex:
         logging.error(ex)
     finally:

@@ -19,29 +19,29 @@ class Maintenance(Base):
     id = Column('id', Integer, primary_key=True)
     title = Column('title', String, nullable=False)
     date = Column('date', TIMESTAMP, default=func.utcnow())
-    current_mileage = Column('current_mileage', BigInteger, nullable=False)
+    maintenance_mileage = Column('maintenance_mileage', BigInteger, nullable=False)
     description = Column('description', Text, default='')
     fk_car = Column('fk_car', ForeignKey(car.c.id), nullable=True)
 
     def __init__(
             self,
             title,
-            current_mileage,
+            maintenance_mileage,
             date=datetime.utcnow(),
             description='',
             fk_car=None
     ):
         self.title = title
-        self.current_mileage = current_mileage
+        self.maintenance_mileage = maintenance_mileage
         self.date = date
         self.description = description
         self.fk_car = fk_car
 
     def __repr__(self):
         if self.description == '':
-            fstring = f'{self.title} {self.date}, with {self.current_mileage}'
+            fstring = f'{self.title} {self.date}, with {self.maintenance_mileage}'
         else:
-            fstring = (f'{self.title} {self.date}, with {self.current_mileage},\n'
+            fstring = (f'{self.title} {self.date}, with {self.maintenance_mileage},\n'
                        f'Description: {str(self.description)}')
         return fstring
 
@@ -66,11 +66,11 @@ class MaintenanceService:
     def __init__(self, database):
         self.db = database
 
-    async def add_maintenance(self, title, current_mileage, date=datetime.utcnow(), description='', fk_car=None):
+    async def add_maintenance(self, title, maintenance_mileage, date=datetime.utcnow(), description='', fk_car=None):
         async with self.db.async_session() as session:
             maintenance = Maintenance(
                 title=title,
-                current_mileage=current_mileage,
+                maintenance_mileage=maintenance_mileage,
                 date=date,
                 description=description,
                 fk_car=fk_car
@@ -110,10 +110,10 @@ class MaintenanceService:
             await session.execute(update(Maintenance).where(Maintenance.id == maint_id).values(date=new_date))
             await session.commit()
 
-    async def update_maintenance_current_mileage(self, maint_id, new_current_mileage):
+    async def update_maintenance_mileage(self, maint_id, new_maintenance_mileage):
         async with self.db.async_session() as session:
             await session.execute(update(Maintenance).where(Maintenance.id == maint_id).values(
-                current_mileage=new_current_mileage))
+                maintenance_mileage=new_maintenance_mileage))
             await session.commit()
 
     async def update_maintenance_description(self, maint_id, new_description):
@@ -133,7 +133,7 @@ async def async_main() -> None:
     maintenance_service = MaintenanceService(db)
 
     maint = await maintenance_service.add_maintenance(
-        title='TO3', current_mileage=100, description='Some works3', fk_car=1
+        title='TO3', maintenance_mileage=100, description='Some works3', fk_car=1
     )
     print(maint)
 

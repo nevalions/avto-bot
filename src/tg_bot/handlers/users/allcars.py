@@ -52,6 +52,7 @@ async def show_users_cars(call: CallbackQuery):
                         f"Info: {car['description']}",
                         reply_markup=show_all_cars_menu(car['id'])
                     )
+                await call.message.answer(f'Main menu', reply_markup=ikb_menu)
             else:
                 autolog_warning(f"tg_user {call.message.chat.id} don't have any car")
                 await call.message.answer("You don't have any car", reply_markup=ikb_menu)
@@ -66,17 +67,24 @@ async def show_users_cars(call: CallbackQuery):
 @dp.callback_query_handler(car_action_menu_cd.filter(action='cancel'), state='*')
 async def cancel_car_action(query: CallbackQuery, callback_data: dict, state: FSMContext):
     current_state = await state.get_state()
-    autolog_warning(f'User canceled car id({callback_data["car_id"]}) action')
+    db = Database(DATABASE_URL)
+    car_service = CarService(db)
+
+    car_id = int(callback_data['car_id'])
+    car = await car_service.get_car_by_id(car_id)
+
+    autolog_warning(f'User canceled car id({car.id}) action')
     if current_state is None:
         return
 
     await state.finish()
+
     await query.message.answer(
         f'Action cancelled.', reply_markup=ikb_menu
     )
 
 
-@dp.callback_query_handler(car_action_menu_cd.filter(action='edit_model'))
+@dp.callback_query_handler(car_action_menu_cd.filter(action='edit_car_model'))
 async def update_inline_car_model(query: CallbackQuery, callback_data: dict, state: FSMContext):
     autolog_info(f"Edit car id {callback_data['car_id']} model")
     async with state.proxy() as data:
@@ -112,7 +120,7 @@ async def enter_model(message: Message, state: FSMContext):
         await db.engine.dispose()
 
 
-@dp.callback_query_handler(car_action_menu_cd.filter(action='edit_model_name'))
+@dp.callback_query_handler(car_action_menu_cd.filter(action='edit_car_model_name'))
 async def update_inline_car_model_name(query: CallbackQuery, callback_data: dict, state: FSMContext):
     autolog_info(f"Edit car id {callback_data['car_id']} model name")
     async with state.proxy() as data:
@@ -148,7 +156,7 @@ async def enter_model(message: Message, state: FSMContext):
         await db.engine.dispose()
 
 
-@dp.callback_query_handler(car_action_menu_cd.filter(action='edit_current_mileage'))
+@dp.callback_query_handler(car_action_menu_cd.filter(action='edit_car_current_mileage'))
 async def update_inline_car_model_name(query: CallbackQuery, callback_data: dict, state: FSMContext):
     autolog_info(f"Edit car id {callback_data['car_id']} current mileage")
     async with state.proxy() as data:
@@ -163,7 +171,6 @@ async def update_inline_car_model_name(query: CallbackQuery, callback_data: dict
 async def enter_model(message: Message, state: FSMContext):
     autolog_info(f"Enter car current milage")
     db = Database(DATABASE_URL)
-    tg_user_service = TgUserService(db)
     car_service = CarService(db)
 
     try:
@@ -188,7 +195,7 @@ async def enter_model(message: Message, state: FSMContext):
         await db.engine.dispose()
 
 
-@dp.callback_query_handler(car_action_menu_cd.filter(action='edit_description'))
+@dp.callback_query_handler(car_action_menu_cd.filter(action='edit_car_description'))
 async def update_inline_car_model_name(query: CallbackQuery, callback_data: dict, state: FSMContext):
     autolog_info(f"Edit car id {callback_data['car_id']} description")
     async with state.proxy() as data:
@@ -201,8 +208,8 @@ async def update_inline_car_model_name(query: CallbackQuery, callback_data: dict
 async def enter_model(message: Message, state: FSMContext):
     autolog_info(f"Enter car description")
     db = Database(DATABASE_URL)
-    tg_user_service = TgUserService(db)
     car_service = CarService(db)
+
     try:
         async with state.proxy() as data:
             data['car_description'] = message.text
@@ -215,26 +222,42 @@ async def enter_model(message: Message, state: FSMContext):
         await db.engine.dispose()
 
 
-@dp.callback_query_handler(state='*', text='cancel_delete')
-async def cancel_inline(call: CallbackQuery):
-    autolog_warning(f'Telegram user canceled deleting a car')
-    await call.message.delete()
-    await call.message.answer('Cancelled.', reply_markup=ikb_menu)
-
-
-@dp.callback_query_handler(car_action_menu_cd.filter(action='delete'))
+@dp.callback_query_handler(car_action_menu_cd.filter(action='delete_car'))
 async def delete_inline_car(query: CallbackQuery, callback_data: dict):
+    autolog_info(f"Enter car description")
+    db = Database(DATABASE_URL)
+    car_service = CarService(db)
+
     autolog_info(f"Delete car ask")
-    markup = await show_delete_cars_menu(callback_data['car_id'])
-    await query.message.answer(f'Are you sure you want to delete {callback_data["car_id"]}', reply_markup=markup)
+    car_id = int(callback_data['car_id'])
+    car = await car_service.get_car_by_id(car_id)
+    markup = await show_delete_cars_menu(car_id)
+
+    await query.message.answer(f'Are you sure you want to delete {car.model} {car.model_name}', reply_markup=markup)
 
 
-@dp.callback_query_handler(car_action_menu_cd.filter(action='delete_ok'))
+@dp.callback_query_handler(car_action_menu_cd.filter(action='cancel_delete_car'))
+async def cancel_delete_inline_car(query: CallbackQuery, callback_data: dict):
+    autolog_warning(f'Telegram user canceled deleting a car')
+    db = Database(DATABASE_URL)
+    car_service = CarService(db)
+
+    car_id = int(callback_data['car_id'])
+    car = await car_service.get_car_by_id(car_id)
+
+    await query.message.delete()
+    await query.message.answer(f'Car {car.model} {car.model_name} deleting cancelled.')
+
+
+@dp.callback_query_handler(car_action_menu_cd.filter(action='delete_car_ok'))
 async def delete_car_ok(query: CallbackQuery, callback_data: dict):
     autolog_info(f"Delete car ok")
     db = Database(DATABASE_URL)
-    tg_user_service = TgUserService(db)
     car_service = CarService(db)
-    await car_service.delete_car(int(callback_data['car_id']))
+
+    car_id = int(callback_data['car_id'])
+    car = await car_service.get_car_by_id(car_id)
+
+    await car_service.delete_car(car_id)
     await db.engine.dispose()
-    await query.message.answer(f'Car deleted', reply_markup=ikb_menu)
+    await query.message.answer(f'Car {car.model} {car.model_name} deleted', reply_markup=ikb_menu)

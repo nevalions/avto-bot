@@ -45,7 +45,7 @@ maintenance = Table(
     Column('id', Integer, primary_key=True),
     Column('title', String(50), nullable=False),
     Column('date', TIMESTAMP, default=datetime.utcnow),
-    Column('current_mileage', BigInteger, nullable=False),
+    Column('maintenance_mileage', BigInteger, nullable=False),
     Column('description', Text, default=''),
     Column('fk_car', ForeignKey('car.id'), nullable=True)
 )

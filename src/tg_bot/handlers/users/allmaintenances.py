@@ -23,7 +23,7 @@ class UpdateCarForm(StatesGroup):
     maintenance_id = State()
     maintenance_title = State()
     maintenance_date = State()
-    maintenance_current_mileage = State()
+    maintenance_mileage = State()
     maintenance_description = State()
     maintenance_fk_car = State()
 
@@ -44,7 +44,7 @@ async def show_cars_maintenances(query: CallbackQuery, callback_data: dict):
                     f'Car: {car.model} {car.model_name}\n'
                     f'Maintenance: {maint["title"]}\n'
                     f'Date: {maint["date"]}\n'
-                    f'Current mileage: {maint["current_mileage"]}\n',
+                    f'Maintenance mileage: {maint["maintenance_mileage"]}\n',
 
                     reply_markup=show_all_car_maintenance_menu(maintenance_id=0, car_id=car_id)
                 )
@@ -56,7 +56,8 @@ async def show_cars_maintenances(query: CallbackQuery, callback_data: dict):
         else:
             autolog_warning(f"Car: {car.model} {car.model_name}\n don't have any maintenances")
             await query.message.answer(
-                f"Car: {car.model} {car.model_name}\n does not have any maintenances",
+                f"Car: {car.model} {car.model_name}\n"
+                f"Does not have any maintenances",
                 reply_markup=add_new_maintenance(maintenance_id=0, car_id=car_id))
 
             await query.message.answer(f'Main menu', reply_markup=ikb_menu)

@@ -29,6 +29,19 @@ def show_all_car_maintenance_menu(maintenance_id=None, car_id=None):
         row_width=2,
         inline_keyboard=[
             [
+                InlineKeyboardButton(text='Show maintenance works',
+                                     callback_data='car_maintenance_works')
+            ],
+            [
+                InlineKeyboardButton(text='-',
+                                     callback_data=maintenance_action_menu_cd.new(
+                                         action='spacer',
+                                         maintenance_id=maintenance_id,
+                                         car_id=car_id
+                                     )
+                                     )
+            ],
+            [
                 InlineKeyboardButton(text='Edit maintenance title',
                                      callback_data=maintenance_action_menu_cd.new(
                                          action='edit_maintenance_title',
@@ -63,40 +76,9 @@ def show_all_car_maintenance_menu(maintenance_id=None, car_id=None):
                                      )
             ],
             [
-                InlineKeyboardButton(text='-',
-                                     callback_data=maintenance_action_menu_cd.new(
-                                         action='spacer',
-                                         maintenance_id=maintenance_id,
-                                         car_id=car_id
-                                     )
-                                     )
-            ],
-            [
-                InlineKeyboardButton(text='Show maintenance works',
-                                     callback_data='car_maintenance_works')
-            ],
-            [
-                InlineKeyboardButton(text='-',
-                                     callback_data=maintenance_action_menu_cd.new(
-                                         action='spacer',
-                                         maintenance_id=maintenance_id,
-                                         car_id=car_id
-                                     )
-                                     )
-            ],
-            [
                 InlineKeyboardButton(text='DELETE maintenance',
                                      callback_data=maintenance_action_menu_cd.new(
                                          action='delete_maintenance',
-                                         maintenance_id=maintenance_id,
-                                         car_id=car_id
-                                     )
-                                     )
-            ],
-            [
-                InlineKeyboardButton(text='-',
-                                     callback_data=maintenance_action_menu_cd.new(
-                                         action='spacer',
                                          maintenance_id=maintenance_id,
                                          car_id=car_id
                                      )
