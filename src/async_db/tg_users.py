@@ -8,28 +8,28 @@ from src.models.models import user
 
 
 class TgUser(Base):
-    __tablename__ = 'tg_users'
+    __tablename__ = 'tg_user'
     __table_args__ = {'extend_existing': True}
 
     id = Column('id', Integer, primary_key=True)
-    tg_users_id = Column('tg_users_id', BigInteger)
+    tg_user_id = Column('tg_user_id', BigInteger)
     chat_id = Column('chat_id', BigInteger)
     tg_username = Column('tg_username', String)
     tg_firstname = Column('tg_firstname', String)
     tg_lastname = Column('tg_lastname', String)
-    fk_users = Column(Integer, ForeignKey(user.c.id))
+    fk_user = Column(Integer, ForeignKey(user.c.id))
 
-    def __init__(self, chat_id, tg_username, tg_firstname, tg_lastname, fk_users=None, tg_users_id=None):
-        self.tg_users_id = tg_users_id
+    def __init__(self, chat_id, tg_username, tg_firstname, tg_lastname, fk_user=None, tg_user_id=None):
         self.chat_id = chat_id
         self.tg_username = tg_username
         self.tg_firstname = tg_firstname
         self.tg_lastname = tg_lastname
-        self.fk_users = fk_users
+        self.fk_user = fk_user
+        self.tg_user_id = tg_user_id
 
     def __repr__(self):
         return f'({self.id}) {self.chat_id} {self.tg_username} {self.tg_firstname} {self.tg_lastname} ' \
-               f'connected to user {self.fk_users}'
+               f'connected to user {self.fk_user}'
 
 
 class TgUserService:
@@ -42,8 +42,8 @@ class TgUserService:
             tg_username,
             tg_firstname,
             tg_lastname,
-            fk_users=None,
-            tg_users_id=None,
+            fk_user=None,
+            tg_user_id=None,
     ):
         async with self.db.async_session() as session:
             tg_user = TgUser(
@@ -51,8 +51,8 @@ class TgUserService:
                 tg_username=tg_username,
                 tg_firstname=tg_firstname,
                 tg_lastname=tg_lastname,
-                fk_users=fk_users,
-                tg_users_id=tg_users_id
+                fk_user=fk_user,
+                tg_user_id=tg_user_id
             )
             session.add(tg_user)
             await session.commit()
@@ -78,14 +78,14 @@ class TgUserService:
 
             return all_tg_users
 
-    async def add_tg_user_register(self, tg_users_id, fk_users, chat_id):
+    async def add_tg_user_register(self, tg_user_id, fk_user, chat_id):
         async with self.db.async_session() as session:
             result = await session.execute(select(TgUser).filter_by(chat_id=chat_id))
 
             tg_user = result.scalars().one_or_none()
             if tg_user:
-                tg_user.tg_users_id = tg_users_id
-                tg_user.fk_users = fk_users
+                tg_user.tg_user_id = tg_user_id
+                tg_user.fk_user = fk_user
             else:
                 print(f'Error user adding to tg_user')
 

@@ -40,9 +40,9 @@ async def show_users_cars(call: CallbackQuery):
     autolog_info(f"Show all user's cars")
     try:
         is_registered = await tg_user_service.get_tg_user_by_chat_id(int(call.message.chat.id))
-        if is_registered.tg_users_id is not None:
+        if is_registered.tg_user_id is not None:
             autolog_info(f"Show all tg_user {call.message.chat.id} cars")
-            user_id = is_registered.fk_users
+            user_id = is_registered.fk_user
             user_cars = await car_service.get_all_user_cars(user_id)
             if user_cars:
                 autolog_info(f"tg_user {call.message.chat.id} have some cars")
@@ -208,7 +208,7 @@ async def enter_model(message: Message, state: FSMContext):
 async def cancel_inline(call: CallbackQuery):
     autolog_warning(f'Telegram user canceled deleting a car')
     await call.message.delete()
-    await call.message.answer('Cancelled.', reply_markup=ReplyKeyboardRemove())
+    await call.message.answer('Cancelled.', reply_markup=ikb_menu)
 
 
 @dp.callback_query_handler(car_action_menu_cd.filter(action='delete'))

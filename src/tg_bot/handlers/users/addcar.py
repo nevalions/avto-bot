@@ -46,8 +46,8 @@ async def add_car_command(call: CallbackQuery, state: FSMContext):
 
     try:
         is_registered = await tg_user_service.get_tg_user_by_chat_id(int(call.message.chat.id))
-        if is_registered.tg_users_id is not None:
-            user_id = is_registered.fk_users
+        if is_registered.tg_user_id is not None:
+            user_id = is_registered.fk_user
             async with state.proxy() as data:
                 data['user_id'] = user_id
         await AddCarForm.enter_model.set()
@@ -178,7 +178,7 @@ async def enter_description(message: types.Message, state: FSMContext):
             int(data['mileage']),
             data['measures'],
             data['description'],
-            fk_users=data['user_id']
+            fk_user=data['user_id']
         )
 
         autolog_info(f"Car {car.model}, {car.model_name}, {car.mileage} added at {car.date_added.isoformat()}")
@@ -206,7 +206,7 @@ async def no_description(call: CallbackQuery, state: FSMContext):
             int(data['mileage']),
             data['measures'],
             data['description'],
-            fk_users=data['user_id']
+            fk_user=data['user_id']
         )
 
         autolog_info(f"Car {car.model}, {car.model_name}, {car.mileage} added at {car.date_added.isoformat()}"

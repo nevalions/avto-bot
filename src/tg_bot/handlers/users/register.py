@@ -40,7 +40,7 @@ async def register_command_inline(call: CallbackQuery, state: FSMContext):
         is_registered = await tg_user_service.get_tg_user_by_chat_id(data['chat_id'])
         await db.engine.dispose()
 
-        if is_registered.fk_users:
+        if is_registered.fk_user:
             autolog_warning(f'Telegram user {call.message.chat.id} already registered')
             await call.message.answer('You are already registered', reply_markup=ikb_menu)
             await state.finish()
@@ -112,7 +112,7 @@ async def register_email(message: types.Message, state: FSMContext):
             data['fk_tg_user_id'] = tg_referer_id.id
 
         autolog_warning(
-            f"Users_tg_users relation added {data['tg_user_id']}, {data['fk_tg_user_id']}, {data['chat_id']}")
+            f"User_tg_user relation added {data['tg_user_id']}, {data['fk_tg_user_id']}, {data['chat_id']}")
         await tg_user_service.add_tg_user_register(
             int(data['tg_user_id']),
             int(data['fk_tg_user_id']),
