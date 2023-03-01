@@ -19,6 +19,8 @@ class User(Base):
     email = Column('email', String)
     registered_at = Column('registered_at', TIMESTAMP, default=func.utcnow())
 
+    # tg_children = relationship('TgUser', cascade='all,delete', backref='user')
+
     def __init__(self, username, email, registered_at=datetime.utcnow()):
         self.username = username
         self.email = email

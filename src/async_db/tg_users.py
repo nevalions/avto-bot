@@ -19,6 +19,8 @@ class TgUser(Base):
     tg_lastname = Column('tg_lastname', String)
     fk_user = Column(Integer, ForeignKey(user.c.id))
 
+    # parent = relationship(Parent, backref=backref("children", cascade="all,delete"))
+
     def __init__(self, chat_id, tg_username, tg_firstname, tg_lastname, fk_user=None, tg_user_id=None):
         self.chat_id = chat_id
         self.tg_username = tg_username
