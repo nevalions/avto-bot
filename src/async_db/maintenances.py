@@ -1,20 +1,19 @@
 import asyncio
-from pprint import pprint
 
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, TIMESTAMP, BigInteger, Text, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, TIMESTAMP, BigInteger, Text, ForeignKey
 from sqlalchemy import func
 from sqlalchemy import select, delete, update
 
 from sqlalchemy.orm import relationship
 
-from src.models.models import cars, users, maintenances, works
+from src.models.models import car, maintenance, work
 from src.async_db.base import DATABASE_URL, Base, Database
 
 
 class Maintenance(Base):
-    __tablename__ = 'maintenances'
+    __tablename__ = 'maintenance'
     __table_args__ = {'extend_existing': True}
 
     id = Column('id', Integer, primary_key=True)
@@ -22,7 +21,7 @@ class Maintenance(Base):
     date = Column('date', TIMESTAMP, default=func.utcnow())
     current_mileage = Column('current_mileage', BigInteger, nullable=False)
     description = Column('description', Text, default='')
-    fk_cars = Column('fk_cars', ForeignKey(cars.c.id), nullable=True)
+    fk_car = Column('fk_car', ForeignKey(car.c.id), nullable=True)
 
     def __init__(
             self,
@@ -30,13 +29,13 @@ class Maintenance(Base):
             current_mileage,
             date=datetime.utcnow(),
             description='',
-            fk_cars=None
+            fk_car=None
     ):
         self.title = title
         self.current_mileage = current_mileage
         self.date = date
         self.description = description
-        self.fk_cars = fk_cars
+        self.fk_car = fk_car
 
     def __repr__(self):
         if self.description == '':
@@ -47,150 +46,107 @@ class Maintenance(Base):
         return fstring
 
 
-class Work(Base):
-    __tablename__ = 'works'
+class MaintWork(Base):
+    __tablename__ = 'maint_work'
     __table_args__ = {'extend_existing': True}
 
-    id = Column('id', Integer, primary_key=True)
-    title = Column('title', String, nullable=False)
-    is_regular = Column('is_regular', Boolean, default=False)
-    description = Column('description', Text, default='')
-    next_maintenance_after = Column('next_maintenance_after', BigInteger, default=0)
-    is_custom = Column('is_custom', Boolean, default=False)
-    fk_users = Column('fk_users', ForeignKey(users.c.id), nullable=True)
+    fk_maintenances = Column('fk_maintenances', ForeignKey(maintenance.c.id), nullable=False, primary_key=True)
+    fk_work = Column('fk_work', ForeignKey(work.c.id), nullable=False)
 
     def __init__(
             self,
-            title,
-            is_regular,
-            description='',
-            next_maintenance_after=0,
-            is_custom=False,
-            fk_users=None
+            fk_maintenance,
+            fk_work,
     ):
-        self.title = title
-        self.is_regular = is_regular
-        self.description = description
-        self.next_maintenance_after = next_maintenance_after
-        self.is_custom = is_custom
-        self.fk_users = fk_users
-
-    def __repr__(self):
-        if self.is_regular:
-            fstring = (f'{self.title} regular: {self.is_regular}, next at: {self.next_maintenance_after}\n'
-                       f'Description: {self.description}')
-        else:
-            fstring = (f'{self.title}\n'
-                       f'Description: {self.description}')
-        return fstring
-
-
-class MaintsWorks(Base):
-    __tablename__ = 'maints_works'
-    __table_args__ = {'extend_existing': True}
-
-    fk_maintenances = Column('fk_maintenances', ForeignKey(maintenances.c.id), nullable=False, primary_key=True)
-    fk_works = Column('fk_works', ForeignKey(works.c.id), nullable=False)
-
-    def __init__(
-            self,
-            fk_maintenances,
-            fk_works,
-    ):
-        self.fk_maintenances = fk_maintenances
-        self.fk_works = fk_works
+        self.fk_maintenance = fk_maintenance
+        self.fk_work = fk_work
 
 
 class MaintenanceService:
     def __init__(self, database):
         self.db = database
 
-    async def add_maintenance(self, title, current_mileage, date=datetime.utcnow(), description='', fk_cars=None):
+    async def add_maintenance(self, title, current_mileage, date=datetime.utcnow(), description='', fk_car=None):
         async with self.db.async_session() as session:
             maintenance = Maintenance(
                 title=title,
                 current_mileage=current_mileage,
                 date=date,
                 description=description,
-                fk_cars=fk_cars
+                fk_car=fk_car
             )
             session.add(maintenance)
             await session.commit()
             return maintenance
 
-    async def m2m_maints_works(self, fk_maintenances, fk_works):
+    async def m2m_maint_work(self, fk_maintenance, fk_work):
         async with self.db.async_session() as session:
-            m2m_maints_works = MaintsWorks(fk_maintenances=fk_maintenances, fk_works=fk_works)
-            session.add(m2m_maints_works)
+            m2m_maint_work = MaintWork(fk_maintenance=fk_maintenance, fk_work=fk_work)
+            session.add(m2m_maint_work)
             await session.commit()
-            return m2m_maints_works
+            return m2m_maint_work
 
-
-class WorkService:
-    def __init__(self, database):
-        self.db = database
-
-    async def add_work(
-            self, title, is_regular, description='', next_maintenance_after=0, is_custom=False, fk_users=None
-    ):
+    async def get_all_car_maintenances(self, car_id):
         async with self.db.async_session() as session:
-            work = Work(
-                title=title,
-                is_regular=is_regular,
-                description=description,
-                next_maintenance_after=next_maintenance_after,
-                is_custom=is_custom,
-                fk_users=fk_users,
+            result = await session.execute(select(Maintenance).order_by(Maintenance.date).filter_by(fk_car=car_id))
 
-            )
-            session.add(work)
+            all_car_maintenances = []
+            for maintenance in result.scalars():
+                all_car_maintenances.append(vars(maintenance))
+
+            return all_car_maintenances
+
+    async def get_car_maintenance_by_id(self, maintenance_id):
+        async with self.db.async_session() as session:
+            return await session.execute(select(Maintenance).filter_by(id=maintenance_id))
+
+    async def update_maintenance_title(self, maint_id, new_title):
+        async with self.db.async_session() as session:
+            await session.execute(update(Maintenance).where(Maintenance.id == maint_id).values(title=new_title))
             await session.commit()
-            return work
 
-    async def get_all_default_works(self, is_custom=False):
+    async def update_maintenance_date(self, maint_id, new_date):
         async with self.db.async_session() as session:
-            result = await session.execute(select(Work).order_by(Work.title).filter_by(is_custom=is_custom))
+            await session.execute(update(Maintenance).where(Maintenance.id == maint_id).values(date=new_date))
+            await session.commit()
 
-            all_default_works = []
-            for work in result.scalars():
-                all_default_works.append(vars(work))
-
-            return all_default_works
-
-    async def get_all_user_custom_works(self, user_id, is_custom=True):
+    async def update_maintenance_current_mileage(self, maint_id, new_current_mileage):
         async with self.db.async_session() as session:
-            result = await session.execute(select(Work).order_by(Work.title).filter_by(
-                fk_users=user_id, is_custom=is_custom)
-            )
+            await session.execute(update(Maintenance).where(Maintenance.id == maint_id).values(
+                current_mileage=new_current_mileage))
+            await session.commit()
 
-            all_user_custom_works = []
-            for work in result.scalars():
-                all_user_custom_works.append(vars(work))
+    async def update_maintenance_description(self, maint_id, new_description):
+        async with self.db.async_session() as session:
+            await session.execute(update(Maintenance).where(Maintenance.id == maint_id).values(
+                description=new_description))
+            await session.commit()
 
-            return all_user_custom_works
+    async def delete_maintenance(self, maintenance_id):
+        async with self.db.async_session() as session:
+            await session.execute(delete(Maintenance).filter_by(id=maintenance_id))
+            await session.commit()
+
+
+
 
 
 async def async_main() -> None:
     db = Database(DATABASE_URL)
     maintenance_service = MaintenanceService(db)
-    work_service = WorkService(db)
-
 
     # maint = await maintenance_service.add_maintenance(
-    #     title='TO2', current_mileage=320000, description='Some works2', fk_cars=7
+    #     title='TO2', current_mileage=320000, description='Some works2', fk_car=7
     # )
     # print(maint)
-    #
-    # work = await work_service.add_work('Change Brake Pads', True, '', 10000)
-    # print(work)
 
-    # await maintenance_service.m2m_maints_works(1, 3)
+    # maints_show = await maintenance_service.get_all_car_maintenances(7)
+    # print(maints_show)
 
-    # default_works = await work_service.get_all_default_works()
-    # print(default_works)
+    maint_show = await maintenance_service.get_car_maintenance_by_id(1)
+    print(vars(*maint_show.one_or_none()))
 
-    user_works = await work_service.get_all_user_custom_works(2)
-    print(user_works)
+    # await maintenance_service.m2m_maint_work(1, 3)
 
     await db.engine.dispose()
 

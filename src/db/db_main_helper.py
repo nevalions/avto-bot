@@ -17,9 +17,9 @@ class AutoBotMainDB(Db):
 
     def show_all_users_cars(self, _user_id):
         try:
-            query = sql.SQL("SELECT cars.id, cars.model, cars.model_name, cars.mileage, "
-                            "cars.measures FROM users INNER JOIN users_cars ON users_cars.user_id=users.id INNER JOIN "
-                            "cars ON users_cars.car_id=cars.id WHERE users.id={user_id};").format(
+            query = sql.SQL("SELECT car.id, car.model, car.model_name, car.mileage, "
+                            "car.measures FROM user INNER JOIN user_car ON user_car.user_id=user.id INNER JOIN "
+                            "cars ON user_car.car_id=car.id WHERE user.id={user_id};").format(
                 user_id=sql.Literal(_user_id))
 
             result = self.select_query_dict(query)

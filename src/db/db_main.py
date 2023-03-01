@@ -1,4 +1,3 @@
-# TODO add logger to all db modules
 import psycopg2
 
 from src.config import host, user, password, db_name, port

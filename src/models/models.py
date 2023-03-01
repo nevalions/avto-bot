@@ -4,8 +4,8 @@ from sqlalchemy import MetaData, Table, Column, Integer, String, TIMESTAMP, Fore
 
 metadata = MetaData()
 
-users = Table(
-    'users',
+user = Table(
+    'user',
     metadata,
     Column('id', Integer, primary_key=True),
     Column('username', String(20), nullable=False),
@@ -13,8 +13,8 @@ users = Table(
     Column('registered_at', TIMESTAMP, default=datetime.utcnow),
 )
 
-cars = Table(
-    'cars',
+car = Table(
+    'car',
     metadata,
     Column('id', Integer, primary_key=True),
     Column('model', String(50), nullable=False),
@@ -24,34 +24,34 @@ cars = Table(
     Column('measures', String(15), nullable=False),
     Column('date_added', TIMESTAMP, default=datetime.utcnow),
     Column('description', Text, default=''),
-    Column('fk_users', ForeignKey('users.id'), nullable=True),
+    Column('fk_user', ForeignKey('user.id'), nullable=True),
 )
 
 tg_users = Table(
-    'tg_users',
+    'tg_user',
     metadata,
     Column('id', Integer, primary_key=True),
-    Column('tg_users_id', BigInteger, nullable=True),
+    Column('tg_user_id', BigInteger, nullable=True),
     Column('chat_id', BigInteger, nullable=False, unique=True),
     Column('tg_username', String(50), nullable=False),
     Column('tg_firstname', String(50), default=''),
     Column('tg_lastname', String(50), default=''),
-    Column('fk_users', ForeignKey('users.id'), nullable=True)
+    Column('fk_user', ForeignKey('user.id'), nullable=True)
 )
 
-maintenances = Table(
-    'maintenances',
+maintenance = Table(
+    'maintenance',
     metadata,
     Column('id', Integer, primary_key=True),
     Column('title', String(50), nullable=False),
     Column('date', TIMESTAMP, default=datetime.utcnow),
     Column('current_mileage', BigInteger, nullable=False),
     Column('description', Text, default=''),
-    Column('fk_cars', ForeignKey('cars.id'), nullable=True)
+    Column('fk_car', ForeignKey('car.id'), nullable=True)
 )
 
-works = Table(
-    'works',
+work = Table(
+    'work',
     metadata,
     Column('id', Integer, primary_key=True),
     Column('title', String(50), nullable=False),
@@ -59,12 +59,12 @@ works = Table(
     Column('description', Text, default=''),
     Column('next_maintenance_after', BigInteger, default=0),
     Column('is_custom', Boolean, default=False),
-    Column('fk_users', ForeignKey('users.id'), nullable=True)
+    Column('fk_user', ForeignKey('user.id'), nullable=True)
 )
 
-maints_works = Table(
-    'maints_works',
+maint_work = Table(
+    'maint_work',
     metadata,
-    Column('fk_maintenances', ForeignKey('maintenances.id'), nullable=False, primary_key=True),
-    Column('fk_works', ForeignKey('works.id'), nullable=False)
+    Column('fk_maintenance', ForeignKey('maintenance.id'), nullable=False, primary_key=True),
+    Column('fk_work', ForeignKey('work.id'), nullable=False)
 )

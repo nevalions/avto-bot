@@ -6,7 +6,7 @@ class AutoBotAutoDB(Db):
     """
     Main Postgres DB functions for Car()
     """
-    db_table_name = 'cars'
+    db_table_name = 'car'
 
     def add_car(self,
                 model: str,
@@ -18,7 +18,7 @@ class AutoBotAutoDB(Db):
                 current_mileage: str,
                 ):
         try:
-            query = "INSERT INTO cars(model, model_name, mileage, measures, date_added, description, current_mileage)" \
+            query = "INSERT INTO car(model, model_name, mileage, measures, date_added, description, current_mileage)" \
                     " VALUES(%s,%s,%s,%s,%s,%s,%s) RETURNING id;"
             self.cursor.execute(
                 query,

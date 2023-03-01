@@ -4,7 +4,7 @@ from sqlalchemy import ForeignKey, Column, Integer, String, BigInteger
 from sqlalchemy import select
 
 from src.async_db.base import DATABASE_URL, Base, Database
-from src.models.models import users
+from src.models.models import user
 
 
 class TgUser(Base):
@@ -17,7 +17,7 @@ class TgUser(Base):
     tg_username = Column('tg_username', String)
     tg_firstname = Column('tg_firstname', String)
     tg_lastname = Column('tg_lastname', String)
-    fk_users = Column(Integer, ForeignKey(users.c.id))
+    fk_users = Column(Integer, ForeignKey(user.c.id))
 
     def __init__(self, chat_id, tg_username, tg_firstname, tg_lastname, fk_users=None, tg_users_id=None):
         self.tg_users_id = tg_users_id

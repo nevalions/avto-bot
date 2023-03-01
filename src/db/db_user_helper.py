@@ -9,7 +9,7 @@ class AutoBotUserDB(Db):
     """
     Main Postgres DB functions for User()
     """
-    db_table_name = 'users'
+    db_table_name = 'user'
 
     def query_execute(self, query):
         self.cursor.execute(query)
@@ -17,9 +17,9 @@ class AutoBotUserDB(Db):
 
     def add_user(self, _username, _email):
         try:
-            query = sql.SQL("INSERT INTO users(username, email) SELECT {username}, {email} WHERE NOT EXISTS (SELECT "
-                            "id FROM users WHERE email = {email}) RETURNING id").format(username=sql.Literal(_username),
-                                                                                        email=sql.Literal(_email))
+            query = sql.SQL("INSERT INTO user(username, email) SELECT {username}, {email} WHERE NOT EXISTS (SELECT "
+                            "id FROM user WHERE email = {email}) RETURNING id").format(username=sql.Literal(_username),
+                                                                                       email=sql.Literal(_email))
             self.cursor.execute(query)
             self.connect.commit()
             try:

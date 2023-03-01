@@ -11,7 +11,7 @@ from src.async_db.base import DATABASE_URL, Base, Database
 
 
 class User(Base):
-    __tablename__ = 'users'
+    __tablename__ = 'user'
     __table_args__ = {'extend_existing': True}
 
     id = Column('id', Integer, primary_key=True)

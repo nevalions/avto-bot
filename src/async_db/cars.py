@@ -1,5 +1,4 @@
 import asyncio
-from pprint import pprint
 
 from datetime import datetime
 
@@ -9,12 +8,12 @@ from sqlalchemy import select, delete, update
 
 from sqlalchemy.orm import relationship
 
-from src.models.models import users, cars
+from src.models.models import user
 from src.async_db.base import DATABASE_URL, Base, Database
 
 
 class Car(Base):
-    __tablename__ = 'cars'
+    __tablename__ = 'car'
     __table_args__ = {'extend_existing': True}
 
     id = Column('id', Integer, primary_key=True)
@@ -25,7 +24,7 @@ class Car(Base):
     measures = Column('measures', String)
     date_added = Column('date_added', TIMESTAMP, default=func.utcnow())
     description = Column('description', Text)
-    fk_users = Column(Integer, ForeignKey(users.c.id))
+    fk_user = Column(Integer, ForeignKey(user.c.id))
 
     def __init__(
             self,
@@ -36,7 +35,7 @@ class Car(Base):
             measures,
             date_added=datetime.utcnow(),
             description='',
-            fk_users=None,
+            fk_user=None,
     ):
         self.model = model
         self.model_name = model_name
@@ -45,18 +44,18 @@ class Car(Base):
         self.measures = measures
         self.date_added = date_added
         self.description = description
-        self.fk_users = fk_users
+        self.fk_user = fk_user
 
     def __repr__(self):
         return f'({self.id}) {self.model} {self.model_name} registered at {self.date_added} ' \
-               f'with {self.mileage} {self.measures}, user_id ({self.fk_users})'
+               f'with {self.mileage} {self.measures}, user_id ({self.fk_user})'
 
 
 class CarService:
     def __init__(self, database):
         self.db = database
 
-    async def add_car(self, model, model_name, mileage, measures, description='', fk_users=None):
+    async def add_car(self, model, model_name, mileage, measures, description='', fk_user=None):
         async with self.db.async_session() as session:
             car = Car(
                 model=model,
@@ -65,7 +64,7 @@ class CarService:
                 current_mileage=mileage,
                 measures=measures,
                 description=description,
-                fk_users=fk_users
+                fk_user=fk_user
             )
             session.add(car)
             await session.commit()
@@ -83,7 +82,7 @@ class CarService:
 
     async def get_all_user_cars(self, user_id):
         async with self.db.async_session() as session:
-            result = await session.execute(select(Car).order_by(Car.model).filter_by(fk_users=user_id))
+            result = await session.execute(select(Car).order_by(Car.model).filter_by(fk_user=user_id))
 
             all_user_cars = []
             for car in result.scalars():
@@ -120,11 +119,11 @@ class CarService:
 async def async_main() -> None:
     db = Database(DATABASE_URL)
     car_service = CarService(db)
-    # car = await car_service.add_car('Gmc', 'Savana', 300000, 'miles', fk_users=1)
+    # car = await car_service.add_car('Gmc', 'Savana', 300000, 'miles', fk_user=1)
     # print(car)
     # print(vars(car))
 
-    # car = await car_service.add_car('Chevrolet', 'Astro', 100000, 'miles', fk_users=2)
+    # car = await car_service.add_car('Chevrolet', 'Astro', 100000, 'miles', fk_user=2)
     # print(car)
     # print(vars(car))
 
@@ -133,8 +132,8 @@ async def async_main() -> None:
     #
     # await car_service.delete_car(9)
     #
-    # all_users_cars = await car_service.get_all_user_cars(1)
-    # pprint((all_users_cars))
+    # all_user_cars = await car_service.get_all_user_cars(1)
+    # pprint((all_user_cars))
     await car_service.update_car_model(10, 'Ford')
     # await car_service.update_car_current_mileage(10, 22222222)
 
