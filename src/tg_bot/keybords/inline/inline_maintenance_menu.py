@@ -110,9 +110,9 @@ def add_new_maintenance(maintenance_id=None, car_id=None):
         row_width=1,
         inline_keyboard=[
             [
-                InlineKeyboardButton(text='Add new maintenance',
+                InlineKeyboardButton(text='Add new car maintenance',
                                      callback_data=maintenance_action_menu_cd.new(
-                                         action='addmaintenance',
+                                         action='add_car_maintenances',
                                          maintenance_id=maintenance_id,
                                          car_id=car_id)
                                      )

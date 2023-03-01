@@ -1,7 +1,5 @@
 import logging.config
 
-from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.types import CallbackQuery, Message
 
 from src.logs.log_conf_main import LOGGING_CONFIG
@@ -17,15 +15,6 @@ from src.async_db.maintenances import MaintenanceService
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
-
-
-class UpdateCarForm(StatesGroup):
-    maintenance_id = State()
-    maintenance_title = State()
-    maintenance_date = State()
-    maintenance_mileage = State()
-    maintenance_description = State()
-    maintenance_fk_car = State()
 
 
 @dp.callback_query_handler(car_action_menu_cd.filter(action='show_car_maintenances'))

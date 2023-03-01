@@ -5,10 +5,9 @@ import logging.config
 from src.logs.log_conf_main import LOGGING_CONFIG
 from src.logs.func_auto_log import autolog_warning, autolog_info
 
-from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, Message, ReplyKeyboardRemove
 
 from src.tg_bot.loader import dp
 from src.tg_bot.keybords.inline import ikb_cancel_menu, ikb_no_description_menu, ikb_km_m_menu, ikb_menu, ikb_start_menu
@@ -71,12 +70,12 @@ async def cancel_inline(call: CallbackQuery, state: FSMContext):
 
     await state.finish()
     await call.message.answer(
-        'Cancelled.', reply_markup=types.ReplyKeyboardRemove()
+        'Cancelled.', reply_markup=ReplyKeyboardRemove()
     )
 
 
 @dp.message_handler(state=AddCarForm.enter_model)
-async def enter_model(message: types.Message, state: FSMContext):
+async def enter_model(message: Message, state: FSMContext):
     autolog_info(f'Telegram user added car model')
     try:
         if Car.not_empty_str(message.text):
@@ -96,7 +95,7 @@ async def enter_model(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(state=AddCarForm.enter_model_name)
-async def enter_model_name(message: types.Message, state: FSMContext):
+async def enter_model_name(message: Message, state: FSMContext):
     autolog_info(f'Telegram user added car model name')
     try:
         if Car.not_empty_str(message.text):
@@ -115,7 +114,7 @@ async def enter_model_name(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(state=AddCarForm.enter_mileage)
-async def enter_mileage(message: types.Message, state: FSMContext):
+async def enter_mileage(message: Message, state: FSMContext):
     autolog_info(f'Telegram user added car mileage')
     try:
         mil = message.text.replace(" ", "").translate(str.maketrans('', '', string.punctuation))
@@ -166,7 +165,7 @@ async def measures_km(call: CallbackQuery, state: FSMContext):
 
 
 @dp.message_handler(state=AddCarForm.enter_description)
-async def enter_description(message: types.Message, state: FSMContext):
+async def enter_description(message: Message, state: FSMContext):
     autolog_info(f'Telegram user added car with description')
     db = Database(DATABASE_URL)
     car_service = CarService(db)

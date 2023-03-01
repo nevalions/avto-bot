@@ -4,6 +4,7 @@ email-validator
 mock
 psycopg2
 aiogram
+aiogram_calendar
 python-dotenv
 pathlib
 asyncio
