@@ -128,17 +128,14 @@ class MaintenanceService:
             await session.commit()
 
 
-
-
-
 async def async_main() -> None:
     db = Database(DATABASE_URL)
     maintenance_service = MaintenanceService(db)
 
-    # maint = await maintenance_service.add_maintenance(
-    #     title='TO2', current_mileage=320000, description='Some works2', fk_car=7
-    # )
-    # print(maint)
+    maint = await maintenance_service.add_maintenance(
+        title='TO3', current_mileage=100, description='Some works3', fk_car=1
+    )
+    print(maint)
 
     # maints_show = await maintenance_service.get_all_car_maintenances(7)
     # print(maints_show)

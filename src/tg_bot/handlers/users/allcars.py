@@ -3,7 +3,7 @@ import logging.config
 
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
-from aiogram.types import CallbackQuery, ReplyKeyboardRemove, Message
+from aiogram.types import CallbackQuery, Message
 
 from src.logs.log_conf_main import LOGGING_CONFIG
 from src.logs.func_auto_log import autolog_warning, autolog_info
@@ -22,10 +22,6 @@ from src.classes import Car
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
-db = Database(DATABASE_URL)
-tg_user_service = TgUserService(db)
-car_service = CarService(db)
-
 
 class UpdateCarForm(StatesGroup):
     car_id = State()
@@ -38,9 +34,12 @@ class UpdateCarForm(StatesGroup):
 @dp.callback_query_handler(text='allcars')
 async def show_users_cars(call: CallbackQuery):
     autolog_info(f"Show all user's cars")
+    db = Database(DATABASE_URL)
+    tg_user_service = TgUserService(db)
+    car_service = CarService(db)
     try:
         is_registered = await tg_user_service.get_tg_user_by_chat_id(int(call.message.chat.id))
-        if is_registered.tg_user_id is not None:
+        if is_registered.tg_user_id:
             autolog_info(f"Show all tg_user {call.message.chat.id} cars")
             user_id = is_registered.fk_user
             user_cars = await car_service.get_all_user_cars(user_id)
@@ -89,6 +88,9 @@ async def update_inline_car_model(query: CallbackQuery, callback_data: dict, sta
 @dp.message_handler(state=UpdateCarForm.car_model)
 async def enter_model(message: Message, state: FSMContext):
     autolog_info(f"Enter new car model")
+    db = Database(DATABASE_URL)
+    tg_user_service = TgUserService(db)
+    car_service = CarService(db)
     try:
         if Car.not_empty_str(message.text):
             autolog_warning(f'Invalid car model "{message.text}"')
@@ -122,6 +124,9 @@ async def update_inline_car_model_name(query: CallbackQuery, callback_data: dict
 @dp.message_handler(state=UpdateCarForm.car_model_name)
 async def enter_model(message: Message, state: FSMContext):
     autolog_info(f"Enter new car model name")
+    db = Database(DATABASE_URL)
+    tg_user_service = TgUserService(db)
+    car_service = CarService(db)
     try:
         if Car.not_empty_str(message.text):
             autolog_warning(f'Invalid car model name"{message.text}"')
@@ -157,6 +162,9 @@ async def update_inline_car_model_name(query: CallbackQuery, callback_data: dict
 @dp.message_handler(state=UpdateCarForm.car_current_mileage)
 async def enter_model(message: Message, state: FSMContext):
     autolog_info(f"Enter car current milage")
+    db = Database(DATABASE_URL)
+    tg_user_service = TgUserService(db)
+    car_service = CarService(db)
 
     try:
         mil = message.text.replace(" ", "").translate(str.maketrans('', '', string.punctuation))
@@ -192,6 +200,9 @@ async def update_inline_car_model_name(query: CallbackQuery, callback_data: dict
 @dp.message_handler(state=UpdateCarForm.car_description)
 async def enter_model(message: Message, state: FSMContext):
     autolog_info(f"Enter car description")
+    db = Database(DATABASE_URL)
+    tg_user_service = TgUserService(db)
+    car_service = CarService(db)
     try:
         async with state.proxy() as data:
             data['car_description'] = message.text
@@ -221,6 +232,9 @@ async def delete_inline_car(query: CallbackQuery, callback_data: dict):
 @dp.callback_query_handler(car_action_menu_cd.filter(action='delete_ok'))
 async def delete_car_ok(query: CallbackQuery, callback_data: dict):
     autolog_info(f"Delete car ok")
+    db = Database(DATABASE_URL)
+    tg_user_service = TgUserService(db)
+    car_service = CarService(db)
     await car_service.delete_car(int(callback_data['car_id']))
     await db.engine.dispose()
     await query.message.answer(f'Car deleted', reply_markup=ikb_menu)

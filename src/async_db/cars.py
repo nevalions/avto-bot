@@ -70,6 +70,11 @@ class CarService:
             await session.commit()
             return car
 
+    async def get_car_by_id(self, car_id):
+        async with self.db.async_session() as session:
+            car = await session.execute(select(Car).filter_by(id=car_id))
+            return car.scalars().one_or_none()
+
     async def get_all_cars(self):
         async with self.db.async_session() as session:
             result = await session.execute(select(Car))
