@@ -1,6 +1,6 @@
 import logging.config
 
-from aiogram_calendar import simple_cal_callback, SimpleCalendar, dialog_cal_callback, DialogCalendar
+from aiogram_calendar import simple_cal_callback, SimpleCalendar
 
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
@@ -21,9 +21,6 @@ from src.tg_bot.keybords.inline import ikb_cancel_menu
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
-
-start_kb = ReplyKeyboardMarkup(resize_keyboard=True,)
-start_kb.row('Navigation Calendar', 'Dialog Calendar')
 
 
 class AddMaintenanceForm(StatesGroup):
@@ -124,3 +121,6 @@ async def add_car_maintenance_description(
         )
 
     print(maint)
+
+    await state.finish()
+    await db.engine.dispose()
