@@ -1,15 +1,11 @@
 import asyncio
-
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, TIMESTAMP, BigInteger, Text, ForeignKey
-from sqlalchemy import func
-from sqlalchemy import select, delete, update
+from sqlalchemy import (TIMESTAMP, BigInteger, Column, ForeignKey, Integer,
+                        String, Text, delete, func, select, update)
 
-from sqlalchemy.orm import relationship
-
-from src.models.models import car, maintenance, work
 from src.async_db.base import DATABASE_URL, Base, Database
+from src.models.models import car, maintenance, work
 
 
 class Maintenance(Base):
@@ -19,7 +15,8 @@ class Maintenance(Base):
     id = Column('id', Integer, primary_key=True)
     title = Column('title', String, nullable=False)
     date = Column('date', TIMESTAMP, default=func.utcnow())
-    maintenance_mileage = Column('maintenance_mileage', BigInteger, nullable=False)
+    maintenance_mileage = Column(
+        'maintenance_mileage', BigInteger, nullable=False)
     description = Column('description', Text, default='')
     fk_car = Column('fk_car', ForeignKey(car.c.id), nullable=True)
 
@@ -50,7 +47,8 @@ class MaintWork(Base):
     __tablename__ = 'maint_work'
     __table_args__ = {'extend_existing': True}
 
-    fk_maintenances = Column('fk_maintenances', ForeignKey(maintenance.c.id), nullable=False, primary_key=True)
+    fk_maintenances = Column('fk_maintenances', ForeignKey(
+        maintenance.c.id), nullable=False, primary_key=True)
     fk_work = Column('fk_work', ForeignKey(work.c.id), nullable=False)
 
     def __init__(
@@ -66,7 +64,14 @@ class MaintenanceService:
     def __init__(self, database):
         self.db = database
 
-    async def add_maintenance(self, title, maintenance_mileage, date=datetime.utcnow(), description='', fk_car=None):
+    async def add_maintenance(
+            self,
+            title,
+            maintenance_mileage,
+            date=datetime.utcnow(),
+            description='',
+            fk_car=None
+    ):
         async with self.db.async_session() as session:
             maintenance = Maintenance(
                 title=title,
@@ -81,44 +86,58 @@ class MaintenanceService:
 
     async def m2m_maint_work(self, fk_maintenance, fk_work):
         async with self.db.async_session() as session:
-            m2m_maint_work = MaintWork(fk_maintenance=fk_maintenance, fk_work=fk_work)
+            m2m_maint_work = MaintWork(
+                fk_maintenance=fk_maintenance, fk_work=fk_work)
             session.add(m2m_maint_work)
             await session.commit()
             return m2m_maint_work
 
     async def get_all_car_maintenances(self, car_id):
         async with self.db.async_session() as session:
-            result = await session.execute(select(Maintenance).order_by(Maintenance.date).filter_by(fk_car=car_id))
+            result = await session.execute(
+                select(Maintenance).order_by(
+                    Maintenance.date).filter_by(fk_car=car_id)
+            )
 
             all_car_maintenances = []
-            for maintenance in result.scalars():
-                all_car_maintenances.append(vars(maintenance))
+            for maint in result.scalars():
+                all_car_maintenances.append(vars(maint))
 
             return all_car_maintenances
 
     async def get_car_maintenance_by_id(self, maintenance_id):
         async with self.db.async_session() as session:
-            return await session.execute(select(Maintenance).filter_by(id=maintenance_id))
+            return await session.execute(
+                select(Maintenance).filter_by(id=maintenance_id)
+            )
 
     async def update_maintenance_title(self, maint_id, new_title):
         async with self.db.async_session() as session:
-            await session.execute(update(Maintenance).where(Maintenance.id == maint_id).values(title=new_title))
+            await session.execute(
+                update(Maintenance).where(Maintenance.id == maint_id).values(
+                    title=new_title)
+            )
             await session.commit()
 
     async def update_maintenance_date(self, maint_id, new_date):
         async with self.db.async_session() as session:
-            await session.execute(update(Maintenance).where(Maintenance.id == maint_id).values(date=new_date))
+            await session.execute(
+                update(Maintenance).where(Maintenance.id == maint_id).values(
+                    date=new_date)
+            )
             await session.commit()
 
     async def update_maintenance_mileage(self, maint_id, new_maintenance_mileage):
         async with self.db.async_session() as session:
-            await session.execute(update(Maintenance).where(Maintenance.id == maint_id).values(
+            await session.execute(update(Maintenance).where(
+                Maintenance.id == maint_id).values(
                 maintenance_mileage=new_maintenance_mileage))
             await session.commit()
 
     async def update_maintenance_description(self, maint_id, new_description):
         async with self.db.async_session() as session:
-            await session.execute(update(Maintenance).where(Maintenance.id == maint_id).values(
+            await session.execute(update(Maintenance).where(
+                Maintenance.id == maint_id).values(
                 description=new_description))
             await session.commit()
 

@@ -1,17 +1,16 @@
 import logging.config
 
-from aiogram.types import CallbackQuery, Message
-
-from src.logs.log_conf_main import LOGGING_CONFIG
-from src.logs.func_auto_log import autolog_warning, autolog_info
-
-from src.tg_bot.loader import dp
-from src.tg_bot.keybords.inline import ikb_menu, show_all_car_maintenance_menu, show_delete_maintenance_menu, \
-    show_maintenance_cancel_menu, car_action_menu_cd, maintenance_action_menu_cd, add_new_maintenance
+from aiogram.types import CallbackQuery
 
 from src.async_db.base import DATABASE_URL, Database
 from src.async_db.cars import CarService
 from src.async_db.maintenances import MaintenanceService
+from src.logs.func_auto_log import autolog_info, autolog_warning
+from src.logs.log_conf_main import LOGGING_CONFIG
+from src.tg_bot.keybords.inline import (add_new_maintenance,
+                                        car_action_menu_cd, ikb_menu,
+                                        show_all_car_maintenance_menu)
+from src.tg_bot.loader import dp
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
@@ -19,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 @dp.callback_query_handler(car_action_menu_cd.filter(action='show_car_maintenances'))
 async def show_cars_maintenances(query: CallbackQuery, callback_data: dict):
-    autolog_info(f"Show all car's maintenances")
+    autolog_info("Show all car's maintenances")
     db = Database(DATABASE_URL)
     car_service = CarService(db)
     maintenance_service = MaintenanceService(db)
@@ -35,21 +34,23 @@ async def show_cars_maintenances(query: CallbackQuery, callback_data: dict):
                     f'Date: {maint["date"]}\n'
                     f'Maintenance mileage: {maint["maintenance_mileage"]}\n',
 
-                    reply_markup=show_all_car_maintenance_menu(maintenance_id=0, car_id=car_id)
+                    reply_markup=show_all_car_maintenance_menu(
+                        maintenance_id=0, car_id=car_id)
                 )
 
             await query.message.answer('Add new maintenance',
                                        reply_markup=add_new_maintenance(maintenance_id=0, car_id=car_id))
 
-            await query.message.answer(f'Main menu', reply_markup=ikb_menu)
+            await query.message.answer('Main menu', reply_markup=ikb_menu)
         else:
-            autolog_warning(f"Car: {car.model} {car.model_name}\n don't have any maintenances")
+            autolog_warning(
+                f"Car: {car.model} {car.model_name}\n don't have any maintenances")
             await query.message.answer(
                 f"Car: {car.model} {car.model_name}\n"
                 f"Does not have any maintenances",
                 reply_markup=add_new_maintenance(maintenance_id=0, car_id=car_id))
 
-            await query.message.answer(f'Main menu', reply_markup=ikb_menu)
+            await query.message.answer('Main menu', reply_markup=ikb_menu)
     except Exception as ex:
         logging.error(ex)
     finally:
