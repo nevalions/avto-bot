@@ -73,16 +73,16 @@ class MaintenanceService:
             fk_car=None
     ):
         async with self.db.async_session() as session:
-            maintenance = Maintenance(
+            maint = Maintenance(
                 title=title,
                 maintenance_mileage=maintenance_mileage,
                 date=date,
                 description=description,
                 fk_car=fk_car
             )
-            session.add(maintenance)
+            session.add(maint)
             await session.commit()
-            return maintenance
+            return maint
 
     async def m2m_maint_work(self, fk_maintenance, fk_work):
         async with self.db.async_session() as session:
