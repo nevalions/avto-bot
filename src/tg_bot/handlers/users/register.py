@@ -42,13 +42,15 @@ async def register_command_inline(call: CallbackQuery, state: FSMContext):
 
         if is_registered.fk_user:
             autolog_warning(f'Telegram user {call.message.chat.id} already registered')
-            await call.message.answer('You are already registered', reply_markup=ikb_menu)
+            await call.message.answer(
+                'You are already registered',
+                reply_markup=ikb_menu)
             await state.finish()
         else:
             await RegisterForm.enter_username.set()
             await call.message.answer(
-                f'Please, enter your username in our service.', reply_markup=ikb_cancel_menu
-            )
+                f'Please, enter your username in our service.',
+                reply_markup=ikb_cancel_menu)
     except Exception as ex:
         logging.error(ex)
 
@@ -62,7 +64,8 @@ async def cancel_register(call: CallbackQuery, state: FSMContext):
     await state.finish()
 
     await call.message.answer(
-        'Cancelled.', reply_markup=types.ReplyKeyboardRemove()
+        'Cancelled.',
+        reply_markup=types.ReplyKeyboardRemove()
     )
 
 
@@ -71,16 +74,22 @@ async def register_username(message: types.Message, state: FSMContext):
     autolog_info(f'User entered username "{message.text}"')
     try:
         if User.not_empty_str(message.text):
-            return await message.reply('Enter a valid username', reply_markup=ikb_cancel_menu)
+            return await message.reply(
+                'Enter a valid username',
+                reply_markup=ikb_cancel_menu)
     except Exception as ex:
         logging.error(ex)
-        return await message.reply('Enter a valid username', reply_markup=ikb_cancel_menu)
+        return await message.reply(
+            'Enter a valid username',
+            reply_markup=ikb_cancel_menu)
 
     async with state.proxy() as data:
         data['username'] = message.text
 
     await RegisterForm.enter_email.set()
-    await message.answer(f"Enter email for user {message.text}", reply_markup=ikb_cancel_menu)
+    await message.answer(
+        f"Enter email for user {message.text}",
+        reply_markup=ikb_cancel_menu)
 
 
 @dp.message_handler(state=RegisterForm.enter_email)
@@ -94,10 +103,14 @@ async def register_email(message: types.Message, state: FSMContext):
     try:
         if User.check_email(message.text):
             autolog_warning('Enter a valid email')
-            return await message.reply('Enter a valid email', reply_markup=ikb_cancel_menu)
+            return await message.reply(
+                'Enter a valid email',
+                reply_markup=ikb_cancel_menu)
         elif user:
             autolog_warning(f'Email {user.email} already exist.\n Enter a valid email')
-            return await message.reply(f'Email already exist.\n Enter a valid email', reply_markup=ikb_cancel_menu)
+            return await message.reply(
+                f'Email already exist.\n Enter a valid email',
+                reply_markup=ikb_cancel_menu)
     except Exception as ex:
         logging.error(ex)
         return await message.reply('Enter a valid email', reply_markup=ikb_cancel_menu)

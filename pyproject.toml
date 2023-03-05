@@ -4,7 +4,7 @@ select = ["E", "F"]
 ignore = []
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
-fixable = ["A", "B", "C", "D", "E", "F", "..."]
+fixable = ["A", "B", "C", "D", "E", "F"]
 unfixable = []
 
 # Exclude a variety of commonly ignored directories.
@@ -30,6 +30,7 @@ exclude = [
     "node_modules",
     "venv",
 ]
+extend-exclude = ['__init__.py']
 
 # Same as Black.
 line-length = 88
