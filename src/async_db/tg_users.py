@@ -21,7 +21,14 @@ class TgUser(Base):
 
     # parent = relationship(Parent, backref=backref("children", cascade="all,delete"))
 
-    def __init__(self, chat_id, tg_username, tg_firstname, tg_lastname, fk_user=None, tg_user_id=None):
+    def __init__(
+            self,
+            chat_id,
+            tg_username,
+            tg_firstname,
+            tg_lastname,
+            fk_user=None,
+            tg_user_id=None):
         self.chat_id = chat_id
         self.tg_username = tg_username
         self.tg_firstname = tg_firstname
@@ -89,7 +96,7 @@ class TgUserService:
                 tg_user.tg_user_id = tg_user_id
                 tg_user.fk_user = fk_user
             else:
-                print(f'Error user adding to tg_user')
+                print('Error user adding to tg_user')
 
             await session.commit()
             return tg_user

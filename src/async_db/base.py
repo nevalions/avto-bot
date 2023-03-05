@@ -13,7 +13,11 @@ DATABASE_URL = f"postgresql+asyncpg://{user}:{password}@{host}:{str(port)}/{db_n
 class Database:
     def __init__(self, db_url):
         self.engine = create_async_engine(db_url, future=True)
-        self.async_session = async_sessionmaker(bind=self.engine, class_=AsyncSession, expire_on_commit=False)
+        self.async_session = async_sessionmaker(
+            bind=self.engine,
+            class_=AsyncSession,
+            expire_on_commit=False
+        )
 
 
 class Base(DeclarativeBase):

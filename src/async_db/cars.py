@@ -47,7 +47,8 @@ class Car(Base):
         self.fk_user = fk_user
 
     def __repr__(self):
-        return f'({self.id}) {self.model} {self.model_name} registered at {self.date_added} ' \
+        return f'({self.id}) {self.model} {self.model_name} registered at' \
+               f' {self.date_added} ' \
                f'with {self.mileage} {self.measures}, user_id ({self.fk_user})'
 
 
@@ -55,7 +56,14 @@ class CarService:
     def __init__(self, database):
         self.db = database
 
-    async def add_car(self, model, model_name, mileage, measures, description='', fk_user=None):
+    async def add_car(
+            self,
+            model,
+            model_name,
+            mileage,
+            measures,
+            description='', 
+            fk_user=None):
         async with self.db.async_session() as session:
             car = Car(
                 model=model,
@@ -87,7 +95,8 @@ class CarService:
 
     async def get_all_user_cars(self, user_id):
         async with self.db.async_session() as session:
-            result = await session.execute(select(Car).order_by(Car.model).filter_by(fk_user=user_id))
+            result = await session.execute(
+                select(Car).order_by(Car.model).filter_by(fk_user=user_id))
 
             all_user_cars = []
             for car in result.scalars():
@@ -97,22 +106,27 @@ class CarService:
 
     async def update_car_model(self, car_id, new_model):
         async with self.db.async_session() as session:
-            await session.execute(update(Car).where(Car.id == car_id).values(model=new_model))
+            await session.execute(
+                update(Car).where(Car.id == car_id).values(model=new_model))
             await session.commit()
 
     async def update_car_model_name(self, car_id, new_model_name):
         async with self.db.async_session() as session:
-            await session.execute(update(Car).where(Car.id == car_id).values(model_name=new_model_name))
+            await session.execute(
+                update(Car).where(Car.id == car_id).values(model_name=new_model_name))
             await session.commit()
 
     async def update_car_current_mileage(self, car_id, current_mileage):
         async with self.db.async_session() as session:
-            await session.execute(update(Car).where(Car.id == car_id).values(current_mileage=current_mileage))
+            await session.execute(
+                update(Car).where(Car.id == car_id).values(
+                    current_mileage=current_mileage))
             await session.commit()
 
     async def update_car_description(self, car_id, description):
         async with self.db.async_session() as session:
-            await session.execute(update(Car).where(Car.id == car_id).values(description=description))
+            await session.execute(
+                update(Car).where(Car.id == car_id).values(description=description))
             await session.commit()
 
     async def delete_car(self, car_id):
