@@ -37,7 +37,8 @@ class TgUser(Base):
         self.tg_user_id = tg_user_id
 
     def __repr__(self):
-        return f'({self.id}) {self.chat_id} {self.tg_username} {self.tg_firstname} {self.tg_lastname} ' \
+        return f'({self.id}) {self.chat_id} {self.tg_username} {self.tg_firstname} ' \
+               f'{self.tg_lastname} ' \
                f'connected to user {self.fk_user}'
 
 
