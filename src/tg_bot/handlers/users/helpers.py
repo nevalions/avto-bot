@@ -7,6 +7,9 @@ logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
 
+
+
+
 class TextMessages(object):
     def __init__(
             self,
@@ -24,13 +27,16 @@ class TextMessages(object):
     def main_description_txt(self) -> str:
         return f'📄 <b>Description</b>: {self.description_main}'
 
-    def added(self) -> str:
-        message = self.text + '✅ Added'
-        return message
+    @staticmethod
+    def added() -> str:
+        return '✅ Added'
 
-    def deleted(self) -> str:
-        message = self.text + '🗑 Deleted'
-        return message
+    @staticmethod
+    def deleted() -> str:
+        return '🗑 Deleted'
+
+    def ask_to_delete(self):
+        return f'Are you sure you want to delete: "{self.text}"?'
 
 
 class TextCar(TextMessages):

@@ -1,6 +1,8 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
 
+from src.tg_bot.handlers.users.menu_text_helper import MenuText, cancel_txt, delete_txt
+
 car_action_menu_cd = CallbackData('action_menu_cd', 'action', 'car_id')
 
 
@@ -13,7 +15,7 @@ def show_all_cars_menu(car_id):
         row_width=2,
         inline_keyboard=[
             [
-                InlineKeyboardButton(text='🔧 Show car maintenances',
+                InlineKeyboardButton(text=MenuText.show_maintenance(),
                                      callback_data=car_action_menu_cd.new(
                                          action='show_car_maintenances',
                                          car_id=car_id)
@@ -27,33 +29,33 @@ def show_all_cars_menu(car_id):
                                      )
             ],
             [
-                InlineKeyboardButton(text='Edit car model',
+                InlineKeyboardButton(text=MenuText.edit_car_model(),
                                      callback_data=car_action_menu_cd.new(
                                          action='edit_car_model',
                                          car_id=car_id)
                                      ),
-                InlineKeyboardButton(text='Edit car model name',
+                InlineKeyboardButton(text=MenuText.edit_car_model_name(),
                                      callback_data=car_action_menu_cd.new(
                                          action='edit_car_model_name',
                                          car_id=car_id)
                                      )
             ],
             [
-                InlineKeyboardButton(text='Add car current mileage',
+                InlineKeyboardButton(text=MenuText.edit_car_current_mileage(),
                                      callback_data=car_action_menu_cd.new(
                                          action='edit_car_current_mileage',
                                          car_id=car_id)
                                      )
             ],
             [
-                InlineKeyboardButton(text='Edit car description',
+                InlineKeyboardButton(text=MenuText.edit_description(),
                                      callback_data=car_action_menu_cd.new(
                                          action='edit_car_description',
                                          car_id=car_id)
                                      )
             ],
             [
-                InlineKeyboardButton(text='❌ Delete car',
+                InlineKeyboardButton(text=delete_txt,
                                      callback_data=car_action_menu_cd.new(
                                          action='delete_car',
                                          car_id=car_id)
@@ -68,7 +70,7 @@ def show_cars_cancel_menu(car_id):
         row_width=1,
         inline_keyboard=[
             [
-                InlineKeyboardButton(text='Cancel',
+                InlineKeyboardButton(text=cancel_txt,
                                      callback_data=car_action_menu_cd.new(
                                          action='cancel',
                                          car_id=car_id))
@@ -82,11 +84,11 @@ async def show_delete_cars_menu(car_id):
         row_width=2,
         inline_keyboard=[
             [
-                InlineKeyboardButton(text='❌ Delete',
+                InlineKeyboardButton(text=delete_txt,
                                      callback_data=car_action_menu_cd.new(
                                          action='delete_car_ok',
                                          car_id=car_id)),
-                InlineKeyboardButton(text='Cancel',
+                InlineKeyboardButton(text=cancel_txt,
                                      callback_data=car_action_menu_cd.new(
                                          action='cancel_delete_car',
                                          car_id=car_id))

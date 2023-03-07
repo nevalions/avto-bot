@@ -14,7 +14,8 @@ from src.tg_bot.keybords.inline import add_new_maintenance, car_action_menu_cd, 
     maintenance_action_menu_cd, show_all_maintenance_one_btn, \
     show_maintenance_cancel_menu
 
-from src.tg_bot.handlers.users.helpers import TextMaintenance
+from src.tg_bot.handlers.users.helpers import TextMaintenance, TextMessages
+from src.tg_bot.handlers.users.menu_text_helper import MenuText
 
 from src.tg_bot.loader import dp
 
@@ -50,11 +51,12 @@ async def show_cars_maintenances(query: CallbackQuery, callback_data: dict):
                                                maintenance_id=maint["id"],
                                                car_id=car.id))
 
-            await query.message.answer('Add new maintenance',
+            await query.message.answer(MenuText.menu_separator(),
                                        reply_markup=add_new_maintenance(
                                            maintenance_id=0, car_id=car.id))
 
-            await query.message.answer('Main menu', reply_markup=ikb_menu)
+            await query.message.answer(MenuText.menu_separator(),
+                                       reply_markup=ikb_menu)
         else:
             autolog_warning(
                 f"Car: {car.model} {car.model_name}\n don't have any maintenances")
@@ -63,7 +65,7 @@ async def show_cars_maintenances(query: CallbackQuery, callback_data: dict):
                 f"Does not have any maintenances",
                 reply_markup=add_new_maintenance(maintenance_id=0, car_id=car.id))
 
-            await query.message.answer('Main menu', reply_markup=ikb_menu)
+            await query.message.answer(MenuText.menu_separator(), reply_markup=ikb_menu)
     except Exception as ex:
         logging.error(ex)
     finally:
@@ -144,8 +146,9 @@ async def delete_inline_maintenance(query: CallbackQuery, callback_data: dict):
     markup = await show_delete_maintenance_menu(
         maintenance_id=maint.id, car_id=maint.fk_car)
 
+    text = TextMessages(text=maint.title)
     await query.message.answer(
-        f'Are you sure you want to delete {maint.title}?',
+        text.ask_to_delete(),
         reply_markup=markup)
 
     await db.engine.dispose()

@@ -2,6 +2,8 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
 from src.tg_bot.keybords.inline import car_action_menu_cd
 
+from src.tg_bot.handlers.users.menu_text_helper import MenuText, cancel_txt, delete_txt
+
 maintenance_action_menu_cd = CallbackData(
     'action_menu_cd',
     'action',
@@ -21,7 +23,7 @@ def show_all_car_maintenance_menu(maintenance_id=None, car_id=None):
         row_width=2,
         inline_keyboard=[
             [
-                InlineKeyboardButton(text='Show maintenance works',
+                InlineKeyboardButton(text=MenuText.show_works(),
                                      callback_data='car_maintenance_works')
             ],
             [
@@ -34,14 +36,14 @@ def show_all_car_maintenance_menu(maintenance_id=None, car_id=None):
                                      )
             ],
             [
-                InlineKeyboardButton(text='Edit maintenance title',
+                InlineKeyboardButton(text=MenuText.edit_title(),
                                      callback_data=maintenance_action_menu_cd.new(
                                          action='edit_maintenance_title',
                                          maintenance_id=maintenance_id,
                                          car_id=car_id
                                      )
                                      ),
-                InlineKeyboardButton(text='Edit maintenance description',
+                InlineKeyboardButton(text=MenuText.edit_description(),
                                      callback_data=maintenance_action_menu_cd.new(
                                          action='edit_maintenance_description',
                                          maintenance_id=maintenance_id,
@@ -50,7 +52,7 @@ def show_all_car_maintenance_menu(maintenance_id=None, car_id=None):
                                      )
             ],
             [
-                InlineKeyboardButton(text='Edit maintenance current mileage',
+                InlineKeyboardButton(text=MenuText.edit_mileage(),
                                      callback_data=maintenance_action_menu_cd.new(
                                          action='edit_maintenance_current_mileage',
                                          maintenance_id=maintenance_id,
@@ -59,7 +61,7 @@ def show_all_car_maintenance_menu(maintenance_id=None, car_id=None):
                                      )
             ],
             [
-                InlineKeyboardButton(text='Edit maintenance date',
+                InlineKeyboardButton(text=MenuText.edit_date(),
                                      callback_data=maintenance_action_menu_cd.new(
                                          action='edit_maintenance_date',
                                          maintenance_id=maintenance_id,
@@ -68,7 +70,7 @@ def show_all_car_maintenance_menu(maintenance_id=None, car_id=None):
                                      )
             ],
             [
-                InlineKeyboardButton(text='❌ Delete maintenance',
+                InlineKeyboardButton(text=delete_txt,
                                      callback_data=maintenance_action_menu_cd.new(
                                          action='delete_maintenance',
                                          maintenance_id=maintenance_id,
@@ -85,7 +87,7 @@ def add_new_maintenance(maintenance_id=None, car_id=None):
         row_width=1,
         inline_keyboard=[
             [
-                InlineKeyboardButton(text='🔧 Add new car maintenance',
+                InlineKeyboardButton(text=MenuText.add_maintenance(),
                                      callback_data=maintenance_action_menu_cd.new(
                                          action='add_car_maintenances',
                                          maintenance_id=maintenance_id,
@@ -102,7 +104,7 @@ def show_all_maintenance_one_btn(car_id=None):
         row_width=1,
         inline_keyboard=[
             [
-                InlineKeyboardButton(text='Show car maintenances',
+                InlineKeyboardButton(text=MenuText.show_works(),
                                      callback_data=car_action_menu_cd.new(
                                          action='show_car_maintenances',
                                          car_id=car_id)
@@ -118,7 +120,7 @@ def show_maintenance_cancel_menu(maintenance_id=None, car_id=None):
         row_width=1,
         inline_keyboard=[
             [
-                InlineKeyboardButton(text='Cancel',
+                InlineKeyboardButton(text=cancel_txt,
                                      callback_data=maintenance_action_menu_cd.new(
                                          action='cancel',
                                          maintenance_id=maintenance_id,
@@ -134,14 +136,14 @@ async def show_delete_maintenance_menu(maintenance_id=None, car_id=None):
         row_width=2,
         inline_keyboard=[
             [
-                InlineKeyboardButton(text='❌ Delete',
+                InlineKeyboardButton(text=delete_txt,
                                      callback_data=maintenance_action_menu_cd.new(
                                          action='delete_maintenance_ok',
                                          maintenance_id=maintenance_id,
                                          car_id=car_id
                                          )
                                      ),
-                InlineKeyboardButton(text='Cancel',
+                InlineKeyboardButton(text=cancel_txt,
                                      callback_data=maintenance_action_menu_cd.new(
                                          action='cancel_delete_maintenance',
                                          maintenance_id=maintenance_id,

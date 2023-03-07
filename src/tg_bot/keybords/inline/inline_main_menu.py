@@ -1,54 +1,64 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from src.tg_bot.handlers.users.menu_text_helper import MenuText, cancel_txt
 
-ikb_start_menu = InlineKeyboardMarkup(row_width=2,
-                                      inline_keyboard=[
-                                          [
-                                              InlineKeyboardButton(text='Register',
-                                                                   callback_data='register')
-                                          ]
-                                      ])
+add_car_text = MenuText.main_menu()["add_car"]
 
-ikb_menu = InlineKeyboardMarkup(row_width=2,
-                                inline_keyboard=[
-                                    [
-                                        InlineKeyboardButton(text='Add new car',
-                                                             callback_data='addcar')
-                                    ],
-                                    [
-                                        InlineKeyboardButton(text='Show your cars',
-                                                             callback_data='allcars')
-                                    ]
-                                ])
+ikb_start_menu = InlineKeyboardMarkup(
+    row_width=2,
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text=MenuText.register(),
+                                 callback_data='register')
+        ]
+    ])
 
-ikb_cancel_menu = InlineKeyboardMarkup(row_width=1,
-                                       inline_keyboard=[
-                                           [
-                                               InlineKeyboardButton(text='Cancel',
-                                                                    callback_data='cancel')
-                                           ],
-                                       ])
+ikb_menu = InlineKeyboardMarkup(
+    row_width=2,
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text=add_car_text,
+                                 callback_data='addcar')
+        ],
+        [
+            InlineKeyboardButton(text=MenuText.main_menu()["show_cars"],
+                                 callback_data='allcars')
+        ]
+    ])
 
-ikb_no_description_menu = InlineKeyboardMarkup(row_width=1,
-                                               inline_keyboard=[
-                                                   [
-                                                       InlineKeyboardButton(text='No Description',
-                                                                            callback_data='no_description'),
-                                                   ],
-                                               ])
+ikb_cancel_menu = InlineKeyboardMarkup(
+    row_width=1,
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text=cancel_txt,
+                                 callback_data='cancel')
+        ],
+    ])
 
-ikb_km_m_menu = InlineKeyboardMarkup(row_width=2,
-                                     inline_keyboard=[
-                                         [
-                                             InlineKeyboardButton(text='km',
-                                                                  callback_data='km'),
-                                             InlineKeyboardButton(text='miles',
-                                                                  callback_data='miles')
-                                         ],
-                                     ])
+ikb_no_description_menu = InlineKeyboardMarkup(
+    row_width=1,
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(
+                text=MenuText.no_description(),
+                callback_data='no_description'),
+        ],
+    ])
 
-ikb_car_add = InlineKeyboardMarkup(row_width=1,
-                                   inline_keyboard=[
-                                       [
-                                           InlineKeyboardButton(text='Add new car',
-                                                                callback_data='addcar')]
-                                   ])
+ikb_km_m_menu = InlineKeyboardMarkup(
+    row_width=2,
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text='KM',
+                                 callback_data='km'),
+            InlineKeyboardButton(text='MILES',
+                                 callback_data='miles')
+        ],
+    ])
+
+ikb_car_add = InlineKeyboardMarkup(
+    row_width=1,
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text=add_car_text,
+                                 callback_data='addcar')]
+    ])
