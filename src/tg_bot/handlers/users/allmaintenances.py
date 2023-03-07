@@ -145,7 +145,7 @@ async def delete_inline_maintenance(query: CallbackQuery, callback_data: dict):
         maintenance_id=maint.id, car_id=maint.fk_car)
 
     await query.message.answer(
-        f'Are you sure you want to delete {maint.title}',
+        f'Are you sure you want to delete {maint.title}?',
         reply_markup=markup)
 
     await db.engine.dispose()
@@ -183,10 +183,10 @@ async def delete_maintenance_ok(query: CallbackQuery, callback_data: dict):
     maintenance_service = MaintenanceService(db)
     try:
         maint = await maintenance_service.get_car_maintenance_by_id(m_id)
-
+        text = TextMaintenance(maint_title=maint.title)
         await query.message.delete()
         await maintenance_service.delete_maintenance(maint.id)
-        await query.message.answer(f'Maintenance {maint.title} deleted 🗑',
+        await query.message.answer(text.maintenance_deleted(),
                                    reply_markup=show_all_maintenance_one_btn(
                                        car_id=maint.fk_car))
     except Exception as ex:
