@@ -94,7 +94,7 @@ async def update_inline_car_model(query: CallbackQuery, callback_data: dict, sta
 
 
 @dp.message_handler(state=UpdateCarForm.car_model)
-async def enter_model(message: Message, state: FSMContext):
+async def enter_car_model(message: Message, state: FSMContext):
     autolog_info(f"Enter new car model")
     db = Database(DATABASE_URL)
     tg_user_service = TgUserService(db)
@@ -130,7 +130,7 @@ async def update_inline_car_model_name(query: CallbackQuery, callback_data: dict
 
 
 @dp.message_handler(state=UpdateCarForm.car_model_name)
-async def enter_model(message: Message, state: FSMContext):
+async def enter_car_model(message: Message, state: FSMContext):
     autolog_info(f"Enter new car model name")
     db = Database(DATABASE_URL)
     tg_user_service = TgUserService(db)
@@ -157,7 +157,7 @@ async def enter_model(message: Message, state: FSMContext):
 
 
 @dp.callback_query_handler(car_action_menu_cd.filter(action='edit_car_current_mileage'))
-async def update_inline_car_model_name(query: CallbackQuery, callback_data: dict, state: FSMContext):
+async def update_inline_car_current_milage(query: CallbackQuery, callback_data: dict, state: FSMContext):
     autolog_info(f"Edit car id {callback_data['car_id']} current mileage")
     async with state.proxy() as data:
         data['car_id'] = callback_data['car_id']
@@ -168,7 +168,7 @@ async def update_inline_car_model_name(query: CallbackQuery, callback_data: dict
 
 
 @dp.message_handler(state=UpdateCarForm.car_current_mileage)
-async def enter_model(message: Message, state: FSMContext):
+async def enter_car_current_milage(message: Message, state: FSMContext):
     autolog_info(f"Enter car current milage")
     db = Database(DATABASE_URL)
     car_service = CarService(db)
@@ -196,7 +196,7 @@ async def enter_model(message: Message, state: FSMContext):
 
 
 @dp.callback_query_handler(car_action_menu_cd.filter(action='edit_car_description'))
-async def update_inline_car_model_name(query: CallbackQuery, callback_data: dict, state: FSMContext):
+async def update_inline_car_description(query: CallbackQuery, callback_data: dict, state: FSMContext):
     autolog_info(f"Edit car id {callback_data['car_id']} description")
     async with state.proxy() as data:
         data['car_id'] = callback_data['car_id']
@@ -205,7 +205,7 @@ async def update_inline_car_model_name(query: CallbackQuery, callback_data: dict
 
 
 @dp.message_handler(state=UpdateCarForm.car_description)
-async def enter_model(message: Message, state: FSMContext):
+async def enter_car_description(message: Message, state: FSMContext):
     autolog_info(f"Enter car description")
     db = Database(DATABASE_URL)
     car_service = CarService(db)
@@ -233,7 +233,8 @@ async def delete_inline_car(query: CallbackQuery, callback_data: dict):
     car = await car_service.get_car_by_id(car_id)
     markup = await show_delete_cars_menu(car_id)
 
-    await query.message.answer(f'Are you sure you want to delete {car.model} {car.model_name}', reply_markup=markup)
+    await query.message.answer(f'Are you sure you want to delete '
+                               f'{car.model} {car.model_name}', reply_markup=markup)
 
 
 @dp.callback_query_handler(car_action_menu_cd.filter(action='cancel_delete_car'))

@@ -12,10 +12,11 @@ from src.async_db.maintenances import MaintenanceService
 from src.classes.cars import Car
 from src.logs.func_auto_log import autolog_info, autolog_warning
 from src.logs.log_conf_main import LOGGING_CONFIG
-from src.tg_bot.keybords.inline import (ikb_cancel_menu,
-                                        ikb_no_description_menu,
-                                        maintenance_action_menu_cd,
-                                        show_all_car_maintenance_menu)
+from src.tg_bot.keybords.inline import ikb_cancel_menu, ikb_no_description_menu, \
+    maintenance_action_menu_cd, show_all_maintenance_one_btn, show_cars_cancel_menu
+
+from src.tg_bot.handlers.users.helpers import TextMaintenance
+
 from src.tg_bot.loader import dp
 
 logging.config.dictConfig(LOGGING_CONFIG)
@@ -30,7 +31,8 @@ class AddMaintenanceForm(StatesGroup):
     maintenance_fk_car = State()
 
 
-@dp.callback_query_handler(maintenance_action_menu_cd.filter(action='add_car_maintenances'))
+@dp.callback_query_handler(maintenance_action_menu_cd.filter(
+    action='add_car_maintenances'))
 async def add_car_maintenance_id(
         query: CallbackQuery, callback_data: dict, state: FSMContext
 ):
@@ -45,9 +47,9 @@ async def add_car_maintenance_id(
                 data['maintenance_fk_car'] = car_id
             await AddMaintenanceForm.maintenance_title.set()
             await query.message.answer(
-                f"Please, enter maintenance"
-                f"title for car {car.model} {car.model_name}",
-                reply_markup=ikb_cancel_menu
+                f"Please, enter maintenance title for car \n"
+                f"{car.model} {car.model_name}",
+                reply_markup=show_cars_cancel_menu(car.id)
             )
 
         else:
@@ -55,6 +57,7 @@ async def add_car_maintenance_id(
     except Exception as ex:
         logging.error(ex)
     finally:
+
         await db.engine.dispose()
 
 
@@ -62,7 +65,6 @@ async def add_car_maintenance_id(
 async def add_car_maintenance_title(
         message: Message, state: FSMContext
 ):
-
     autolog_info('Add car maintenances title')
 
     async with state.proxy() as data:
@@ -78,9 +80,9 @@ async def add_car_maintenance_title(
     state=AddMaintenanceForm.maintenance_date
 )
 async def add_car_maintenance_date(
-    query: CallbackQuery,
-    callback_data: dict,
-    state: FSMContext
+        query: CallbackQuery,
+        callback_data: dict,
+        state: FSMContext
 ):
     autolog_info('Add car maintenances date')
     selected, date = await SimpleCalendar().process_selection(query, callback_data)
@@ -90,13 +92,11 @@ async def add_car_maintenance_date(
     else:
         async with state.proxy() as data:
             data['maintenance_date'] = date
-        # await query.message.answer(
-        #     f'You selected {date.strftime("%d/%m/%Y")}',
-        # )
 
     await AddMaintenanceForm.maintenance_mileage.set()
     await query.message.answer("Enter maintenances mileage",
-                               reply_markup=ikb_cancel_menu)
+                               reply_markup=show_cars_cancel_menu(
+                                   int(data['maintenance_fk_car'])))
 
 
 @dp.message_handler(state=AddMaintenanceForm.maintenance_mileage)
@@ -126,7 +126,8 @@ async def add_car_maintenance_mileage(
         logging.error(ex)
         return await message.reply(f'Invalid car mileage "{message.text}".\n'
                                    f'Enter a valid mileage.\n'
-                                   f'Just numbers.', reply_markup=ikb_cancel_menu)
+                                   f'Just numbers.',
+                                   reply_markup=ikb_cancel_menu)
 
     await AddMaintenanceForm.maintenance_description.set()
     await message.answer(
@@ -140,6 +141,7 @@ async def add_car_maintenance_description(
     autolog_info('Add car maintenances description')
     db = Database(DATABASE_URL)
     maint_service = MaintenanceService(db)
+    car_service = CarService(db)
 
     async with state.proxy() as data:
         data['maintenance_description'] = message.text
@@ -152,9 +154,14 @@ async def add_car_maintenance_description(
             fk_car=int(data['maintenance_fk_car'])
         )
 
-    print(maint)
+    car = await car_service.get_car_by_id(maint.fk_car)
+    text = TextMaintenance(car.model, car.model_name, maint.title, maint.date,
+                           maint.maintenance_mileage, maint.description)
+    await message.answer(text.maintenance_added(),
+                         reply_markup=show_all_maintenance_one_btn(car_id=car.id))
 
-    await show_all_car_maintenance_menu()
+    autolog_info(f'Car id({car.id}) maintenance {maint.id} '
+                 f'with description added')
 
     await state.finish()
     await db.engine.dispose()
@@ -168,6 +175,7 @@ async def no_description(query: CallbackQuery, state: FSMContext):
     autolog_info('Add car maintenances description')
     db = Database(DATABASE_URL)
     maint_service = MaintenanceService(db)
+    car_service = CarService(db)
 
     async with state.proxy() as data:
         data['maintenance_description'] = ''
@@ -180,9 +188,15 @@ async def no_description(query: CallbackQuery, state: FSMContext):
             fk_car=int(data['maintenance_fk_car'])
         )
 
-    print(maint)
+    car = await car_service.get_car_by_id(maint.fk_car)
 
-    await show_all_car_maintenance_menu()
+    text = TextMaintenance(car.model, car.model_name, maint.title, maint.date,
+                           maint.maintenance_mileage, maint.description)
+    await query.message.answer(text.maintenance_added(),
+                               reply_markup=show_all_maintenance_one_btn(car_id=car.id))
+
+    autolog_info(f'Car id({car.id}) maintenance {maint.id} '
+                 f'without description added')
 
     await state.finish()
     await db.engine.dispose()

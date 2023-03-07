@@ -107,9 +107,10 @@ class MaintenanceService:
 
     async def get_car_maintenance_by_id(self, maintenance_id):
         async with self.db.async_session() as session:
-            return await session.execute(
+            maint = await session.execute(
                 select(Maintenance).filter_by(id=maintenance_id)
             )
+            return maint.scalars().one_or_none()
 
     async def update_maintenance_title(self, maint_id, new_title):
         async with self.db.async_session() as session:
@@ -151,18 +152,19 @@ async def async_main() -> None:
     db = Database(DATABASE_URL)
     maintenance_service = MaintenanceService(db)
 
-    maint = await maintenance_service.add_maintenance(
-        title='TO3', maintenance_mileage=100, description='Some works3', fk_car=1
-    )
-    print(maint)
+    # maint = await maintenance_service.add_maintenance(
+    #     title='TO3', maintenance_mileage=100, description='Some works3', fk_car=1
+    # )
+    # print(maint)
 
     # maints_show = await maintenance_service.get_all_car_maintenances(7)
     # print(maints_show)
 
     maint_show = await maintenance_service.get_car_maintenance_by_id(1)
-    print(vars(*maint_show.one_or_none()))
+    print(vars(maint_show))
 
     # await maintenance_service.m2m_maint_work(1, 3)
+    # await maintenance_service.delete_maintenance(11)
 
     await db.engine.dispose()
 
