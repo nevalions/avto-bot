@@ -46,7 +46,7 @@ async def show_cars_maintenances(query: CallbackQuery, callback_data: dict):
                 text = TextMaintenance(car.model, car.model_name, maint["title"],
                                        maint["date"], maint["maintenance_mileage"],
                                        maint["description"])
-                await query.message.answer(text.maintenance(),
+                await query.message.answer(text.maintenance_txt(),
                                            reply_markup=show_all_car_maintenance_menu(
                                                maintenance_id=maint["id"],
                                                car_id=car.id))
@@ -65,7 +65,6 @@ async def show_cars_maintenances(query: CallbackQuery, callback_data: dict):
                 f"Does not have any maintenances",
                 reply_markup=add_new_maintenance(maintenance_id=0, car_id=car.id))
 
-            await query.message.answer(MenuText.menu_separator(), reply_markup=ikb_menu)
     except Exception as ex:
         logging.error(ex)
     finally:

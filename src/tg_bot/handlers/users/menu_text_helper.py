@@ -4,7 +4,7 @@ class MenuText(object):
 
     @staticmethod
     def menu_separator():
-        return f'<pre>|{30 * "-"}|</pre>'
+        return f'<code>|{30 * "-"}|</code>'
 
     @staticmethod
     def main_menu():
@@ -74,3 +74,4 @@ class MenuText(object):
 
 cancel_txt = MenuText.cancel()
 delete_txt = MenuText.delete()
+separator = MenuText.menu_separator()

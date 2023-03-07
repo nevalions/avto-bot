@@ -44,20 +44,16 @@ async def add_car_maintenance_id(
     try:
         if car:
             async with state.proxy() as data:
-                data['maintenance_fk_car'] = car_id
+                data['maintenance_fk_car'] = car.id
+            text = TextMaintenance(car_model=car.model, car_model_name=car.model_name)
             await AddMaintenanceForm.maintenance_title.set()
-            await query.message.answer(
-                f"Please, enter maintenance title for car \n"
-                f"{car.model} {car.model_name}",
-                reply_markup=show_cars_cancel_menu(car.id)
-            )
-
+            await query.message.answer(text.add_maintenance_txt(),
+                                       reply_markup=show_cars_cancel_menu(car.id))
         else:
-            print('LOL kek no Car')
+            autolog_info("Add car maintenances, NO CAR!")
     except Exception as ex:
         logging.error(ex)
     finally:
-
         await db.engine.dispose()
 
 
@@ -71,7 +67,7 @@ async def add_car_maintenance_title(
         data['maintenance_title'] = message.text
 
     await AddMaintenanceForm.maintenance_date.set()
-    await message.answer("Please select a date:",
+    await message.answer(TextMaintenance.add_date_txt(),
                          reply_markup=await SimpleCalendar().start_calendar())
 
 
@@ -94,7 +90,7 @@ async def add_car_maintenance_date(
             data['maintenance_date'] = date
 
     await AddMaintenanceForm.maintenance_mileage.set()
-    await query.message.answer("Enter maintenances mileage",
+    await query.message.answer(TextMaintenance.add_maintenance_mileage_txt(),
                                reply_markup=show_cars_cancel_menu(
                                    int(data['maintenance_fk_car'])))
 
@@ -130,8 +126,8 @@ async def add_car_maintenance_mileage(
                                    reply_markup=ikb_cancel_menu)
 
     await AddMaintenanceForm.maintenance_description.set()
-    await message.answer(
-        "Enter maintenances description", reply_markup=ikb_no_description_menu)
+    await message.answer(TextMaintenance.add_description_txt(),
+                         reply_markup=ikb_no_description_menu)
 
 
 @dp.message_handler(state=AddMaintenanceForm.maintenance_description)
