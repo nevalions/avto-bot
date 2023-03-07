@@ -22,12 +22,14 @@ class User(Base):
     # tg_children = relationship('TgUser', cascade='all,delete', backref='user')
 
     def __init__(self, username, email, registered_at=datetime.utcnow()):
+        super().__init__()
         self.username = username
         self.email = email
         self.registered_at = registered_at
 
     def __repr__(self):
-        return f'({self.id}) {self.username} {self.email} registered at {self.registered_at}'
+        return f'({self.id}) {self.username} {self.email} ' \
+               f'registered at {self.registered_at}'
 
 
 class UserService:

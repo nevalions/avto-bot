@@ -28,7 +28,9 @@ class TgUser(Base):
             tg_firstname,
             tg_lastname,
             fk_user=None,
-            tg_user_id=None):
+            tg_user_id=None
+    ):
+        super().__init__()
         self.chat_id = chat_id
         self.tg_username = tg_username
         self.tg_firstname = tg_firstname

@@ -37,6 +37,7 @@ class Car(Base):
             description='',
             fk_user=None,
     ):
+        super().__init__()
         self.model = model
         self.model_name = model_name
         self.mileage = mileage

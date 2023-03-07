@@ -30,6 +30,7 @@ class Work(Base):
             is_custom=False,
             fk_user=None
     ):
+        super().__init__()
         self.title = title
         self.is_regular = is_regular
         self.description = description
@@ -39,7 +40,8 @@ class Work(Base):
 
     def __repr__(self):
         if self.is_regular:
-            fstring = (f'{self.title} regular: {self.is_regular}, next at: {self.next_maintenance_after}\n'
+            fstring = (f'{self.title} regular: {self.is_regular}, '
+                       f'next at: {self.next_maintenance_after}\n'
                        f'Description: {self.description}')
         else:
             fstring = (f'{self.title}\n'
@@ -52,7 +54,8 @@ class WorkService:
         self.db = database
 
     async def add_work(
-            self, title, is_regular, description='', next_maintenance_after=0, is_custom=False, fk_user=None
+            self, title, is_regular, description='', next_maintenance_after=0,
+            is_custom=False, fk_user=None
     ):
         async with self.db.async_session() as session:
             work = Work(
@@ -70,7 +73,8 @@ class WorkService:
 
     async def get_all_default_works(self, is_custom=False):
         async with self.db.async_session() as session:
-            result = await session.execute(select(Work).order_by(Work.title).filter_by(is_custom=is_custom))
+            result = await session.execute(
+                select(Work).order_by(Work.title).filter_by(is_custom=is_custom))
 
             all_default_works = []
             for work in result.scalars():
@@ -96,20 +100,25 @@ class WorkService:
 
     async def update_work_title(self, work_id, new_title):
         async with self.db.async_session() as session:
-            await session.execute(update(Work).where(Work.id == work_id).values(title=new_title))
+            await session.execute(
+                update(Work).where(Work.id == work_id).values(title=new_title))
             await session.commit()
 
     async def update_work_is_regular(self, work_id, new_is_regular):
         async with self.db.async_session() as session:
-            await session.execute(update(Work).where(Work.id == work_id).values(is_regular=new_is_regular))
+            await session.execute(update(Work).where(
+                Work.id == work_id).values(is_regular=new_is_regular))
             await session.commit()
 
     async def update_work_description(self, work_id, new_description):
         async with self.db.async_session() as session:
-            await session.execute(update(Work).where(Work.id == work_id).values(description=new_description))
+            await session.execute(update(Work).where(
+                Work.id == work_id).values(description=new_description))
             await session.commit()
 
-    async def update_work_next_maintenance_after(self, work_id, new_next_maintenance_after):
+    async def update_work_next_maintenance_after(
+            self, work_id, new_next_maintenance_after
+    ):
         async with self.db.async_session() as session:
             await session.execute(update(Work).where(Work.id == work_id).values(
                 next_maintenance_after=new_next_maintenance_after))

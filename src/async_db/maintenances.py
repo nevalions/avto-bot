@@ -28,6 +28,7 @@ class Maintenance(Base):
             description='',
             fk_car=None
     ):
+        super().__init__()
         self.title = title
         self.maintenance_mileage = maintenance_mileage
         self.date = date
@@ -56,6 +57,7 @@ class MaintWork(Base):
             fk_maintenance,
             fk_work,
     ):
+        super().__init__()
         self.fk_maintenance = fk_maintenance
         self.fk_work = fk_work
 
