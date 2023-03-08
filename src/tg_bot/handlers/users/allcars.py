@@ -90,7 +90,7 @@ async def cancel_car_action(
         await state.finish()
 
         await query.message.answer(
-            TextCar.action_canceled(), reply_markup=ikb_menu
+            TextCar.action_canceled_txt(), reply_markup=ikb_menu
         )
     except Exception as ex:
         logging.error(ex)
@@ -113,7 +113,7 @@ async def update_inline_car_model(
         async with state.proxy() as data:
             data['car_id'] = car.id
         await UpdateCarForm.car_model.set()
-        await query.message.answer(TextCar(car_model=car.model).update_model(),
+        await query.message.answer(TextCar(car_model=car.model).update_model_txt(),
                                    reply_markup=show_cars_cancel_menu(car_id))
     except Exception as ex:
         logging.error(ex)
@@ -141,7 +141,7 @@ async def enter_car_model(message: Message, state: FSMContext):
         async with state.proxy() as data:
             data['car_model'] = message.text
             await car_service.update_car_model(int(data['car_id']), data['car_model'])
-            await message.answer(TextCar().item_updated(),
+            await message.answer(TextCar().item_updated_txt(),
                                  reply_markup=ikb_menu)
     except Exception as ex:
         logging.error(ex)
@@ -165,7 +165,7 @@ async def update_inline_car_model_name(
 
         await UpdateCarForm.car_model_name.set()
         await query.message.answer(TextCar(
-            car_model=car.model, car_model_name=car.model_name).update_model_name(),
+            car_model=car.model, car_model_name=car.model_name).update_model_name_txt(),
                                    reply_markup=show_cars_cancel_menu(car.id))
     except Exception as ex:
         logging.error(ex)
@@ -194,7 +194,7 @@ async def enter_car_model_name(message: Message, state: FSMContext):
             data['car_model_name'] = message.text
             await car_service.update_car_model_name(
                 int(data['car_id']), data['car_model_name'])
-            await message.answer(TextCar().item_updated(),
+            await message.answer(TextCar().item_updated_txt(),
                                  reply_markup=ikb_menu)
     except Exception as ex:
         logging.error(ex)
@@ -218,7 +218,7 @@ async def update_inline_car_current_milage(
 
         await UpdateCarForm.car_current_mileage.set()
         await query.message.answer(
-            TextCar.update_car_current_mileage(),
+            TextCar.update_car_current_mileage_txt(),
             reply_markup=show_cars_cancel_menu(car.id)
         )
     except Exception as ex:
@@ -252,7 +252,7 @@ async def enter_car_current_milage(message: Message, state: FSMContext):
             data['current_mileage'] = mil
             await car_service.update_car_current_mileage(
                 int(data['car_id']), int(data['current_mileage']))
-            await message.answer(TextCar().item_updated(),
+            await message.answer(TextCar().item_updated_txt(),
                                  reply_markup=ikb_menu)
     except Exception as ex:
         logging.error(ex)
@@ -284,7 +284,7 @@ async def enter_car_description(message: Message, state: FSMContext):
             data['car_description'] = message.text
             await car_service.update_car_description(
                 int(data['car_id']), data['car_description'])
-            await message.answer(TextCar().item_updated(),
+            await message.answer(TextCar().item_updated_txt(),
                                  reply_markup=ikb_menu)
     except Exception as ex:
         logging.error(ex)
@@ -304,7 +304,7 @@ async def delete_inline_car(query: CallbackQuery, callback_data: dict):
     car = await car_service.get_car_by_id(car_id)
     markup = await show_delete_cars_menu(car_id)
     delete_text = f'{car.model} {car.model_name}'
-    await query.message.answer(TextMessages(text=delete_text).ask_to_delete(),
+    await query.message.answer(TextMessages(text=delete_text).ask_to_delete_txt(),
                                reply_markup=markup)
 
 
@@ -319,7 +319,7 @@ async def cancel_delete_inline_car(query: CallbackQuery, callback_data: dict):
     delete_text = f'{car.model} {car.model_name}'
 
     await query.message.delete()
-    await query.message.answer(TextMessages(delete_text).undo_delete())
+    await query.message.answer(TextMessages(delete_text).undo_delete_txt())
 
 
 @dp.callback_query_handler(car_action_menu_cd.filter(action='delete_car_ok'))
@@ -333,5 +333,5 @@ async def delete_car_ok(query: CallbackQuery, callback_data: dict):
 
     await car_service.delete_car(car_id)
     await db.engine.dispose()
-    await query.message.answer(TextCar(car.model, car.model_name).car_deleted(),
+    await query.message.answer(TextCar(car.model, car.model_name).car_deleted_txt(),
                                reply_markup=ikb_menu)

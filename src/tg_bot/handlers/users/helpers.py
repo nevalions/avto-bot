@@ -24,35 +24,43 @@ class TextMessages(object):
     def main_description_txt(self) -> str:
         return f'📄 <b>Info</b>: {self.description}'
 
-    @staticmethod
-    def added() -> str:
-        return '✅ Added'
 
     @staticmethod
-    def deleted() -> str:
-        return '🗑 Deleted'
+    def register_txt() -> str:
+        return 'Hi! Please register.\n' \
+               'We need some info, to add a garage for you.'
 
-    def ask_to_delete(self):
+    @staticmethod
+    def added_txt() -> str:
+        return "✅ Added"
+
+    @staticmethod
+    def deleted_txt() -> str:
+        return "🗑 Deleted"
+
+    @staticmethod
+    def item_updated_txt() -> str:
+        return "✅ Item updated"
+
+    def ask_to_delete_txt(self):
         return f"Are you sure you want to delete '<b>{self.text}</b>'?"
 
-    def undo_delete(self):
+    def undo_delete_txt(self):
         return f"Undo deletion '<b>{self.text}</b>'"
 
     @staticmethod
     def add_description_txt() -> str:
-        return '📄 Enter description'
+        return "📄 Enter 'Description'"
 
     @staticmethod
     def update_description() -> str:
-        return 'Update description'
+        return "Update 'Description'"
 
     @staticmethod
-    def action_canceled() -> str:
-        return 'Action cancelled'
+    def action_canceled_txt() -> str:
+        return "Action cancelled"
 
-    @staticmethod
-    def item_updated() -> str:
-        return '✅ Item updated'
+
 
 
 class TextCar(TextMessages):
@@ -64,18 +72,21 @@ class TextCar(TextMessages):
         self.car_model_name = car_model_name
         self.current_mileage = current_mileage
         self.measures = measures
-        self.description_main = description
+        self.description = description
 
-    def car_model_and_model_name(self) -> str:
+    def car_model_and_model_name_txt(self) -> str:
         return f'🚙 <b>Car</b>: {self.car_model} {self.car_model_name}'
 
-    def car_current_mileage(self):
+    def car_current_mileage_txt(self):
+        return f'🛣 <b>Current mileage</b>: {self.current_mileage}'
+
+    def car_current_mileage_with_measures_txt(self):
         return f'🛣 <b>Current mileage</b>: {self.current_mileage} {self.measures}'
 
     def car_txt(self) -> str:
         items = [
-            self.car_model_and_model_name(),
-            self.car_current_mileage(),
+            self.car_model_and_model_name_txt(),
+            self.car_current_mileage_with_measures_txt(),
             self.main_description_txt()
         ]
         return '\n'.join(items)
@@ -84,20 +95,41 @@ class TextCar(TextMessages):
     def no_car() -> str:
         return "YOU DON'T HAVE ANY CAR"
 
-    def update_model(self) -> str:
+    @staticmethod
+    def add_car_model_txt() -> str:
+        return "Please, enter car <b>'Model'</b>" \
+               "\n(Lada, Ford, Chevrolet, etc)"
+
+    def add_car_model_name_txt(self) -> str:
+        return f"Enter 'Model Name' for <b>{self.car_model_name}</b>"
+
+    def add_car_mileage_txt(self) -> str:
+        return f"{self.car_model_and_model_name_txt()}\nEnter <b>'Mileage'</b>"
+
+    def add_car_measure_txt(self) -> str:
+        return f"{self.car_model_and_model_name_txt()}\n" \
+               f"{self.car_current_mileage_txt()}\n" \
+               f"Enter <b>'Measures'</b>"
+
+    def add_car_description_txt(self) -> str:
+        return f"{self.car_model_and_model_name_txt()}\n" \
+               f"{self.car_current_mileage_with_measures_txt()}\n" \
+               f"{self.add_description_txt()}"
+
+    def update_model_txt(self) -> str:
         return f'🚙 <b>Car:</b> {self.car_model}\n' \
                f"Update 'Model'"
 
-    def update_model_name(self) -> str:
+    def update_model_name_txt(self) -> str:
         return f'🚙 <b>Car:</b> {self.car_model} <b>{self.car_model_name}</b>\n' \
                f"Update 'Model Name'"
 
     @staticmethod
-    def update_car_current_mileage() -> str:
-        return "Update car <b>current mileage</b>"
+    def update_car_current_mileage_txt() -> str:
+        return "Update car <b>'Current Mileage'</b>"
 
-    def car_deleted(self):
-        return f"{self.car_model_and_model_name()}\n{self.deleted()}"
+    def car_deleted_txt(self):
+        return f"{self.car_model_and_model_name_txt()}\n{self.deleted_txt()}"
 
 
 class TextMaintenance(TextCar):
@@ -114,36 +146,45 @@ class TextMaintenance(TextCar):
         self.maint_maintenance_mileage = maint_maintenance_mileage
         self.description_main = description
 
-    def maintenance_title(self) -> str:
+    def maintenance_title_txt(self) -> str:
         return f'🔧 <b>Maintenance</b>: {self.maint_title}'
 
-    def maintenance_mileage(self) -> str:
+    def maintenance_mileage_txt(self) -> str:
         return f'🛣 <b>Maintenance mileage</b>: {self.maint_maintenance_mileage}'
 
     def maintenance_txt(self) -> str:
         items = [
-            self.car_model_and_model_name(),
-            self.maintenance_title(),
+            self.car_model_and_model_name_txt(),
+            self.maintenance_title_txt(),
             self.date_to_text(),
-            self.maintenance_mileage(),
+            self.maintenance_mileage_txt(),
             self.main_description_txt()
         ]
         return '\n'.join(items)
 
-    def maintenance_added(self):
-        return f"{self.maintenance_txt()}\n{self.added()}"
+    def maintenance_added_txt(self):
+        return f"{self.maintenance_txt()}\n{self.added_txt()}"
 
-    def maintenance_deleted(self):
-        return f"{self.maintenance_title()}\n{self.deleted()}"
+    def maintenance_deleted_txt(self):
+        return f"{self.maintenance_title_txt()}\n{self.deleted_txt()}"
 
     def add_maintenance_txt(self) -> str:
-        return f"{self.car_model_and_model_name()}\n"\
+        return f"{self.car_model_and_model_name_txt()}\n"\
                f"🔧 Enter maintenance 'Title'"
 
+    def update_maintenance_txt(self) -> str:
+        return f"{self.car_model_and_model_name_txt()}\n"\
+               f"{self.maintenance_title_txt()}" \
+               f"Enter new maintenance 'Title'"
+
     @staticmethod
-    def add_date_txt() -> str:
+    def add_maintenance_date_txt() -> str:
         return "📅 Please, select maintenance 'Date'"
 
     @staticmethod
     def add_maintenance_mileage_txt() -> str:
         return "🛣 Enter maintenances 'Mileage'"
+
+    def no_maintenance_txt(self) -> str:
+        return f"{self.car_model_and_model_name_txt()}\n"\
+               f"Does not have any maintenances"

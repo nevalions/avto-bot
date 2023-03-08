@@ -60,9 +60,9 @@ async def show_cars_maintenances(query: CallbackQuery, callback_data: dict):
         else:
             autolog_warning(
                 f"Car: {car.model} {car.model_name}\n don't have any maintenances")
+
             await query.message.answer(
-                f"Car: {car.model} {car.model_name}\n"
-                f"Does not have any maintenances",
+                TextMaintenance(car.model, car.model_name).no_maintenance_txt(),
                 reply_markup=add_new_maintenance(maintenance_id=0, car_id=car.id))
 
     except Exception as ex:
@@ -89,8 +89,8 @@ async def cancel_maintenance_action(
     await state.finish()
     await db.engine.dispose()
     await query.message.answer(
-        'Action cancelled.', reply_markup=show_all_maintenance_one_btn(
-            car_id=maint.fk_car)
+        TextMaintenance.action_canceled_txt(),
+        reply_markup=show_all_maintenance_one_btn(car_id=maint.fk_car)
     )
 
 
@@ -104,10 +104,15 @@ async def update_inline_maintenance_title(
     autolog_info(f"Edit maintenance id({m_id}) title")
     async with state.proxy() as data:
         data['m_id'] = m_id
+
+    # join car and maint search
     await UpdateMaintenanceForm.maintenance_title.set()
-    await query.message.answer('Enter new maintenance title',
-                               reply_markup=show_maintenance_cancel_menu(
-                                   maintenance_id=m_id, car_id=c_id))
+    await query.message.answer(
+        TextMaintenance(
+            car_model='', car_model_name='', maint_title=''
+        ).update_maintenance_txt(),
+        reply_markup=show_maintenance_cancel_menu(
+            maintenance_id=m_id, car_id=c_id))
 
 
 @dp.message_handler(state=UpdateMaintenanceForm.maintenance_title)
@@ -147,7 +152,7 @@ async def delete_inline_maintenance(query: CallbackQuery, callback_data: dict):
 
     text = TextMessages(text=maint.title)
     await query.message.answer(
-        text.ask_to_delete(),
+        text.ask_to_delete_txt(),
         reply_markup=markup)
 
     await db.engine.dispose()
@@ -188,7 +193,7 @@ async def delete_maintenance_ok(query: CallbackQuery, callback_data: dict):
         text = TextMaintenance(maint_title=maint.title)
         await query.message.delete()
         await maintenance_service.delete_maintenance(maint.id)
-        await query.message.answer(text.maintenance_deleted(),
+        await query.message.answer(text.maintenance_deleted_txt(),
                                    reply_markup=show_all_maintenance_one_btn(
                                        car_id=maint.fk_car))
     except Exception as ex:
