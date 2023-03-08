@@ -104,7 +104,7 @@ def show_all_maintenance_one_btn(car_id=None):
         row_width=1,
         inline_keyboard=[
             [
-                InlineKeyboardButton(text=MenuText.show_works(),
+                InlineKeyboardButton(text=MenuText.show_maintenances(),
                                      callback_data=car_action_menu_cd.new(
                                          action='show_car_maintenances',
                                          car_id=car_id)

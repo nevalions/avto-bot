@@ -174,7 +174,7 @@ class TextMaintenance(TextCar):
 
     def update_maintenance_txt(self) -> str:
         return f"{self.car_model_and_model_name_txt()}\n"\
-               f"{self.maintenance_title_txt()}" \
+               f"{self.maintenance_title_txt()}\n" \
                f"Enter new maintenance 'Title'"
 
     @staticmethod

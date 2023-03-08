@@ -65,11 +65,15 @@ class MenuText(object):
     def show_maintenance():
         return '🔧 SHOW CAR MAINTENANCES 🔧'
 
+    @staticmethod
+    def show_maintenances():
+        return '🔧 SHOW CAR MAINTENANCES 🔧'
+
 
 
     @staticmethod
     def show_works():
-        return '⚙ SHOW MAINTENANCE WORKS ⚙'
+        return '⚙ SHOW CAR MAINTENANCE WORKS ⚙'
 
 
 cancel_txt = MenuText.cancel()

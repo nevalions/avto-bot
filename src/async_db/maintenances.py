@@ -1,3 +1,4 @@
+import typing as t
 import asyncio
 from datetime import datetime
 
@@ -5,6 +6,7 @@ from sqlalchemy import (TIMESTAMP, BigInteger, Column, ForeignKey, Integer,
                         String, Text, delete, func, select, update)
 
 from src.async_db.base import DATABASE_URL, Base, Database
+from src.async_db.cars import Car
 from src.models.models import car, maintenance, work
 
 
@@ -144,6 +146,18 @@ class MaintenanceService:
                 description=new_description))
             await session.commit()
 
+    async def join_maintenance_and_car(self, maint_id: int) -> dict:
+        async with self.db.async_session() as session:
+            join = await session.execute(
+                select(Maintenance, Car)
+                .join(Car, Car.id == Maintenance.fk_car)
+                .where(Maintenance.id == maint_id))
+
+            results = join.all()
+            r = [results[0][0], results[0][1]]
+
+            return {'maintenance': vars(r[0]), 'car': vars(r[1])}
+
     async def delete_maintenance(self, maintenance_id):
         async with self.db.async_session() as session:
             await session.execute(delete(Maintenance).filter_by(id=maintenance_id))
@@ -162,8 +176,16 @@ async def async_main() -> None:
     # maints_show = await maintenance_service.get_all_car_maintenances(7)
     # print(maints_show)
 
-    maint_show = await maintenance_service.get_car_maintenance_by_id(1)
-    print(vars(maint_show))
+    # maint_show = await maintenance_service.get_car_maintenance_by_id(1)
+    # print(vars(maint_show))
+
+    joins = await maintenance_service.join_maintenance_and_car(8)
+    # print(vars(joins[0][0]))
+    print(joins['car']['model'])
+    print(joins['maintenance']['title'])
+    # print(joins[1])
+
+    # print(t.List[t.Tuple[Car, Maintenance]])
 
     # await maintenance_service.m2m_maint_work(1, 3)
     # await maintenance_service.delete_maintenance(11)

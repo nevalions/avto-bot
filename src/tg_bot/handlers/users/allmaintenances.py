@@ -100,19 +100,29 @@ async def update_inline_maintenance_title(
         query: CallbackQuery, callback_data: dict, state: FSMContext):
     m_id = int(callback_data['maintenance_id'])
     c_id = int(callback_data['car_id'])
+    db = Database(DATABASE_URL)
+    maintenance_service = MaintenanceService(db)
+    try:
+        autolog_info(f"Edit maintenance id({m_id}) title")
+        async with state.proxy() as data:
+            data['m_id'] = m_id
 
-    autolog_info(f"Edit maintenance id({m_id}) title")
-    async with state.proxy() as data:
-        data['m_id'] = m_id
+        dict_car_maint = await maintenance_service.join_maintenance_and_car(m_id)
 
-    # join car and maint search
-    await UpdateMaintenanceForm.maintenance_title.set()
-    await query.message.answer(
-        TextMaintenance(
-            car_model='', car_model_name='', maint_title=''
-        ).update_maintenance_txt(),
-        reply_markup=show_maintenance_cancel_menu(
-            maintenance_id=m_id, car_id=c_id))
+        await UpdateMaintenanceForm.maintenance_title.set()
+        await query.message.answer(
+            TextMaintenance(
+                car_model=dict_car_maint['car']['model'],
+                car_model_name=dict_car_maint['car']['model_name'],
+                maint_title=dict_car_maint['maintenance']['title']
+            ).update_maintenance_txt(),
+            reply_markup=show_maintenance_cancel_menu(
+                maintenance_id=m_id, car_id=c_id))
+
+    except Exception as ex:
+        logging.error(ex)
+    finally:
+        await db.engine.dispose()
 
 
 @dp.message_handler(state=UpdateMaintenanceForm.maintenance_title)
@@ -127,7 +137,7 @@ async def enter_maint_title(message: Message, state: FSMContext):
             maint = await maintenance_service.get_car_maintenance_by_id(m_id)
             await maintenance_service.update_maintenance_title(
                 maint.id, message.text)
-            await message.answer('✅ Maintenance title updated',
+            await message.answer(TextMaintenance().item_updated_txt(),
                                  reply_markup=show_all_maintenance_one_btn(
                                      car_id=maint.fk_car))
     except Exception as ex:
