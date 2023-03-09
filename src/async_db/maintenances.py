@@ -3,11 +3,11 @@ from datetime import datetime
 
 from sqlalchemy import TIMESTAMP, BigInteger, Column, ForeignKey, Integer, String, \
     Text, delete, func, select, update
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship
 
 from src.async_db.base import DATABASE_URL, Base, Database
 from src.async_db.cars import Car
-from src.models.models import car, maintenance, work
+from src.models.models import maintenance, work
 
 
 class Maintenance(Base):

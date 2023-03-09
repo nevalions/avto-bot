@@ -172,11 +172,6 @@ class TextMaintenance(TextCar):
         return f"{self.car_model_and_model_name_txt()}\n"\
                f"🔧 Enter maintenance 'Title'"
 
-    def update_maintenance_txt(self) -> str:
-        return f"{self.car_model_and_model_name_txt()}\n"\
-               f"{self.maintenance_title_txt()}\n" \
-               f"Enter new maintenance 'Title'"
-
     @staticmethod
     def add_maintenance_date_txt() -> str:
         return "📅 Please, select maintenance 'Date'"
@@ -184,6 +179,26 @@ class TextMaintenance(TextCar):
     @staticmethod
     def add_maintenance_mileage_txt() -> str:
         return "🛣 Enter maintenances 'Mileage'"
+
+    def update_maintenance_txt(self) -> str:
+        return f"{self.car_model_and_model_name_txt()}\n"\
+               f"{self.maintenance_title_txt()}\n"
+
+    def update_maintenance_title_txt(self) -> str:
+        return f"{self.update_maintenance_txt()}"\
+               f"Enter new maintenance 'Title'"
+
+    def update_maintenance_description_txt(self) -> str:
+        return f"{self.update_maintenance_txt()}"\
+               f"Enter new maintenance 'Description'"
+
+    def update_maintenance_mileage_txt(self) -> str:
+        return f"{self.update_maintenance_txt()}"\
+               f"Enter new maintenance 'Mileage'"
+
+    def update_maintenance_date_txt(self) -> str:
+        return f"{self.update_maintenance_txt()}"\
+               f"Enter new maintenance 'Date'"
 
     def no_maintenance_txt(self) -> str:
         return f"{self.car_model_and_model_name_txt()}\n"\
