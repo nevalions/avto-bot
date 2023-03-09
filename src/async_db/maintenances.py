@@ -6,8 +6,7 @@ from sqlalchemy import TIMESTAMP, BigInteger, Column, ForeignKey, Integer, Strin
 from sqlalchemy.orm import relationship
 
 from src.async_db.base import DATABASE_URL, Base, Database
-from src.async_db.cars import Car
-from src.models.models import maintenance, work
+from src.async_db import Car
 
 
 class Maintenance(Base):
@@ -23,6 +22,8 @@ class Maintenance(Base):
     fk_car = Column(Integer, ForeignKey('car.id', ondelete='CASCADE'), nullable=False)
 
     cars = relationship('Car', back_populates='maintenances')
+    works = relationship('Work', secondary='maint_work',
+                         back_populates='maintenances')
 
     def __init__(
             self,
@@ -48,34 +49,6 @@ class Maintenance(Base):
         return fstring
 
 
-class MaintWork(Base):
-    __tablename__ = 'maint_work'
-    __table_args__ = {'extend_existing': True}
-
-    id = Column('id', Integer, primary_key=True)
-    fk_maintenance = Column(Integer, ForeignKey('maintenance.id', ondelete='CASCADE'),
-                            nullable=False, primary_key=True)
-    fk_work = Column(Integer, ForeignKey('work.id', ondelete='CASCADE'),
-                     nullable=False)
-
-    # maintenances = relationship('Maintenance', back_populates='works')
-
-    # fk_maintenances = Column('fk_maintenances', ForeignKey(
-    #     maintenance.c.id), nullable=False, primary_key=True)
-    # fk_work = Column('fk_work', ForeignKey(work.c.id), nullable=False)
-
-    # fk_user = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
-
-    def __init__(
-            self,
-            fk_maintenance,
-            fk_work,
-    ):
-        super().__init__()
-        self.fk_maintenance = fk_maintenance
-        self.fk_work = fk_work
-
-
 class MaintenanceService:
     def __init__(self, database):
         self.db = database
@@ -99,14 +72,6 @@ class MaintenanceService:
             session.add(maint)
             await session.commit()
             return maint
-
-    async def m2m_maint_work(self, fk_maintenance, fk_work):
-        async with self.db.async_session() as session:
-            m2m_maint_work = MaintWork(
-                fk_maintenance=fk_maintenance, fk_work=fk_work)
-            session.add(m2m_maint_work)
-            await session.commit()
-            return m2m_maint_work
 
     async def get_all_car_maintenances(self, car_id):
         async with self.db.async_session() as session:

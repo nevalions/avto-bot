@@ -68,6 +68,6 @@ maint_work = Table(
     metadata,
     Column('id', Integer, primary_key=True),
     Column('fk_maintenance', ForeignKey('maintenance.id', ondelete="CASCADE"),
-           nullable=False, primary_key=True),
+           nullable=False),
     Column('fk_work', ForeignKey('work.id', ondelete="CASCADE"), nullable=False)
 )

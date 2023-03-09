@@ -73,7 +73,7 @@ class MenuText(object):
 
     @staticmethod
     def show_works():
-        return '⚙ SHOW CAR MAINTENANCE WORKS ⚙'
+        return '⚙ SHOW MAINTENANCE WORKS ⚙'
 
 
 cancel_txt = MenuText.cancel()

@@ -17,10 +17,11 @@ class Work(Base):
     description = Column('description', Text, default='')
     next_maintenance_after = Column('next_maintenance_after', BigInteger, default=0)
     is_custom = Column('is_custom', Boolean, default=False)
-    # fk_user = Column('fk_user', ForeignKey(user.c.id), nullable=True)
     fk_user = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
 
     users = relationship('User', back_populates='works')
+    maintenances = relationship('Maintenance', secondary='maint_work',
+                                back_populates='works')
 
     def __init__(
             self,
