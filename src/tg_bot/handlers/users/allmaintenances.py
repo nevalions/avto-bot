@@ -1,4 +1,5 @@
 import logging.config
+import string
 
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
@@ -12,10 +13,12 @@ from src.logs.log_conf_main import LOGGING_CONFIG
 from src.tg_bot.keybords.inline import add_new_maintenance, car_action_menu_cd, \
     ikb_menu, show_all_car_maintenance_menu, show_delete_maintenance_menu, \
     maintenance_action_menu_cd, show_all_maintenance_one_btn, \
-    show_maintenance_cancel_menu
+    show_maintenance_cancel_menu, ikb_cancel_menu
 
 from src.tg_bot.handlers.users.helpers import TextMaintenance, TextMessages
 from src.tg_bot.handlers.users.menu_text_helper import MenuText
+
+from src.classes import Car
 
 from src.tg_bot.loader import dp
 
@@ -156,7 +159,7 @@ async def update_inline_maintenance_description(
     db = Database(DATABASE_URL)
     maintenance_service = MaintenanceService(db)
     try:
-        autolog_info(f"Edit maintenance id({m_id}) title")
+        autolog_info(f"Edit maintenance id({m_id}) description")
         async with state.proxy() as data:
             data['m_id'] = m_id
 
@@ -180,7 +183,7 @@ async def update_inline_maintenance_description(
 
 @dp.message_handler(state=UpdateMaintenanceForm.maintenance_description)
 async def update_maint_description(message: Message, state: FSMContext):
-    autolog_info("Enter new maintenance title")
+    autolog_info("Enter new maintenance description")
     db = Database(DATABASE_URL)
     maintenance_service = MaintenanceService(db)
 
@@ -198,6 +201,85 @@ async def update_maint_description(message: Message, state: FSMContext):
     finally:
         await state.finish()
         await db.engine.dispose()
+
+
+@dp.callback_query_handler(maintenance_action_menu_cd
+                           .filter(action='edit_maintenance_current_mileage'))
+async def update_inline_maintenance_current_milage(
+        query: CallbackQuery, callback_data: dict, state: FSMContext):
+    m_id = int(callback_data['maintenance_id'])
+    c_id = int(callback_data['car_id'])
+    db = Database(DATABASE_URL)
+    maintenance_service = MaintenanceService(db)
+    try:
+        autolog_info(f"Edit maintenance id({m_id}) current mileage")
+        async with state.proxy() as data:
+            data['m_id'] = m_id
+
+        dict_car_maint = await maintenance_service.join_maintenance_and_car(m_id)
+
+        await UpdateMaintenanceForm.maintenance_mileage.set()
+        await query.message.answer(
+            TextMaintenance(
+                car_model=dict_car_maint['car']['model'],
+                car_model_name=dict_car_maint['car']['model_name'],
+                maint_title=dict_car_maint['maintenance']['title']
+            ).update_maintenance_mileage_txt(),
+            reply_markup=show_maintenance_cancel_menu(
+                maintenance_id=m_id, car_id=c_id))
+
+    except Exception as ex:
+        logging.error(ex)
+    finally:
+        await db.engine.dispose()
+
+
+@dp.message_handler(state=UpdateMaintenanceForm.maintenance_mileage)
+async def enter_maintenance_current_milage(message: Message, state: FSMContext):
+    autolog_info("Enter maintenance current milage")
+    db = Database(DATABASE_URL)
+    maintenance_service = MaintenanceService(db)
+
+    try:
+        mil = message.text.replace(" ", "").translate(
+            str.maketrans('', '', string.punctuation))
+        if Car.is_digit(mil):
+            autolog_warning(f'Invalid maintenance mileage "{message.text}"')
+            return await message.reply(
+                f'Invalid maintenance mileage "{message.text}".\n'
+                f'Enter a valid mileage.\nJust numbers.',
+                reply_markup=ikb_cancel_menu)
+    except Exception as ex:
+        logging.error(ex)
+        return await message.reply(f'Invalid mileage"{message.text}"\n'
+                                   f'Enter a valid maintenance mileage',
+                                   reply_markup=ikb_cancel_menu)
+
+    try:
+
+        async with state.proxy() as data:
+            m_id = int(data['m_id'])
+            maint = await maintenance_service.get_car_maintenance_by_id(m_id)
+            await maintenance_service.update_maintenance_mileage(
+                maint.id, int(mil))
+            await message.answer(TextMaintenance().item_updated_txt(),
+                                 reply_markup=show_all_maintenance_one_btn(
+                                     car_id=maint.fk_car))
+
+    except Exception as ex:
+        logging.error(ex)
+    finally:
+        await state.finish()
+        await db.engine.dispose()
+
+
+
+
+
+
+
+
+
 
 
 @dp.callback_query_handler(maintenance_action_menu_cd.filter(
