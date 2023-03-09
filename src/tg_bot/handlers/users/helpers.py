@@ -24,7 +24,6 @@ class TextMessages(object):
     def main_description_txt(self) -> str:
         return f'📄 <b>Info</b>: {self.description}'
 
-
     @staticmethod
     def register_txt() -> str:
         return 'Hi! Please register.\n' \
@@ -59,8 +58,6 @@ class TextMessages(object):
     @staticmethod
     def action_canceled_txt() -> str:
         return "Action cancelled"
-
-
 
 
 class TextCar(TextMessages):
@@ -98,30 +95,32 @@ class TextCar(TextMessages):
     @staticmethod
     def add_car_model_txt() -> str:
         return "Please, enter car <b>'Model'</b>" \
-               "\n(Lada, Ford, Chevrolet, etc)"
+               "\n(Lada, Ford, Chevrolet, etc)\n\n" \
+               "<b>Don't</b> enter model name!"
 
     def add_car_model_name_txt(self) -> str:
         return f"Enter 'Model Name' for <b>{self.car_model_name}</b>"
 
     def add_car_mileage_txt(self) -> str:
-        return f"{self.car_model_and_model_name_txt()}\nEnter <b>'Mileage'</b>"
+        return f"{self.car_model_and_model_name_txt()}\n\n" \
+               f"Enter <b>'Mileage'</b>"
 
     def add_car_measure_txt(self) -> str:
         return f"{self.car_model_and_model_name_txt()}\n" \
-               f"{self.car_current_mileage_txt()}\n" \
+               f"{self.car_current_mileage_txt()}\n\n" \
                f"Enter <b>'Measures'</b>"
 
     def add_car_description_txt(self) -> str:
         return f"{self.car_model_and_model_name_txt()}\n" \
-               f"{self.car_current_mileage_with_measures_txt()}\n" \
+               f"{self.car_current_mileage_with_measures_txt()}\n\n" \
                f"{self.add_description_txt()}"
 
     def update_model_txt(self) -> str:
-        return f'🚙 <b>Car:</b> {self.car_model}\n' \
+        return f'🚙 <b>Car:</b> {self.car_model}\n\n' \
                f"Update 'Model'"
 
     def update_model_name_txt(self) -> str:
-        return f'🚙 <b>Car:</b> {self.car_model} <b>{self.car_model_name}</b>\n' \
+        return f'🚙 <b>Car:</b> {self.car_model} <b>{self.car_model_name}</b>\n\n' \
                f"Update 'Model Name'"
 
     @staticmethod
@@ -182,7 +181,7 @@ class TextMaintenance(TextCar):
 
     def update_maintenance_txt(self) -> str:
         return f"{self.car_model_and_model_name_txt()}\n"\
-               f"{self.maintenance_title_txt()}\n"
+               f"{self.maintenance_title_txt()}\n\n"
 
     def update_maintenance_title_txt(self) -> str:
         return f"{self.update_maintenance_txt()}"\

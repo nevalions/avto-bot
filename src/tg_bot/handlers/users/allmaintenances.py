@@ -4,6 +4,7 @@ import string
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.types import CallbackQuery, Message
+from aiogram_calendar import SimpleCalendar, simple_cal_callback
 
 from src.async_db.base import DATABASE_URL, Database
 from src.async_db.cars import CarService
@@ -275,11 +276,69 @@ async def enter_maintenance_current_milage(message: Message, state: FSMContext):
 
 
 
+@dp.callback_query_handler(maintenance_action_menu_cd
+                           .filter(action='edit_maintenance_date'))
+async def update_inline_maintenance_date(
+        query: CallbackQuery, callback_data: dict, state: FSMContext):
+    m_id = int(callback_data['maintenance_id'])
+    c_id = int(callback_data['car_id'])
+    db = Database(DATABASE_URL)
+    maintenance_service = MaintenanceService(db)
+    try:
+        autolog_info(f"Edit maintenance id({m_id}) date")
+        async with state.proxy() as data:
+            data['m_id'] = m_id
+            data['c_id'] = c_id
+
+        dict_car_maint = await maintenance_service.join_maintenance_and_car(m_id)
+
+        await UpdateMaintenanceForm.maintenance_date.set()
+        await query.message.answer(
+            TextMaintenance(
+                car_model=dict_car_maint['car']['model'],
+                car_model_name=dict_car_maint['car']['model_name'],
+                maint_title=dict_car_maint['maintenance']['title']
+            ).update_maintenance_date_txt(),
+            reply_markup=await SimpleCalendar().start_calendar())
+
+    except Exception as ex:
+        logging.error(ex)
+    finally:
+        await db.engine.dispose()
 
 
+@dp.callback_query_handler(
+    simple_cal_callback.filter(),
+    state=UpdateMaintenanceForm.maintenance_date
+)
+async def update_car_maintenance_date(
+        query: CallbackQuery,
+        callback_data: dict,
+        state: FSMContext
+):
+    db = Database(DATABASE_URL)
+    maintenance_service = MaintenanceService(db)
+    try:
+        selected, date = await SimpleCalendar().process_selection(query, callback_data)
+        if not selected:
+            return None
+        else:
+            autolog_info('Update car maintenances date')
+            async with state.proxy() as data:
+                m_id = int(data['m_id'])
+                data['maintenance_date'] = date
 
-
-
+                maint = await maintenance_service.get_car_maintenance_by_id(m_id)
+                await maintenance_service.update_maintenance_date(
+                    maint.id, date)
+                await query.message.answer(TextMaintenance().item_updated_txt(),
+                                           reply_markup=show_all_maintenance_one_btn(
+                                               car_id=maint.fk_car))
+    except Exception as ex:
+        logging.error(ex)
+    finally:
+        await state.finish()
+        await db.engine.dispose()
 
 
 @dp.callback_query_handler(maintenance_action_menu_cd.filter(
