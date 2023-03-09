@@ -25,6 +25,9 @@ class Car(Base):
     date_added = Column('date_added', TIMESTAMP, default=func.utcnow())
     description = Column('description', Text)
     fk_user = Column(Integer, ForeignKey(user.c.id))
+    maintenances = relationship(
+        'Maintenance', cascade="all, delete-orphan", back_populates="cars",
+        passive_deletes=True)
 
     def __init__(
             self,
@@ -154,7 +157,7 @@ async def async_main() -> None:
     #
     # all_user_cars = await car_service.get_all_user_cars(1)
     # pprint((all_user_cars))
-    await car_service.update_car_model(10, 'Ford')
+    # await car_service.update_car_model(10, 'Ford')
     # await car_service.update_car_current_mileage(10, 22222222)
 
     await db.engine.dispose()

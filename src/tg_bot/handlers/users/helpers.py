@@ -135,7 +135,7 @@ class TextCar(TextMessages):
 class TextMaintenance(TextCar):
     def __init__(self, car_model: str = '', car_model_name: str = '',
                  maint_title: str = '', date_main: datetime = None,
-                 maint_maintenance_mileage: int = None, description: str = ''):
+                 maintenance_mileage: int = None, description: str = ''):
         super().__init__(car_model, car_model_name)
         TextMessages.__init__(self, description, date_main)
 
@@ -143,14 +143,14 @@ class TextMaintenance(TextCar):
         self.car_model_name = car_model_name
         self.maint_title = maint_title
         self.date_main = date_main
-        self.maint_maintenance_mileage = maint_maintenance_mileage
-        self.description_main = description
+        self.maintenance_mileage = maintenance_mileage
+        self.description = description
 
     def maintenance_title_txt(self) -> str:
         return f'🔧 <b>Maintenance</b>: {self.maint_title}'
 
     def maintenance_mileage_txt(self) -> str:
-        return f'🛣 <b>Maintenance mileage</b>: {self.maint_maintenance_mileage}'
+        return f'🛣 <b>Maintenance mileage</b>: {self.maintenance_mileage}'
 
     def maintenance_txt(self) -> str:
         items = [

@@ -152,7 +152,7 @@ async def add_car_maintenance_description(
 
     car = await car_service.get_car_by_id(maint.fk_car)
     text = TextMaintenance(car.model, car.model_name, maint.title, maint.date,
-                           maint.maintenance_mileage_txt, maint.description)
+                           maint.maintenance_mileage, maint.description)
     await message.answer(text.maintenance_added_txt(),
                          reply_markup=show_all_maintenance_one_btn(car_id=car.id))
 
@@ -187,7 +187,7 @@ async def no_description(query: CallbackQuery, state: FSMContext):
     car = await car_service.get_car_by_id(maint.fk_car)
 
     text = TextMaintenance(car.model, car.model_name, maint.title, maint.date,
-                           maint.maintenance_mileage_txt, maint.description)
+                           maint.maintenance_mileage, maint.description)
     await query.message.answer(text.maintenance_added_txt(),
                                reply_markup=show_all_maintenance_one_btn(car_id=car.id))
 

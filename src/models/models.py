@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from sqlalchemy import MetaData, Table, Column, Integer, String, TIMESTAMP, ForeignKey, BigInteger, Text, Boolean
+from sqlalchemy import MetaData, Table, Column, Integer, String, TIMESTAMP, \
+    ForeignKey, BigInteger, Text, Boolean
 
 metadata = MetaData()
 
@@ -24,7 +25,7 @@ car = Table(
     Column('measures', String(15), nullable=False),
     Column('date_added', TIMESTAMP, default=datetime.utcnow),
     Column('description', Text, default=''),
-    Column('fk_user', ForeignKey('user.id'), nullable=True),
+    Column('fk_user', ForeignKey('user.id', ondelete="CASCADE"), nullable=True),
 )
 
 tg_users = Table(
@@ -36,7 +37,7 @@ tg_users = Table(
     Column('tg_username', String(50), nullable=False),
     Column('tg_firstname', String(50), default=''),
     Column('tg_lastname', String(50), default=''),
-    Column('fk_user', ForeignKey('user.id'), nullable=True)
+    Column('fk_user', ForeignKey('user.id', ondelete="CASCADE"), nullable=True)
 )
 
 maintenance = Table(
@@ -47,7 +48,7 @@ maintenance = Table(
     Column('date', TIMESTAMP, default=datetime.utcnow),
     Column('maintenance_mileage', BigInteger, nullable=False),
     Column('description', Text, default=''),
-    Column('fk_car', ForeignKey('car.id'), nullable=True)
+    Column('fk_car', ForeignKey('car.id', ondelete="CASCADE"), nullable=True)
 )
 
 work = Table(
@@ -59,12 +60,13 @@ work = Table(
     Column('description', Text, default=''),
     Column('next_maintenance_after', BigInteger, default=0),
     Column('is_custom', Boolean, default=False),
-    Column('fk_user', ForeignKey('user.id'), nullable=True)
+    Column('fk_user', ForeignKey('user.id', ondelete="CASCADE"), nullable=True)
 )
 
 maint_work = Table(
     'maint_work',
     metadata,
-    Column('fk_maintenance', ForeignKey('maintenance.id'), nullable=False, primary_key=True),
-    Column('fk_work', ForeignKey('work.id'), nullable=False)
+    Column('fk_maintenance', ForeignKey('maintenance.id', ondelete="CASCADE"),
+           nullable=False, primary_key=True),
+    Column('fk_work', ForeignKey('work.id', ondelete="CASCADE"), nullable=False)
 )
