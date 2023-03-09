@@ -125,7 +125,7 @@ class TextCar(TextMessages):
 
     @staticmethod
     def update_car_current_mileage_txt() -> str:
-        return "Update car <b>'Current Mileage'</b>"
+        return "Update car 'Current Mileage'"
 
     def car_deleted_txt(self):
         return f"{self.car_model_and_model_name_txt()}\n{self.deleted_txt()}"
@@ -168,7 +168,7 @@ class TextMaintenance(TextCar):
         return f"{self.maintenance_title_txt()}\n{self.deleted_txt()}"
 
     def add_maintenance_txt(self) -> str:
-        return f"{self.car_model_and_model_name_txt()}\n"\
+        return f"{self.car_model_and_model_name_txt()}\n\n"\
                f"🔧 Enter maintenance 'Title'"
 
     @staticmethod
