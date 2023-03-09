@@ -21,6 +21,7 @@ class Maintenance(Base):
         'maintenance_mileage', BigInteger, nullable=False)
     description = Column('description', Text, default='')
     fk_car = Column(Integer, ForeignKey('car.id', ondelete='CASCADE'), nullable=False)
+
     cars = relationship('Car', back_populates='maintenances')
 
     def __init__(
@@ -51,9 +52,19 @@ class MaintWork(Base):
     __tablename__ = 'maint_work'
     __table_args__ = {'extend_existing': True}
 
-    fk_maintenances = Column('fk_maintenances', ForeignKey(
-        maintenance.c.id), nullable=False, primary_key=True)
-    fk_work = Column('fk_work', ForeignKey(work.c.id), nullable=False)
+    id = Column('id', Integer, primary_key=True)
+    fk_maintenance = Column(Integer, ForeignKey('maintenance.id', ondelete='CASCADE'),
+                            nullable=False, primary_key=True)
+    fk_work = Column(Integer, ForeignKey('work.id', ondelete='CASCADE'),
+                     nullable=False)
+
+    # maintenances = relationship('Maintenance', back_populates='works')
+
+    # fk_maintenances = Column('fk_maintenances', ForeignKey(
+    #     maintenance.c.id), nullable=False, primary_key=True)
+    # fk_work = Column('fk_work', ForeignKey(work.c.id), nullable=False)
+
+    # fk_user = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
 
     def __init__(
             self,

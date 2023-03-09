@@ -8,7 +8,6 @@ from sqlalchemy import select, delete, update
 
 from sqlalchemy.orm import relationship
 
-from src.models.models import user
 from src.async_db.base import DATABASE_URL, Base, Database
 
 
@@ -24,7 +23,9 @@ class Car(Base):
     measures = Column('measures', String)
     date_added = Column('date_added', TIMESTAMP, default=func.utcnow())
     description = Column('description', Text)
-    fk_user = Column(Integer, ForeignKey(user.c.id))
+    fk_user = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+
+    users = relationship('User', back_populates='cars')
     maintenances = relationship(
         'Maintenance', cascade="all, delete-orphan", back_populates="cars",
         passive_deletes=True)

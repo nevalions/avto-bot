@@ -19,7 +19,15 @@ class User(Base):
     email = Column('email', String)
     registered_at = Column('registered_at', TIMESTAMP, default=func.utcnow())
 
-    # tg_children = relationship('TgUser', cascade='all,delete', backref='user')
+    tg_users = relationship(
+        'TgUser', cascade="all, delete", back_populates="users",
+        passive_deletes=True)
+    cars = relationship(
+        'Car', cascade="all, delete-orphan", back_populates="users",
+        passive_deletes=True)
+    works = relationship(
+        'Work', cascade="all, delete-orphan", back_populates="users",
+        passive_deletes=True)
 
     def __init__(self, username, email, registered_at=datetime.utcnow()):
         super().__init__()
@@ -61,7 +69,7 @@ class UserService:
             if user:
                 user.username = username
             else:
-                print(f'Error changing username')
+                print('Error changing username')
 
             await session.commit()
             return user
@@ -70,20 +78,20 @@ class UserService:
 async def async_main() -> None:
     db = Database(DATABASE_URL)
     user_service = UserService(db)
-    await user_service.add_user('John Doe', 'mail@mail.ru')
-
-    # found_user = await user_service.get_user_by_id(14)
-    found_user = await user_service.get_user_by_email('mail@mail.ru')
-    print(vars(found_user)['email'])
-    print(found_user.__dict__)
-    print(found_user.username)
-    x = [*vars(found_user).values()]
-    print(x[1:])
-    change_username = await user_service.update_username('ROOT', found_user.id)
-    print(vars(change_username))
-    print(vars(found_user))
-
-    await db.engine.dispose()
+    # await user_service.add_user('John Doe', 'mail@mail.ru')
+    #
+    # # found_user = await user_service.get_user_by_id(14)
+    # found_user = await user_service.get_user_by_email('mail@mail.ru')
+    # print(vars(found_user)['email'])
+    # print(found_user.__dict__)
+    # print(found_user.username)
+    # x = [*vars(found_user).values()]
+    # print(x[1:])
+    # change_username = await user_service.update_username('ROOT', found_user.id)
+    # print(vars(change_username))
+    # print(vars(found_user))
+    #
+    # await db.engine.dispose()
 
 if __name__ == '__main__':
     asyncio.run(async_main())

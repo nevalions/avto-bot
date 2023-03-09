@@ -2,9 +2,9 @@ import asyncio
 
 from sqlalchemy import ForeignKey, Column, Integer, String, BigInteger
 from sqlalchemy import select
+from sqlalchemy.orm import relationship
 
 from src.async_db.base import DATABASE_URL, Base, Database
-from src.models.models import user
 
 
 class TgUser(Base):
@@ -17,9 +17,9 @@ class TgUser(Base):
     tg_username = Column('tg_username', String)
     tg_firstname = Column('tg_firstname', String)
     tg_lastname = Column('tg_lastname', String)
-    fk_user = Column(Integer, ForeignKey(user.c.id))
+    fk_user = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
 
-    # parent = relationship(Parent, backref=backref("children", cascade="all,delete"))
+    users = relationship('User', back_populates='tg_users')
 
     def __init__(
             self,
