@@ -4,6 +4,7 @@ from sqlalchemy import Column, Integer, String, BigInteger, Text, ForeignKey, Bo
 from sqlalchemy import select, delete, update
 from sqlalchemy.orm import relationship
 
+from src.async_db.maintenances import MaintenanceService
 from src.async_db.base import DATABASE_URL, Base, Database
 
 
@@ -20,8 +21,8 @@ class Work(Base):
     fk_user = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
 
     users = relationship('User', back_populates='works')
-    maintenances = relationship('Maintenance', secondary='maint_work',
-                                back_populates='works')
+    fk_maintenance_id = relationship('Maintenance', secondary='maint_work',
+                                     back_populates='fk_work_id')
 
     def __init__(
             self,
@@ -57,7 +58,7 @@ class WorkService:
 
     async def add_work(
             self, title, is_regular, description='', next_maintenance_after=0,
-            is_custom=False, fk_user=None
+            is_custom=False, fk_user=None, m_id=None
     ):
         async with self.db.async_session() as session:
             work = Work(
@@ -67,8 +68,10 @@ class WorkService:
                 next_maintenance_after=next_maintenance_after,
                 is_custom=is_custom,
                 fk_user=fk_user,
-
             )
+            maint = await MaintenanceService(self.db).get_car_maintenance_by_id(m_id)
+            work.fk_maintenance_id.append(maint)
+
             session.add(work)
             await session.commit()
             return work
@@ -136,14 +139,14 @@ async def async_main() -> None:
     db = Database(DATABASE_URL)
     work_service = WorkService(db)
 
-    # work = await work_service.add_work('Change Brake Pads', True, '', 10000)
-    # print(work)
+    work = await work_service.add_work('Change Brake Pads', True, '', 10000, is_custom=True, fk_user=1)
+    print(work)
 
     # default_works = await work_service.get_all_default_works()
     # print(default_works)
-
-    user_works = await work_service.get_all_user_custom_works(2)
-    print(user_works)
+    #
+    # user_works = await work_service.get_all_user_custom_works(1)
+    # print(user_works)
 
     await db.engine.dispose()
 

@@ -56,7 +56,6 @@ class MenuText(object):
     def edit_car_current_mileage():
         return 'ADD CAR CURRENT MILEAGE'
 
-
     @staticmethod
     def add_maintenance():
         return '🔧 ADD NEW CAR MAINTENANCE 🔧'
@@ -74,6 +73,28 @@ class MenuText(object):
     @staticmethod
     def show_works():
         return '⚙ SHOW MAINTENANCE WORKS ⚙'
+
+    @staticmethod
+    def show_top_works():
+        return '⚙ TOP WORKS ⚙'
+
+    @staticmethod
+    def edit_work_title():
+        return 'EDIT WORK TITLE'
+
+    @staticmethod
+    def edit_work_description():
+        return 'EDIT WORK DESCRIPTION'
+
+    @staticmethod
+    def edit_work_is_regular():
+        return 'WORK IS REGULAR'
+
+    @staticmethod
+    def edit_next_maintenance_mileage():
+        return 'EDIT NEXT MAINTENANCE MILEAGE'
+
+
 
 
 cancel_txt = MenuText.cancel()

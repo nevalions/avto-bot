@@ -63,3 +63,4 @@ dmypy.json
 /ac.sh
 /migrations/versions/
 /src/.ruff_cache/
+/src/async_db/db_test.py

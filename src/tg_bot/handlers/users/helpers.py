@@ -200,5 +200,5 @@ class TextMaintenance(TextCar):
                f"Enter new maintenance 'Date'"
 
     def no_maintenance_txt(self) -> str:
-        return f"{self.car_model_and_model_name_txt()}\n"\
+        return f"{self.car_model_and_model_name_txt()}\n\n"\
                f"Does not have any maintenances"

@@ -1,7 +1,8 @@
+import uuid
 from datetime import datetime
 
 from sqlalchemy import MetaData, Table, Column, Integer, String, TIMESTAMP, \
-    ForeignKey, BigInteger, Text, Boolean
+    ForeignKey, BigInteger, Text, Boolean, UUID
 
 metadata = MetaData()
 
@@ -66,6 +67,7 @@ work = Table(
 maint_work = Table(
     'maint_work',
     metadata,
+    # Column('uuid', UUID, primary_key=True, default=lambda: uuid.uuid4().hex),
     Column('id', Integer, primary_key=True),
     Column('fk_maintenance', ForeignKey('maintenance.id', ondelete="CASCADE"),
            nullable=False),

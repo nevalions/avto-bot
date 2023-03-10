@@ -24,7 +24,12 @@ def show_all_car_maintenance_menu(maintenance_id=None, car_id=None):
         inline_keyboard=[
             [
                 InlineKeyboardButton(text=MenuText.show_works(),
-                                     callback_data='car_maintenance_works')
+                                     callback_data=maintenance_action_menu_cd.new(
+                                         action='maintenance_works',
+                                         maintenance_id=maintenance_id,
+                                         car_id=car_id
+                                     )
+                                     )
             ],
             [
                 InlineKeyboardButton(text='-',

@@ -22,8 +22,8 @@ class Maintenance(Base):
     fk_car = Column(Integer, ForeignKey('car.id', ondelete='CASCADE'), nullable=False)
 
     cars = relationship('Car', back_populates='maintenances')
-    works = relationship('Work', secondary='maint_work',
-                         back_populates='maintenances')
+    fk_work_id = relationship('Work', secondary='maint_work',
+                              back_populates='fk_maintenance_id')
 
     def __init__(
             self,
